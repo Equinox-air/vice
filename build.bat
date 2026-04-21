@@ -142,8 +142,49 @@ if not defined CGO_CFLAGS (
     set CGO_LDFLAGS=-L !SDL2_DIR!\lib
 )   
 
-REM Copy runtime DLLs from ext/ to windows/ if available
+REM If MinGW is present under ext/, add it to PATH automatically
 set MINGW_BIN=%CD%\ext\mingw\mingw64\bin
+if not exist "!MINGW_BIN!\mingw32-make.exe" (
+    echo === Downloading MinGW-w64 ===
+    REM Locate 7-Zip for .7z extraction
+    set SEVENZIP=
+    if exist "%ProgramFiles%\7-Zip\7z.exe" set "SEVENZIP=%ProgramFiles%\7-Zip\7z.exe"
+    if not defined SEVENZIP if exist "%ProgramFiles(x86)%\7-Zip\7z.exe" set "SEVENZIP=%ProgramFiles(x86)%\7-Zip\7z.exe"
+    if not defined SEVENZIP (
+        where 7z >nul 2>&1
+        if not errorlevel 1 set SEVENZIP=7z
+    )
+    if not defined SEVENZIP (
+        echo Error: 7-Zip not found. Cannot auto-install MinGW.
+        echo Install 7-Zip from https://www.7-zip.org/ and re-run, or
+        echo install MinGW-w64 manually and add it to PATH.
+        exit /b 1
+    )
+    if not exist "ext" mkdir ext
+    if not exist "ext\mingw" mkdir ext\mingw
+    set MINGW_ARCHIVE=%CD%\ext\mingw-posix.7z
+    echo Downloading MinGW-w64 12.2.0 ^(posix-seh^)...
+    curl -L -o "!MINGW_ARCHIVE!" "https://github.com/niXman/mingw-builds-binaries/releases/download/12.2.0-rt_v10-rev0/x86_64-12.2.0-release-posix-seh-rt_v10-rev0.7z"
+    if errorlevel 1 (
+        echo Error: Failed to download MinGW.
+        exit /b 1
+    )
+    echo Extracting MinGW-w64...
+    "!SEVENZIP!" x "!MINGW_ARCHIVE!" -o"%CD%\ext\mingw" -y
+    if errorlevel 1 (
+        echo Error: Failed to extract MinGW.
+        del "!MINGW_ARCHIVE!" 2>nul
+        exit /b 1
+    )
+    del "!MINGW_ARCHIVE!"
+    echo MinGW-w64 installed to ext\mingw\
+)
+if exist "!MINGW_BIN!\mingw32-make.exe" (
+    echo Adding !MINGW_BIN! to PATH
+    set PATH=!MINGW_BIN!;!PATH!
+)
+
+REM Copy runtime DLLs from ext/ to windows/ if available
 if exist "!MINGW_BIN!\libgcc_s_seh-1.dll" (
     if not exist "windows\libgcc_s_seh-1.dll" (
         echo Copying MinGW runtime DLLs to windows/

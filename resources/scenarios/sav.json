@@ -56,8 +56,10 @@
         {
           "airlines": [
             {
-              "fleet": "short",
-              "icao": "DAL"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KATL",
@@ -67,17 +69,28 @@
         {
           "airlines": [
             {
-              "fleet": "short",
-              "icao": "AAL"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "icao": "JIA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "icao": "PDT"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "icao": "ENY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KCLT",
@@ -87,13 +100,22 @@
         {
           "airlines": [
             {
-              "icao": "EDV"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "icao": "JBU"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "icao": "RPA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KJFK",
@@ -103,17 +125,28 @@
         {
           "airlines": [
             {
-              "fleet": "short",
-              "icao": "UAL"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "icao": "AAY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "icao": "RPA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "icao": "NKS"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KEWR",
@@ -123,11 +156,16 @@
         {
           "airlines": [
             {
-              "icao": "JIA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "fleet": "short",
-              "icao": "UAL"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KORD",
@@ -137,8 +175,10 @@
         {
           "airlines": [
             {
-              "fleet": "short",
-              "icao": "AAL"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KDFW",
@@ -148,10 +188,16 @@
         {
           "airlines": [
             {
-              "icao": "ASH"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "icao": "AAY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KIAD",
@@ -161,7 +207,10 @@
         {
           "airlines": [
             {
-              "icao": "RPA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KLGA",
@@ -171,7 +220,10 @@
         {
           "airlines": [
             {
-              "icao": "JIA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KPHL",
@@ -181,7 +233,10 @@
         {
           "airlines": [
             {
-              "icao": "SWA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KBWI",
@@ -191,7 +246,10 @@
         {
           "airlines": [
             {
-              "icao": "JIA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KDCA",
@@ -201,7 +259,10 @@
         {
           "airlines": [
             {
-              "icao": "ASH"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KIAH",
@@ -211,7 +272,10 @@
         {
           "airlines": [
             {
-              "icao": "ENY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KMIA",
@@ -221,10 +285,16 @@
         {
           "airlines": [
             {
-              "icao": "SWA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "icao": "LXJ"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KMDW",
@@ -234,10 +304,16 @@
         {
           "airlines": [
             {
-              "icao": "JBU"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "icao": "RPA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KBOS",
@@ -247,7 +323,10 @@
         {
           "airlines": [
             {
-              "icao": "SWA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KBNA",
@@ -257,8 +336,10 @@
         {
           "airlines": [
             {
-              "fleet": "short",
-              "icao": "DAL"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KDTW",
@@ -268,7 +349,10 @@
         {
           "airlines": [
             {
-              "icao": "SWA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KDAL",
@@ -278,7 +362,10 @@
         {
           "airlines": [
             {
-              "icao": "AAY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KCVG",
@@ -288,7 +375,10 @@
         {
           "airlines": [
             {
-              "icao": "AAY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KFLL",
@@ -298,11 +388,16 @@
         {
           "airlines": [
             {
-              "icao": "SCX"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "fleet": "short",
-              "icao": "DAL"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KMSP",
@@ -312,7 +407,10 @@
         {
           "airlines": [
             {
-              "icao": "LXJ"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KTPA",
@@ -322,7 +420,10 @@
         {
           "airlines": [
             {
-              "icao": "VXP"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KHVN",
@@ -332,7 +433,10 @@
         {
           "airlines": [
             {
-              "icao": "AAY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KLCK",
@@ -342,7 +446,10 @@
         {
           "airlines": [
             {
-              "icao": "AAY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KPIT",
@@ -352,7 +459,10 @@
         {
           "airlines": [
             {
-              "icao": "AAY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KCAK",
@@ -362,7 +472,10 @@
         {
           "airlines": [
             {
-              "icao": "MXY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KBDL",
@@ -372,7 +485,10 @@
         {
           "airlines": [
             {
-              "icao": "MXY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KMSY",
@@ -481,10 +597,16 @@
         {
           "airlines": [
             {
-              "icao": "ENY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "icao": "EJA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KCLT",
@@ -494,7 +616,10 @@
         {
           "airlines": [
             {
-              "icao": "RPA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KDCA",
@@ -504,7 +629,10 @@
         {
           "airlines": [
             {
-              "icao": "RPA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KATL",
@@ -514,7 +642,10 @@
         {
           "airlines": [
             {
-              "icao": "ENY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KBOS",
@@ -524,10 +655,16 @@
         {
           "airlines": [
             {
-              "icao": "ENY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "icao": "SKW"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KORD",
@@ -537,7 +674,10 @@
         {
           "airlines": [
             {
-              "icao": "ENY"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KPHL",
@@ -547,7 +687,10 @@
         {
           "airlines": [
             {
-              "icao": "RPA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KLGA",
@@ -557,7 +700,10 @@
         {
           "airlines": [
             {
-              "icao": "SKW"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KEWR",
@@ -567,12 +713,16 @@
         {
           "airlines": [
             {
-              "icao": "N",
-              "fleet": "lightGA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             },
             {
-              "icao": "N",
-              "fleet": "fastGA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KOPF",
@@ -582,8 +732,10 @@
         {
           "airlines": [
             {
-              "icao": "N",
-              "fleet": "lightGA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KLUK",
@@ -593,8 +745,10 @@
         {
           "airlines": [
             {
-              "icao": "N",
-              "fleet": "lightGA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KSSI",
@@ -604,8 +758,10 @@
         {
           "airlines": [
             {
-              "icao": "N",
-              "fleet": "fastGA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KLBE",
@@ -615,8 +771,10 @@
         {
           "airlines": [
             {
-              "icao": "N",
-              "fleet": "fastGA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KFXE",
@@ -637,13 +795,17 @@
           "runway": "14",
           "full_name": "RNAV Runway 14",
           "type": "RNAV",
-          "waypoints": ["EPEDE/iaf/if/a2600 ROOST/faf/a1900 FAXAL/a740 _TBR_14"]
+          "waypoints": [
+            "EPEDE/iaf/if/a2600 ROOST/faf/a1900 FAXAL/a740 _TBR_14"
+          ]
         },
         "R32": {
           "runway": "32",
           "full_name": "RNAV Runway 32",
           "type": "RNAV",
-          "waypoints": ["HENUT/iaf/if/a2600 JUDIT/faf/a1800 RUPSE/a680 _TBR_32"]
+          "waypoints": [
+            "HENUT/iaf/if/a2600 JUDIT/faf/a1800 RUPSE/a680 _TBR_32"
+          ]
         }
       },
       "departure_routes": {
@@ -696,8 +858,10 @@
         {
           "airlines": [
             {
-              "icao": "N",
-              "fleet": "lightGA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KARW",
@@ -707,8 +871,10 @@
         {
           "airlines": [
             {
-              "icao": "N",
-              "fleet": "fastGA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KCHS",
@@ -718,8 +884,10 @@
         {
           "airlines": [
             {
-              "icao": "N",
-              "fleet": "lightGA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KMRN",
@@ -729,8 +897,10 @@
         {
           "airlines": [
             {
-              "icao": "N",
-              "fleet": "lightGA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KCNI",
@@ -740,8 +910,10 @@
         {
           "airlines": [
             {
-              "icao": "N",
-              "fleet": "fastGA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KPDK",
@@ -751,8 +923,10 @@
         {
           "airlines": [
             {
-              "icao": "N",
-              "fleet": "fastGA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KPNS",
@@ -762,8 +936,10 @@
         {
           "airlines": [
             {
-              "icao": "N",
-              "fleet": "lightGA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KVLD",
@@ -773,8 +949,10 @@
         {
           "airlines": [
             {
-              "icao": "N",
-              "fleet": "fastGA"
+              "callsign": "DAL1872",
+              "types": [
+                "B739"
+              ]
             }
           ],
           "destination": "KSHD",
@@ -982,53 +1160,71 @@
     "volumes": {
       "SAV_N_APP": [
         {
-          "boundaries": ["SAV_N_HXD"],
+          "boundaries": [
+            "SAV_N_HXD"
+          ],
           "lower": 2000,
           "upper": 10000
         },
         {
-          "boundaries": ["SAV_N_SFC100"],
+          "boundaries": [
+            "SAV_N_SFC100"
+          ],
           "lower": 0,
           "upper": 10000
         }
       ],
       "SAV_N_APP2": [
         {
-          "boundaries": ["SAV_N_NBC"],
+          "boundaries": [
+            "SAV_N_NBC"
+          ],
           "lower": 0,
           "upper": 10000
         },
         {
-          "boundaries": ["SAV_N_HXD"],
+          "boundaries": [
+            "SAV_N_HXD"
+          ],
           "lower": 2000,
           "upper": 10000
         },
         {
-          "boundaries": ["SAV_N_SFC100"],
+          "boundaries": [
+            "SAV_N_SFC100"
+          ],
           "lower": 0,
           "upper": 10000
         }
       ],
       "SAV_W_APP": [
         {
-          "boundaries": ["SAV_W_TBR"],
+          "boundaries": [
+            "SAV_W_TBR"
+          ],
           "lower": 0,
           "upper": 4000
         },
         {
-          "boundaries": ["SAV_W_SFC100"],
+          "boundaries": [
+            "SAV_W_SFC100"
+          ],
           "lower": 0,
           "upper": 10000
         }
       ],
       "SAV_S_APP": [
         {
-          "boundaries": ["SAV_S_SFC40"],
+          "boundaries": [
+            "SAV_S_SFC40"
+          ],
           "lower": 0,
           "upper": 4000
         },
         {
-          "boundaries": ["SAV_S_SFC100"],
+          "boundaries": [
+            "SAV_S_SFC100"
+          ],
           "lower": 0,
           "upper": 10000
         }
@@ -1050,61 +1246,91 @@
           "airlines": {
             "KSAV": [
               {
-                "icao": "DAL",
-                "fleet": "short",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KATL"
               },
               {
-                "icao": "AAL",
-                "fleet": "short",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KDFW"
               },
               {
-                "icao": "SWA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KBNA"
               },
               {
-                "icao": "SWA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KDAL"
               },
               {
-                "icao": "ASH",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KIAH"
               },
               {
-                "icao": "DAL",
-                "fleet": "short",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KMSP"
               },
               {
-                "icao": "SCX",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KMSP"
               },
               {
-                "icao": "MXY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KMSY"
               }
             ],
             "KHXD": [
               {
-                "icao": "RPA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KATL"
               },
               {
-                "icao": "N",
-                "fleet": "fastGA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KPDK"
               }
             ],
             "KTBR": [
               {
-                "icao": "N",
-                "fleet": "fastGA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KPDK"
               },
               {
-                "icao": "N",
-                "fleet": "fastGA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KCNI"
               }
             ]
@@ -1126,97 +1352,154 @@
           "airlines": {
             "KSAV": [
               {
-                "icao": "AAL",
-                "fleet": "short",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KCLT"
               },
               {
-                "icao": "ENY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KCLT"
               },
               {
-                "icao": "EJA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KCLT"
               },
               {
-                "icao": "JIA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KCLT"
               },
               {
-                "icao": "PDT",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KCLT"
               },
               {
-                "icao": "AAL",
-                "fleet": "short",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KORD"
               },
               {
-                "icao": "UAL",
-                "fleet": "short",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KORD"
               },
               {
-                "icao": "JIA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KORD"
               },
               {
-                "icao": "DAL",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KDTW"
               },
               {
-                "icao": "SWA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KMDW"
               },
               {
-                "icao": "LXJ",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KMDW"
               },
               {
-                "icao": "DAL",
-                "fleet": "short",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KMSP"
               },
               {
-                "icao": "AAY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KCVG"
               },
               {
-                "icao": "AAY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KLCK"
               },
               {
-                "icao": "AAY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KPIT"
               }
             ],
             "KHXD": [
               {
-                "icao": "ENY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KCLT"
               },
               {
-                "icao": "EJA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KCLT"
               },
               {
-                "icao": "ENY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KORD"
               },
               {
-                "icao": "SKW",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KORD"
               }
             ],
             "KTBR": [
               {
-                "icao": "N",
-                "fleet": "fastGA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KMRN"
               },
               {
-                "icao": "N",
-                "fleet": "fastGA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KSHD"
               }
             ]
@@ -1238,105 +1521,175 @@
           "airlines": {
             "KSAV": [
               {
-                "icao": "JBU",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KJFK"
               },
               {
-                "icao": "EDV",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KJFK"
               },
               {
-                "icao": "RPA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KJFK"
               },
               {
-                "icao": "AAY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KEWR"
               },
               {
-                "icao": "RPA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KEWR"
               },
               {
-                "icao": "NKS",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KEWR"
               },
               {
-                "icao": "UAL",
-                "fleet": "short",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KEWR"
               },
               {
-                "icao": "RPA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KLGA"
               },
               {
-                "icao": "AAY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KIAD"
               },
               {
-                "icao": "ASH",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KEWR"
               },
               {
-                "icao": "SWA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KBWI"
               },
               {
-                "icao": "JIA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KDCA"
               },
               {
-                "icao": "JBU",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KBOS"
               },
               {
-                "icao": "RPA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KBOS"
               },
               {
-                "icao": "JIA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KPHL"
               },
               {
-                "icao": "MXY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KBDL"
               },
               {
-                "icao": "VXP",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KHVN"
               },
               {
-                "icao": "MXY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KHPN"
               },
               {
-                "icao": "MXY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KBDL"
               }
             ],
             "KHXD": [
               {
-                "icao": "ENY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KBOS"
               },
               {
-                "icao": "ENY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KPHL"
               },
               {
-                "icao": "RPA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KDCA"
               },
               {
-                "icao": "ENY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KPHL"
               }
             ],
             "KTBR": [
               {
-                "icao": "N",
-                "fleet": "fastGA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KCHS"
               }
             ]
@@ -1358,47 +1711,70 @@
           "airlines": {
             "KSAV": [
               {
-                "icao": "ENY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KMIA"
               },
               {
-                "icao": "LXJ",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KTPA"
               },
               {
-                "icao": "AAY",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KFLL"
               }
             ],
             "KHXD": [
               {
-                "icao": "N",
-                "fleet": "fastGA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KSSI"
               },
               {
-                "icao": "LXJ",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KSRQ"
               },
               {
-                "icao": "WUP",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KISM"
               }
             ],
             "KTBR": [
               {
-                "icao": "N",
-                "fleet": "fastGA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KSSI"
               },
               {
-                "icao": "N",
-                "fleet": "fastGA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KPNS"
               },
               {
-                "icao": "N",
-                "fleet": "fastGA",
+                "callsign": "DAL1872",
+                "types": [
+                  "B739"
+                ],
                 "airport": "KVLD"
               }
             ]
@@ -1420,13 +1796,24 @@
   "magnetic_adjustment": -0.5,
   "name": "KSAV",
   "primary_airport": "KSAV",
-  "reporting_points": ["LOTTS", "PLZZZ", "SOOOP", "VIYAP"],
+  "reporting_points": [
+    "LOTTS",
+    "PLZZZ",
+    "SOOOP",
+    "VIYAP"
+  ],
   "scenarios": {
     "SAV Dep 10 Ldg 10/1 Sats North": {
       "airspace": {
-        "1N": ["SAV_N_APP"],
-        "1W": ["SAV_W_APP"],
-        "1S": ["SAV_S_APP"]
+        "1N": [
+          "SAV_N_APP"
+        ],
+        "1W": [
+          "SAV_W_APP"
+        ],
+        "1S": [
+          "SAV_S_APP"
+        ]
       },
       "arrival_runways": [
         {
@@ -1469,7 +1856,9 @@
         }
       },
       "configuration": "10X",
-      "default_maps": ["RADAR MAP"],
+      "default_maps": [
+        "RADAR MAP"
+      ],
       "departure_runways": [
         {
           "airport": "KSAV",
@@ -1493,9 +1882,15 @@
     },
     "SAV Dep 28 Ldg 28/19 Sats South": {
       "airspace": {
-        "1N": ["SAV_N_APP"],
-        "1W": ["SAV_W_APP"],
-        "1S": ["SAV_S_APP"]
+        "1N": [
+          "SAV_N_APP"
+        ],
+        "1W": [
+          "SAV_W_APP"
+        ],
+        "1S": [
+          "SAV_S_APP"
+        ]
       },
       "arrival_runways": [
         {
@@ -1538,7 +1933,9 @@
         }
       },
       "configuration": "28X",
-      "default_maps": ["RADAR MAP"],
+      "default_maps": [
+        "RADAR MAP"
+      ],
       "departure_runways": [
         {
           "airport": "KSAV",
@@ -1562,9 +1959,15 @@
     },
     "SAV Dep 10 Ldg 10/1 Sats North NBC Offline": {
       "airspace": {
-        "1N": ["SAV_N_APP2"],
-        "1W": ["SAV_W_APP"],
-        "1S": ["SAV_S_APP"]
+        "1N": [
+          "SAV_N_APP2"
+        ],
+        "1W": [
+          "SAV_W_APP"
+        ],
+        "1S": [
+          "SAV_S_APP"
+        ]
       },
       "arrival_runways": [
         {
@@ -1607,7 +2010,9 @@
         }
       },
       "configuration": "10X",
-      "default_maps": ["RADAR MAP"],
+      "default_maps": [
+        "RADAR MAP"
+      ],
       "departure_runways": [
         {
           "airport": "KSAV",
@@ -1631,9 +2036,15 @@
     },
     "SAV Dep 28 Ldg 28/19 Sats South NBC Offline": {
       "airspace": {
-        "1N": ["SAV_N_APP2"],
-        "1W": ["SAV_W_APP"],
-        "1S": ["SAV_S_APP"]
+        "1N": [
+          "SAV_N_APP2"
+        ],
+        "1W": [
+          "SAV_W_APP"
+        ],
+        "1S": [
+          "SAV_S_APP"
+        ]
       },
       "arrival_runways": [
         {
@@ -1676,7 +2087,9 @@
         }
       },
       "configuration": "10X",
-      "default_maps": ["RADAR MAP"],
+      "default_maps": [
+        "RADAR MAP"
+      ],
       "departure_runways": [
         {
           "airport": "KSAV",

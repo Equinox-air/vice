@@ -52,6 +52,7 @@ const (
 	CommandModeDrawRoute
 	CommandModeDrawWind
 	CommandModeMacro
+	CommandModeRWSignOn // realworld replay: sign on as a CPS
 
 	// These correspond to buttons on the main DCB menu.
 	CommandModeRange
@@ -127,6 +128,8 @@ func (c CommandMode) PreviewString(sp *STARSPane) string {
 		}
 	case CommandModeMacro:
 		return "AM"
+	case CommandModeRWSignOn:
+		return "SIGN"
 	case CommandModeRange:
 		return "RANGE"
 	case CommandModePlaceCenter:
@@ -262,6 +265,18 @@ func (sp *STARSPane) processKeyboardInput(ctx *panes.Context) {
 		case imgui.KeyEnter:
 			var status CommandStatus
 			var err error
+
+			// Realworld sign-on mode: Enter commits the CPS or signs off.
+			if sp.commandMode == CommandModeRWSignOn {
+				cps := strings.TrimSpace(strings.ToUpper(sp.previewAreaInput))
+				if cps == "" {
+					sp.signedOnCPS = ""
+				} else {
+					sp.signedOnCPS = cps
+				}
+				sp.setCommandMode(ctx, CommandModeNone)
+				break
+			}
 
 			// If there's an active spinner, it gets keyboard input first.
 			if sp.activeSpinner != nil {
@@ -399,6 +414,8 @@ func (sp *STARSPane) processKeyboardInput(ctx *panes.Context) {
 		case imgui.KeyF12:
 			if ctx.Keyboard.KeyControl() && ps.DisplayDCB {
 				sp.setCommandMode(ctx, CommandModePref)
+			} else if ctx.Client.State.NoTraffic {
+				sp.setCommandMode(ctx, CommandModeRWSignOn)
 			} else {
 				sp.setCommandMode(ctx, CommandModeRestrictionArea)
 			}

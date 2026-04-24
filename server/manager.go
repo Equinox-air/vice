@@ -120,10 +120,12 @@ func (sm *SimManager) getWXProvider() *wx.Provider {
 // Session Management - Creating and Connecting to Sims
 
 type NewSimRequest struct {
-	Facility     string
-	NewSimName   string
-	GroupName    string
-	ScenarioName string
+	Facility            string
+	NewSimName          string
+	GroupName           string
+	ScenarioName        string
+	NoTraffic           bool
+	RealWorldReplayFile string
 
 	ScenarioSpec *ScenarioSpec
 	StartTime    time.Time
@@ -212,13 +214,19 @@ func (sm *SimManager) makeSimConfiguration(req *NewSimRequest, lg *log.Logger) *
 	description := util.Select(sm.local, " "+req.ScenarioName, "@"+req.NewSimName+": "+req.ScenarioName)
 
 	wxp := sm.getWXProvider()
+	launchConfig := req.ScenarioSpec.LaunchConfig
+	if req.NoTraffic {
+		disableTrafficLaunchConfig(&launchConfig)
+	}
 
 	nsc := sim.NewSimConfiguration{
 		Facility:                    req.Facility,
-		LaunchConfig:                req.ScenarioSpec.LaunchConfig,
+		LaunchConfig:                launchConfig,
 		FacilityAdaptation:          deep.MustCopy(sg.FacilityConfig.FacilityAdaptation),
 		DisableTFRRestrictionAreas:  sg.FacilityConfig.DisableTFRRestrictionAreas,
 		EnforceUniqueCallsignSuffix: req.EnforceUniqueCallsignSuffix,
+		NoTraffic:                   req.NoTraffic,
+		RealWorldReplayFile:         req.RealWorldReplayFile,
 		PilotErrorInterval:          req.PilotErrorInterval,
 		DepartureRunways:            sc.DepartureRunways,
 		ArrivalRunways:              sc.ArrivalRunways,
@@ -272,6 +280,19 @@ func (sm *SimManager) makeSimConfiguration(req *NewSimRequest, lg *log.Logger) *
 	}
 
 	return &nsc
+}
+
+func disableTrafficLaunchConfig(lc *sim.LaunchConfig) {
+	lc.DepartureMode = sim.LaunchManual
+	lc.ArrivalMode = sim.LaunchManual
+	lc.OverflightMode = sim.LaunchManual
+	lc.GoAroundRate = 0
+	lc.DepartureRateScale = 0
+	lc.VFRDepartureRateScale = 0
+	lc.InboundFlowRateScale = 0
+	lc.ArrivalPushes = false
+	lc.EmergencyAircraftRate = 0
+	lc.VFFRequestRate = 0
 }
 
 type JoinSimRequest struct {

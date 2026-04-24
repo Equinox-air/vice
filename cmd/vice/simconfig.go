@@ -27,6 +27,7 @@ import (
 	"github.com/mmp/vice/sim"
 	"github.com/mmp/vice/util"
 	"github.com/mmp/vice/wx"
+	"github.com/ncruces/zenity"
 
 	"github.com/AllenDang/cimgui-go/imgui"
 )
@@ -53,7 +54,9 @@ type NewSimConfiguration struct {
 	selectedTCPs        map[sim.TCP]bool
 
 	// New UI state for improved flow
-	filterText string // search/filter for scenario selection
+	filterText               string // search/filter for scenario selection
+	realWorldTrafficModeLive bool
+	realWorldReplayFile      string
 
 	// Weather filter UI state
 	weatherFilter      wx.WeatherFilter
@@ -166,12 +169,13 @@ func MakeNewSimConfiguration(mgr *client.ConnectionManager, defaultFacility *str
 	}
 
 	c := &NewSimConfiguration{
-		lg:              lg,
-		mgr:             mgr,
-		selectedServer:  mgr.LocalServer,
-		defaultFacility: defaultFacility,
-		emergencies:     emergencies,
-		NewSimRequest:   server.MakeNewSimRequest(),
+		lg:                       lg,
+		mgr:                      mgr,
+		selectedServer:           mgr.LocalServer,
+		defaultFacility:          defaultFacility,
+		emergencies:              emergencies,
+		NewSimRequest:            server.MakeNewSimRequest(),
+		realWorldTrafficModeLive: true,
 	}
 
 	c.SetFacility(*defaultFacility)
@@ -373,6 +377,7 @@ const (
 	NewSimCreateLocal = iota
 	NewSimCreateRemote
 	NewSimJoinRemote
+	NewSimViewRealWorldTraffic
 )
 
 type newSimType int32
@@ -381,7 +386,8 @@ func (n newSimType) String() string {
 	return []string{
 		"Create a local sim",
 		"Create a sim on the public vice server",
-		"Join a sim on the public vice server"}[n]
+		"Join a sim on the public vice server",
+		"View Real World Traffic"}[n]
 }
 
 func (c *NewSimConfiguration) UIButtonText() string {
@@ -397,6 +403,9 @@ func (c *NewSimConfiguration) ShowConfigurationWindow() bool {
 // ScenarioSelectionDisabled returns true if the Next/Join button should be disabled
 // on the scenario selection screen.
 func (c *NewSimConfiguration) ScenarioSelectionDisabled(config *Config) bool {
+	if c.newSimType == NewSimViewRealWorldTraffic {
+		return false
+	}
 	if c.newSimType == NewSimJoinRemote {
 		// For join, need TCW selected and initials
 		if c.selectedTCW == "" || len(config.ControllerInitials) != 2 {
@@ -533,6 +542,15 @@ func (c *NewSimConfiguration) DrawScenarioSelectionUI(p platform.Platform, confi
 				imgui.EndDisabled()
 			}
 
+			imgui.TableNextRow()
+			imgui.TableNextColumn()
+			imgui.TableNextColumn()
+			if imgui.RadioButtonIntPtr("View Real World Traffic", (*int32)(&c.newSimType), int32(NewSimViewRealWorldTraffic)) {
+				c.selectedServer = c.mgr.LocalServer
+				c.SetFacility(c.Facility)
+				c.displayError = nil
+			}
+
 			imgui.EndTable()
 		}
 	} else {
@@ -541,6 +559,7 @@ func (c *NewSimConfiguration) DrawScenarioSelectionUI(p platform.Platform, confi
 		imgui.PopStyleColor()
 		c.newSimType = NewSimCreateLocal
 	}
+	imgui.Spacing()
 	imgui.Separator()
 
 	// Helper types and functions for facility data access and formatting
@@ -557,7 +576,7 @@ func (c *NewSimConfiguration) DrawScenarioSelectionUI(p platform.Platform, confi
 		spec         *server.ScenarioSpec
 	}
 
-	if c.newSimType == NewSimCreateLocal || c.newSimType == NewSimCreateRemote {
+	if c.newSimType == NewSimCreateLocal || c.newSimType == NewSimCreateRemote || c.newSimType == NewSimViewRealWorldTraffic {
 		tableScale := util.Select(runtime.GOOS == "windows", p.DPIScale(), float32(1))
 
 		// Search/filter input
@@ -870,49 +889,79 @@ func (c *NewSimConfiguration) DrawScenarioSelectionUI(p platform.Platform, confi
 			// Column 3: Scenarios for the selected TRACON or area
 			imgui.TableNextColumn()
 			if imgui.BeginChildStrV("scenarios", imgui.Vec2{scenarioWidth, columnHeight}, 0, 0) {
-				selectedCatalog := c.selectedFacilityCatalogs[c.GroupName]
-				if selectedCatalog != nil {
-					selectedArea := getAreaKey(c.Facility, c.GroupName, selectedCatalog)
-
-					// Collect all scenarios from groups with the same area
-					type scenarioWithCatalog struct {
-						scenarioInfo
-						catalog *server.ScenarioCatalog
+				if c.newSimType == NewSimViewRealWorldTraffic {
+					imgui.TextWrapped("Choose how to view the selected facility with no simulated traffic.")
+					imgui.Separator()
+					if imgui.RadioButtonBool("Real Traffic", c.realWorldTrafficModeLive) {
+						c.realWorldTrafficModeLive = true
+						c.realWorldReplayFile = ""
 					}
-					var allScenarios []scenarioWithCatalog
-					for groupName, group := range c.selectedFacilityCatalogs {
-						if getAreaKey(c.Facility, groupName, group) == selectedArea {
-							for name, spec := range group.Scenarios {
-								allScenarios = append(allScenarios, scenarioWithCatalog{
-									scenarioInfo: scenarioInfo{
-										groupName:    groupName,
-										scenarioName: name,
-										spec:         spec,
-									},
-									catalog: group,
-								})
+					if imgui.RadioButtonBool("Replay", !c.realWorldTrafficModeLive) {
+						path, err := zenity.SelectFile(
+							zenity.Title("Select Replay NDJSON File"),
+							zenity.FileFilters{{
+								Name:     "NDJSON Files",
+								Patterns: []string{"*.ndjson"},
+							}},
+						)
+						if err != nil {
+							fmt.Printf("Error selecting replay file: %v\n", err)
+						} else {
+							c.realWorldTrafficModeLive = false
+							c.realWorldReplayFile = path
+						}
+					}
+					if c.realWorldReplayFile != "" && !c.realWorldTrafficModeLive {
+						imgui.Spacing()
+						imgui.TextWrapped("Replay file: " + c.realWorldReplayFile)
+					}
+					imgui.Spacing()
+					imgui.TextWrapped("The selected ARTCC/TRACON and its DCB/video maps will load on Next.")
+				} else {
+					selectedCatalog := c.selectedFacilityCatalogs[c.GroupName]
+					if selectedCatalog != nil {
+						selectedArea := getAreaKey(c.Facility, c.GroupName, selectedCatalog)
+
+						// Collect all scenarios from groups with the same area
+						type scenarioWithCatalog struct {
+							scenarioInfo
+							catalog *server.ScenarioCatalog
+						}
+						var allScenarios []scenarioWithCatalog
+						for groupName, group := range c.selectedFacilityCatalogs {
+							if getAreaKey(c.Facility, groupName, group) == selectedArea {
+								for name, spec := range group.Scenarios {
+									allScenarios = append(allScenarios, scenarioWithCatalog{
+										scenarioInfo: scenarioInfo{
+											groupName:    groupName,
+											scenarioName: name,
+											spec:         spec,
+										},
+										catalog: group,
+									})
+								}
 							}
 						}
-					}
 
-					// Sort and display scenarios
-					sort.Slice(allScenarios, func(i, j int) bool {
-						return allScenarios[i].scenarioName < allScenarios[j].scenarioName
-					})
-					for _, s := range allScenarios {
-						// Filter scenarios: show if this specific scenario name matches, OR
-						// if the catalog has a matching airport/facility name (but NOT because
-						// another scenario in the catalog matches), OR if the ARTCC matches
-						if filterLower != "" &&
-							!matchesFilter(s.scenarioName) &&
-							!catalogHasMatchingAirport(s.catalog) &&
-							!matchesFilter(s.catalog.Facility) &&
-							!artccMatchesFilter(selectedARTCC) {
-							continue
-						}
-						selected := s.groupName == c.GroupName && s.scenarioName == c.ScenarioName
-						if imgui.SelectableBoolV(s.scenarioName, selected, 0, imgui.Vec2{}) {
-							c.SetScenario(s.groupName, s.scenarioName)
+						// Sort and display scenarios
+						sort.Slice(allScenarios, func(i, j int) bool {
+							return allScenarios[i].scenarioName < allScenarios[j].scenarioName
+						})
+						for _, s := range allScenarios {
+							// Filter scenarios: show if this specific scenario name matches, OR
+							// if the catalog has a matching airport/facility name (but NOT because
+							// another scenario in the catalog matches), OR if the ARTCC matches
+							if filterLower != "" &&
+								!matchesFilter(s.scenarioName) &&
+								!catalogHasMatchingAirport(s.catalog) &&
+								!matchesFilter(s.catalog.Facility) &&
+								!artccMatchesFilter(selectedARTCC) {
+								continue
+							}
+							selected := s.groupName == c.GroupName && s.scenarioName == c.ScenarioName
+							if imgui.SelectableBoolV(s.scenarioName, selected, 0, imgui.Vec2{}) {
+								c.SetScenario(s.groupName, s.scenarioName)
+							}
 						}
 					}
 				}
@@ -922,7 +971,7 @@ func (c *NewSimConfiguration) DrawScenarioSelectionUI(p platform.Platform, confi
 			imgui.EndTable()
 		}
 
-		if len(c.ScenarioSpec.ArrivalRunways) > 0 {
+		if c.newSimType != NewSimViewRealWorldTraffic && len(c.ScenarioSpec.ArrivalRunways) > 0 {
 			var a []string
 			for _, rwy := range c.ScenarioSpec.ArrivalRunways {
 				a = append(a, rwy.Airport+"/"+string(rwy.Runway))
@@ -1343,72 +1392,76 @@ func (c *NewSimConfiguration) DrawConfigurationUI(p platform.Platform, config *C
 	}
 	imgui.Spacing()
 
-	// TRAFFIC RATES section
-	drawSectionHeader("Traffic Rates")
+	if c.newSimType == NewSimViewRealWorldTraffic {
+		imgui.TextWrapped("Real world traffic mode loads the TRACON configuration, DCB settings, and videomaps without spawning aircraft.")
+	} else {
+		// TRAFFIC RATES section
+		drawSectionHeader("Traffic Rates")
 
-	// Rate limit warning
-	const rateLimit = 100.0
-	if !c.ScenarioSpec.LaunchConfig.CheckRateLimits(rateLimit) {
-		c.ScenarioSpec.LaunchConfig.ClampRates(rateLimit)
-		imgui.PushStyleColorVec4(imgui.ColText, imgui.Vec4{1, .5, .5, 1})
-		imgui.Text(renderer.FontAwesomeIconExclamationTriangle + " Rates reduced to stay within limits")
-		imgui.PopStyleColor()
-	}
-
-	// Departures (collapsible)
-	lc := &c.ScenarioSpec.LaunchConfig
-	if lc.HaveDepartures() {
-		depRate := lc.TotalDepartureRate()
-		headerText := fmt.Sprintf("Departures (Total: %d/hr)###departures", int(depRate+0.5))
-		if imgui.CollapsingHeaderBoolPtr(headerText, nil) {
-			drawDepartureUI(lc, p)
-			imgui.Spacing()
+		// Rate limit warning
+		const rateLimit = 100.0
+		if !c.ScenarioSpec.LaunchConfig.CheckRateLimits(rateLimit) {
+			c.ScenarioSpec.LaunchConfig.ClampRates(rateLimit)
+			imgui.PushStyleColorVec4(imgui.ColText, imgui.Vec4{1, .5, .5, 1})
+			imgui.Text(renderer.FontAwesomeIconExclamationTriangle + " Rates reduced to stay within limits")
+			imgui.PopStyleColor()
 		}
-	}
 
-	// VFR Departures (collapsible)
-	if len(lc.VFRAirportRates) > 0 {
-		vfrRate := 0
-		for _, rate := range lc.VFRAirportRates {
-			r := float32(rate) * lc.VFRDepartureRateScale
-			if r > 0 {
-				vfrRate += int(r)
+		// Departures (collapsible)
+		lc := &c.ScenarioSpec.LaunchConfig
+		if lc.HaveDepartures() {
+			depRate := lc.TotalDepartureRate()
+			headerText := fmt.Sprintf("Departures (Total: %d/hr)###departures", int(depRate+0.5))
+			if imgui.CollapsingHeaderBoolPtr(headerText, nil) {
+				drawDepartureUI(lc, p)
+				imgui.Spacing()
 			}
 		}
-		headerText := fmt.Sprintf("VFR Departures (%d/hr)###vfrdepartures", vfrRate)
-		if imgui.CollapsingHeaderBoolPtr(headerText, nil) {
-			drawVFRDepartureUI(lc, p)
-			imgui.Spacing()
-		}
-	}
 
-	// Arrivals (collapsible)
-	if lc.HaveArrivals() {
-		arrRate := lc.TotalArrivalRate()
-		headerText := fmt.Sprintf("Arrivals (Total: %d/hr)###arrivals", int(arrRate+0.5))
-		if imgui.CollapsingHeaderBoolPtr(headerText, nil) {
-			drawArrivalUI(lc, p)
-			imgui.Spacing()
+		// VFR Departures (collapsible)
+		if len(lc.VFRAirportRates) > 0 {
+			vfrRate := 0
+			for _, rate := range lc.VFRAirportRates {
+				r := float32(rate) * lc.VFRDepartureRateScale
+				if r > 0 {
+					vfrRate += int(r)
+				}
+			}
+			headerText := fmt.Sprintf("VFR Departures (%d/hr)###vfrdepartures", vfrRate)
+			if imgui.CollapsingHeaderBoolPtr(headerText, nil) {
+				drawVFRDepartureUI(lc, p)
+				imgui.Spacing()
+			}
 		}
-	}
 
-	// Overflights (collapsible)
-	if lc.HaveOverflights() {
-		ofRate := lc.TotalOverflightRate()
-		headerText := fmt.Sprintf("Overflights (%d/hr)###overflights", int(ofRate+0.5))
-		if imgui.CollapsingHeaderBoolPtr(headerText, nil) {
-			drawOverflightUI(lc, p)
-			imgui.Spacing()
+		// Arrivals (collapsible)
+		if lc.HaveArrivals() {
+			arrRate := lc.TotalArrivalRate()
+			headerText := fmt.Sprintf("Arrivals (Total: %d/hr)###arrivals", int(arrRate+0.5))
+			if imgui.CollapsingHeaderBoolPtr(headerText, nil) {
+				drawArrivalUI(lc, p)
+				imgui.Spacing()
+			}
 		}
-	}
 
-	// Emergency rate (always visible)
-	imgui.Spacing()
-	imgui.Text("Emergency aircraft rate:")
-	imgui.SameLine()
-	imgui.SetNextItemWidth(150)
-	imgui.SliderFloatV("##emergencyRate", &lc.EmergencyAircraftRate, 0, 20,
-		util.Select(lc.EmergencyAircraftRate == 0, "never", "%.1f /hr"), imgui.SliderFlagsNone)
+		// Overflights (collapsible)
+		if lc.HaveOverflights() {
+			ofRate := lc.TotalOverflightRate()
+			headerText := fmt.Sprintf("Overflights (%d/hr)###overflights", int(ofRate+0.5))
+			if imgui.CollapsingHeaderBoolPtr(headerText, nil) {
+				drawOverflightUI(lc, p)
+				imgui.Spacing()
+			}
+		}
+
+		// Emergency rate (always visible)
+		imgui.Spacing()
+		imgui.Text("Emergency aircraft rate:")
+		imgui.SameLine()
+		imgui.SetNextItemWidth(150)
+		imgui.SliderFloatV("##emergencyRate", &lc.EmergencyAircraftRate, 0, 20,
+			util.Select(lc.EmergencyAircraftRate == 0, "never", "%.1f /hr"), imgui.SliderFlagsNone)
+	}
 
 	return false
 }
@@ -1439,6 +1492,12 @@ func (c *NewSimConfiguration) DrawRatesUI(p platform.Platform) bool {
 
 func (c *NewSimConfiguration) Start(config *Config) error {
 	c.NewSimRequest.Emergencies = c.emergencies
+	c.NewSimRequest.NoTraffic = c.newSimType == NewSimViewRealWorldTraffic
+	if c.NewSimRequest.NoTraffic && !c.realWorldTrafficModeLive {
+		c.NewSimRequest.RealWorldReplayFile = c.realWorldReplayFile
+	} else {
+		c.NewSimRequest.RealWorldReplayFile = ""
+	}
 	c.ScenarioSpec.LaunchConfig.EnableTowerGoArounds = config.EnableTowerGoArounds
 
 	if c.newSimType == NewSimJoinRemote {

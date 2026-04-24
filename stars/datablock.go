@@ -1253,7 +1253,12 @@ func (sp *STARSPane) trackDatablockColorBrightness(ctx *panes.Context, trk sim.T
 		// middle button selected
 		color = sp.Colors.SelectedDatablock
 	} else if trk.IsUnassociated() {
-		color = sp.Colors.UnownedDatablock
+		// Realworld replay: tracks matching the signed-on CPS are shown as owned (white).
+		if sp.signedOnCPS != "" && trk.CPS == sp.signedOnCPS {
+			color = sp.Colors.OwnedDatablock
+		} else {
+			color = sp.Colors.UnownedDatablock
+		}
 	} else {
 		sfp := trk.FlightPlan
 		if _, ok := sp.ForceQLACIDs[sfp.ACID]; ok {
@@ -1286,6 +1291,9 @@ func (sp *STARSPane) trackDatablockColorBrightness(ctx *panes.Context, trk sim.T
 			color = sp.Colors.OwnedDatablock
 		} else if ps.QuickLookTCPs[string(ctx.PrimaryTCPForTCW(sfp.OwningTCW))] {
 			// individual quicklook plus controller
+			color = sp.Colors.OwnedDatablock
+		} else if sp.signedOnCPS != "" && trk.CPS == sp.signedOnCPS {
+			// Realworld replay: signed-on CPS matches this track's CPS → show as owned (white)
 			color = sp.Colors.OwnedDatablock
 		} else {
 			// other controller owns, no special case applies

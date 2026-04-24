@@ -609,7 +609,7 @@ func (s *Sim) spawnAircraft() {
 	}
 	// Pattern aircraft complete a lap in well under a minute, so only
 	// spawn them during the last 3 minutes of prespawn (and always after).
-	if !s.prespawn || s.prespawnPatternEligible {
+	if !s.NoTraffic && (!s.prespawn || s.prespawnPatternEligible) {
 		s.spawnPatternAircraft()
 	}
 	s.updateDepartureSequence()

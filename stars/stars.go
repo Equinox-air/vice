@@ -123,6 +123,9 @@ type STARSPane struct {
 	// For CRDA
 	CRDAPairs []STARSCRDAPair
 
+	// Realworld replay sign-on: the CPS the user has signed on as (e.g. "1E")
+	signedOnCPS string
+
 	// Various UI state
 	FlipNumericKeypad bool
 	TgtGenKey         byte

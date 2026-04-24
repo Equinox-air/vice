@@ -63,7 +63,9 @@ type Sim struct {
 	// Airport -> runway -> state
 	DepartureState map[string]map[av.RunwayID]*RunwayLaunchState
 	// Airport -> pattern state
-	PatternState map[string]*PatternState
+	PatternState    map[string]*PatternState
+	NoTraffic       bool
+	realWorldReplay *realWorldReplay
 	// Key is inbound flow group name
 	NextInboundSpawn map[string]Time
 	NextVFFRequest   Time
@@ -155,6 +157,8 @@ type NewSimConfiguration struct {
 	VirtualControllers      []TCP
 	ControllerConfiguration *ControllerConfiguration
 	ConfigurationId         string
+	NoTraffic               bool
+	RealWorldReplayFile     string
 
 	TFRs                       []av.TFR
 	FacilityAdaptation         FacilityAdaptation
@@ -196,6 +200,7 @@ func NewSim(config NewSimConfiguration, lg *log.Logger) *Sim {
 		InboundAssignments:   config.ControllerConfiguration.InboundAssignments,
 		DepartureAssignments: config.ControllerConfiguration.DepartureAssignments,
 		GoAroundAssignments:  config.ControllerConfiguration.GoAroundAssignments,
+		NoTraffic:            config.NoTraffic,
 
 		STARSComputer: makeSTARSComputer(config.Facility),
 
@@ -317,6 +322,16 @@ func NewSim(config NewSimConfiguration, lg *log.Logger) *Sim {
 
 	s.State = newCommonState(config, config.StartTime.UTC(), s.wxModel, s.METAR, s.Rand, lg)
 	s.ScenarioDefaultConsolidation = config.ControllerConfiguration.DefaultConsolidation
+
+	if config.RealWorldReplayFile != "" {
+		replay, err := loadRealWorldReplay(config.RealWorldReplayFile)
+		if err != nil {
+			lg.Errorf("%s: unable to load replay NDJSON: %v", config.RealWorldReplayFile, err)
+		} else {
+			s.realWorldReplay = replay
+			lg.Infof("loaded replay NDJSON %q with %.0f seconds of data", config.RealWorldReplayFile, replay.EndTimestamp()-replay.StartTimestamp())
+		}
+	}
 
 	return s
 }

@@ -635,33 +635,41 @@ func (sp *STARSPane) drawTracks(ctx *panes.Context, transforms radar.ScopeTransf
 		positionSymbol := ""
 
 		if trk.IsUnassociated() {
-			// See if a position symbol override applies. Note that this may be overridden in code following shortly.
-			fa := ctx.Client.State.FacilityAdaptation
-			for _, r := range fa.UntrackedPositionSymbolOverrides.CodeRanges {
-				if trk.Squawk >= r[0] && trk.Squawk <= r[1] { // ranges are inclusive
-					positionSymbol = fa.UntrackedPositionSymbolOverrides.Symbol
-					break
+			// Realworld replay tracks carry a CPS; use its last character as the position symbol.
+			if trk.CPS != "" {
+				positionSymbol = string(trk.CPS[len(trk.CPS)-1])
+			} else {
+				// See if a position symbol override applies. Note that this may be overridden in code following shortly.
+				fa := ctx.Client.State.FacilityAdaptation
+				for _, r := range fa.UntrackedPositionSymbolOverrides.CodeRanges {
+					if trk.Squawk >= r[0] && trk.Squawk <= r[1] { // ranges are inclusive
+						positionSymbol = fa.UntrackedPositionSymbolOverrides.Symbol
+						break
+					}
 				}
-			}
 
-			switch trk.Mode {
-			case av.TransponderModeStandby:
-				ps := sp.currentPrefs()
-				positionSymbol = util.Select(ps.InhibitPositionSymOnUnassociatedPrimary,
-					" ", string(rune(140))) // diamond
-			case av.TransponderModeAltitude:
-				if sp.beaconCodeSelected(trk.Squawk) {
-					positionSymbol = string(rune(129)) // square
-				} else if positionSymbol == "" {
-					positionSymbol = "*"
-				}
-			case av.TransponderModeOn:
-				if sp.beaconCodeSelected(trk.Squawk) {
-					positionSymbol = string(rune(128)) // triangle
-				} else if positionSymbol == "" {
-					positionSymbol = "+"
+				switch trk.Mode {
+				case av.TransponderModeStandby:
+					ps := sp.currentPrefs()
+					positionSymbol = util.Select(ps.InhibitPositionSymOnUnassociatedPrimary,
+						" ", string(rune(140))) // diamond
+				case av.TransponderModeAltitude:
+					if sp.beaconCodeSelected(trk.Squawk) {
+						positionSymbol = string(rune(129)) // square
+					} else if positionSymbol == "" {
+						positionSymbol = "*"
+					}
+				case av.TransponderModeOn:
+					if sp.beaconCodeSelected(trk.Squawk) {
+						positionSymbol = string(rune(128)) // triangle
+					} else if positionSymbol == "" {
+						positionSymbol = "+"
+					}
 				}
 			}
+		} else if trk.CPS != "" {
+			// Realworld replay associated track: use last char of CPS as position symbol.
+			positionSymbol = string(trk.CPS[len(trk.CPS)-1])
 		} else {
 			positionSymbol = "?"
 			// Use the owning TCW's primary TCP to determine the position symbol.

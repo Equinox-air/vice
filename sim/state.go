@@ -85,6 +85,8 @@ type CommonState struct {
 
 	SimDescription string
 
+	NoTraffic bool
+
 	TFRs []av.TFR
 
 	HandoffIDs []HandoffID
@@ -217,6 +219,12 @@ func makeDerivedState(s *Sim) DerivedState {
 		}
 	}
 
+	if s.realWorldReplay != nil {
+		for callsign, track := range s.realWorldReplay.TracksAtSimTime(s.State.SimTime) {
+			ds.Tracks[callsign] = track
+		}
+	}
+
 	return ds
 }
 
@@ -265,6 +273,8 @@ func newCommonState(config NewSimConfiguration, startTime time.Time, model *wx.M
 		NmPerLongitude:    config.NmPerLongitude,
 		PrimaryAirport:    config.PrimaryAirport,
 		SimDescription:    config.Description,
+
+		NoTraffic: config.NoTraffic,
 
 		TFRs: config.TFRs,
 
@@ -535,6 +545,7 @@ type Track struct {
 	MVAsApply                 bool
 	HoldForRelease            bool
 	MissingFlightPlan         bool
+	CPS                       string // controller position symbol from realworld replay
 	Route                     []math.Point2LL
 	IsTentative               bool   // first 5 seconds after first contact
 	CWTCategory               string // True CWT from aircraft performance DB, not from NAS flight plan

@@ -252,6 +252,11 @@ func (c *ScenarioSelectionModalClient) Buttons() []ModalDialogButton {
 		text:     c.simConfig.UIButtonText(),
 		disabled: c.simConfig.ScenarioSelectionDisabled(c.config),
 		action: func() bool {
+			if c.simConfig.newSimType == NewSimViewRealWorldTraffic {
+				c.simConfig.NewSimRequest.NoTraffic = true
+				c.simConfig.displayError = c.simConfig.Start(c.config)
+				return c.simConfig.displayError == nil
+			}
 			if c.simConfig.ShowConfigurationWindow() {
 				// Go to configuration screen for create flows
 				client := &ConfigurationModalClient{

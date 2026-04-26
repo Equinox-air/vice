@@ -10818,6 +10818,28 @@
       }
     },
     {
+      "icao": "lbq",
+      "name": "Quest Diagnostics",
+      "callsign": {
+        "name": "Labquest",
+        "callsignFormats": ["####"]
+      },
+      "fleets": {
+        "default": [["PC12",16]]
+      }
+    },
+    {
+      "icao": "jnx",
+      "name": "FLY Dreams LLC",
+      "callsign": {
+        "name": "Nexa",
+        "callsignFormats": ["####"]
+      },
+      "fleets": {
+        "default": [["C25B", 6]]
+      }
+    },
+    {
       "icao": "lbt",
       "name": "Nouvelair Tunisie",
       "callsign": {
@@ -10838,6 +10860,17 @@
       },
       "fleets": {
         "default": [["B763", 7]]
+      }
+    },
+    {
+      "icao": "are",
+      "name": "LATAM Colombia",
+      "callsign": {
+        "name": "LAN Colombia",
+        "callsignFormats": ["####"]
+      },
+      "fleets": {
+        "default": [["A320", 29]]
       }
     },
     {
@@ -10925,6 +10958,43 @@
           ["AT43", 3],
           ["AT76", 14]
         ]
+      }
+    },
+    {
+      "icao": "ubt",
+      "name": "Norse Atlanta UK",
+      "callsign": {
+        "name": "Longboat",
+        "callsignFormats": ["##@"]
+      },
+      "fleets": {
+        "default": [["B789", 4]]
+      }
+    },
+     {
+      "icao": "vjt",
+      "name": "VIstaJet Ltd.",
+      "callsign": {
+        "name": "Vista Jet",
+        "callsignFormats": ["###"]
+      },
+      "fleets": {
+        "default": [
+          ["GLEX", 28],
+          ["CL60", 17],
+          ["CL35", 25]
+        ]
+      }
+    },
+    {
+      "icao": "euk",
+      "name": "Aer Lingus UK",
+      "callsign": {
+        "name": "Greenflight",
+        "callsignFormats": ["##@"]
+      },
+      "fleets": {
+        "default": [["A333", 6]]
       }
     },
     {
@@ -14020,6 +14090,49 @@
         ],
         "a320": [["A320", 18]],
         "b738": [["B738", 21]]
+      }
+    },
+    {
+      "icao": "sbe",
+      "name": "Leviate Air Group",
+      "callsign": {
+        "name": "Starbase",
+        "callsignFormats": ["###"]
+      },
+      "fleets": {
+        "default": [
+          ["C56X", 2],
+          ["CL30", 2],
+          ["HDJT", 3]
+        ]
+      }
+    },
+    {
+      "icao": "rkj",
+      "name": "Charter Airlines",
+      "callsign": {
+        "name": "Arca Airlines",
+        "callsignFormats": ["###", "##"]
+      },
+      "fleets": {
+        "default": [
+          ["C750", 10]
+        ]
+      }
+    },
+    {
+      "icao": "SJJ",
+      "name": "Spirit Jets LLC",
+      "callsign": {
+        "name": "Spirit Jet",
+        "callsignFormats": ["###", "##"]
+      },
+      "fleets": {
+        "default": [
+          ["CL35", 1],
+            ["CL60", 2],
+              ["H25B", 3]
+        ]
       }
     },
     {
@@ -19572,17 +19685,6 @@
       },
       "fleets": {
         "default": [["C208", 30]]
-      }
-    },
-    {
-      "icao": "YANKE",
-      "name": "United States Air Force",
-      "callsign": {
-        "name": "YANKEE",
-        "callsignFormats": ["##"]
-      },
-      "fleets": {
-        "default": [["C130", 5]]
       }
     }
   ]

@@ -329,6 +329,11 @@ func (sp *STARSPane) datablockType(ctx *panes.Context, trk sim.Track) DatablockT
 			return FullDatablock
 		}
 
+		// Realworld replay: signed-on CPS matches → treat as owned, show full datablock
+		if sp.signedOnCPS != "" && trk.CPS == sp.signedOnCPS {
+			return FullDatablock
+		}
+
 		if ctx.IsHandoffToUser(&trk) {
 			// it's being handed off to us
 			return FullDatablock
@@ -655,7 +660,7 @@ func (sp *STARSPane) buildLimitedDatablock(ctx *panes.Context, trk sim.Track,
 	sqspc, _ := trk.Squawk.IsSPC()
 	extended = extended || (trk.Mode != av.TransponderModeStandby && sqspc)
 
-	who := trk.MissingFlightPlan && !state.MissingFlightPlanAcknowledged
+	who := trk.MissingFlightPlan && !state.MissingFlightPlanAcknowledged && !ctx.Client.State.NoTraffic
 
 	if len(alerts) == 0 && trk.Mode == av.TransponderModeOn && !extended {
 		return nil

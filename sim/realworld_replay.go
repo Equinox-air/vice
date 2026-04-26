@@ -28,22 +28,28 @@ type realWorldReplay struct {
 }
 
 type replayTrackState struct {
-	callsign     av.ADSBCallsign
-	squawk       av.Squawk
-	lat          float32
-	lon          float32
-	altitude     float32
-	cps          string
+	callsign      av.ADSBCallsign
+	squawk        av.Squawk
+	lat           float32
+	lon           float32
+	altitude      float32
+	vx            float32 // eastward velocity knots
+	vy            float32 // northward velocity knots
+	vVert         float32 // vertical rate ft/min
+	cps           string
 	hasFlightPlan bool
-	acType       string
-	assignedAlt  float32
-	scratchpad   string
-	scratchpad2  string
-	entryFix     string
-	exitFix      string
-	depAirport   string
-	destAirport  string
-	rules        av.FlightRules
+	acType        string
+	assignedAlt   float32
+	requestedAlt  float32
+	scratchpad    string
+	scratchpad2   string
+	entryFix      string
+	exitFix       string
+	depAirport    string
+	destAirport   string
+	rules         av.FlightRules
+	suspended     bool
+	rnav          bool
 }
 
 type replayTrackEvent struct {
@@ -157,15 +163,20 @@ func makeReplayTrackEvent(rec replayNDJSONRecord) (replayTrackEvent, bool) {
 		return replayTrackEvent{}, false
 	}
 
+	vx, vy := replayRecordVelocity(rec)
 	state := replayTrackState{
 		callsign:      av.ADSBCallsign(callsign),
 		lat:           lat,
 		lon:           lon,
 		altitude:      replayRecordAltitude(rec),
+		vx:            vx,
+		vy:            vy,
+		vVert:         replayRecordVVert(rec),
 		cps:           replayRecordCPS(rec),
 		hasFlightPlan: hasFlightPlan,
 		acType:        replayRecordAcType(rec),
 		assignedAlt:   replayRecordAssignedAlt(rec),
+		requestedAlt:  replayRecordRequestedAlt(rec),
 		scratchpad:    replayRecordScratchpad1(rec),
 		scratchpad2:   replayRecordScratchpad2(rec),
 		entryFix:      replayRecordEntryFix(rec),
@@ -173,6 +184,8 @@ func makeReplayTrackEvent(rec replayNDJSONRecord) (replayTrackEvent, bool) {
 		depAirport:    replayRecordDepAirport(rec),
 		destAirport:   replayRecordDestAirport(rec),
 		rules:         replayRecordFlightRules(rec),
+		suspended:     replayRecordSuspended(rec),
+		rnav:          replayRecordRNAV(rec),
 	}
 	if sq, ok := replayRecordSquawk(rec); ok {
 		state.squawk = sq
@@ -372,6 +385,44 @@ func replayRecordFlightRules(rec replayNDJSONRecord) av.FlightRules {
 	}
 }
 
+func replayRecordVelocity(rec replayNDJSONRecord) (vx, vy float32) {
+	if v, ok := replayExtractedFloat(rec.Extracted, "vx"); ok {
+		vx = float32(v)
+	}
+	if v, ok := replayExtractedFloat(rec.Extracted, "vy"); ok {
+		vy = float32(v)
+	}
+	return
+}
+
+func replayRecordVVert(rec replayNDJSONRecord) float32 {
+	if v, ok := replayExtractedFloat(rec.Extracted, "vVert"); ok {
+		return float32(v)
+	}
+	return 0
+}
+
+func replayRecordRequestedAlt(rec replayNDJSONRecord) float32 {
+	if v, ok := replayExtractedFloat(rec.Extracted, "requestedAltitude"); ok {
+		return float32(v)
+	}
+	return 0
+}
+
+func replayRecordSuspended(rec replayNDJSONRecord) bool {
+	if v, ok := replayExtractedString(rec.Extracted, "suspended"); ok {
+		return strings.TrimSpace(v) == "1"
+	}
+	return false
+}
+
+func replayRecordRNAV(rec replayNDJSONRecord) bool {
+	if v, ok := replayExtractedString(rec.Extracted, "rnav"); ok {
+		return strings.TrimSpace(v) == "1"
+	}
+	return false
+}
+
 func replayExtractedString(m map[string]any, key string) (string, bool) {
 	if m == nil {
 		return "", false
@@ -452,6 +503,17 @@ func (r *realWorldReplay) TracksAtSimTime(simTime Time) map[av.ADSBCallsign]*Tra
 
 	tracks := make(map[av.ADSBCallsign]*Track, len(r.active))
 	for _, state := range r.active {
+		gs := math.Sqrt(state.vx*state.vx + state.vy*state.vy)
+		// Heading from north clockwise: atan2(east, north)
+		var hdg math.MagneticHeading
+		if gs > 0 {
+			deg := math.Atan2(state.vx, state.vy) * (180 / math.Pi)
+			if deg < 0 {
+				deg += 360
+			}
+			hdg = math.MagneticHeading(deg)
+		}
+
 		trk := &Track{
 			RadarTrack: av.RadarTrack{
 				ADSBCallsign:        state.callsign,
@@ -460,6 +522,8 @@ func (r *realWorldReplay) TracksAtSimTime(simTime Time) map[av.ADSBCallsign]*Tra
 				TrueAltitude:        state.altitude,
 				TransponderAltitude: state.altitude,
 				Location:            math.Point2LL{state.lon, state.lat},
+				Groundspeed:         gs,
+				Heading:             hdg,
 			},
 			CPS: state.cps,
 		}
@@ -469,6 +533,7 @@ func (r *realWorldReplay) TracksAtSimTime(simTime Time) map[av.ADSBCallsign]*Tra
 				ACID:                ACID(state.callsign),
 				AircraftType:        state.acType,
 				AssignedAltitude:    int(state.assignedAlt),
+				RequestedAltitude:   int(state.requestedAlt),
 				Scratchpad:          state.scratchpad,
 				SecondaryScratchpad: state.scratchpad2,
 				EntryFix:            state.entryFix,
@@ -476,6 +541,8 @@ func (r *realWorldReplay) TracksAtSimTime(simTime Time) map[av.ADSBCallsign]*Tra
 				ArrivalAirport:      state.destAirport,
 				Rules:               state.rules,
 				AssignedSquawk:      state.squawk,
+				Suspended:           state.suspended,
+				RNAV:                state.rnav,
 			}
 		} else {
 			trk.MissingFlightPlan = true

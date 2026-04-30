@@ -4220,14 +4220,14 @@
     },
     "departure_routes": {
       "7": {
-        "WORMS": {
+        "WORMS,GUANO,KIZER,MMKAY,CRG,LAL,MLB,KNEED,VIZTA,TPA,OCF,DEARY,FSHUN,ROGAN,OSPRY,REMIS,CIGAR,RDSOX,JFRYS": {
           "cleared_altitude": 1500,
           "sid": "NYTES2",
           "waypoints": "KORL-25 NYTES/a1500-/h070"
         }
       },
       "25": {
-        "WORMS": {
+        "WORMS,GUANO,KIZER,MMKAY,CRG,LAL,MLB,KNEED,VIZTA,TPA,OCF,DEARY,FSHUN,ROGAN,OSPRY,REMIS,CIGAR,RDSOX,JFRYS": {
           "cleared_altitude": 2000,
           "sid": "TOLLZ2",
           "waypoints": "KORL-7 BELZR/a1500- TOLLZ/a2000/h270"
@@ -4270,6 +4270,728 @@
           {
             "icao": "N",
             "fleet": "fastGA"
+          }
+        ],
+        "altitude": [19000,21000,23000,25000],
+        "destination": "MYAM",
+        "exit": "DDANY",
+        "route": "DDANY"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          }
+        ],
+        "altitude": [18000,20000,22000,24000],
+        "destination": "KRSW",
+        "exit": "FSHUN",
+        "route": "FSHUN SHFTY SHFTY6"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "NJM",
+            "types": ["CL60"]
+          }
+        ],
+        "altitude": [31000,35000,37000,39000],
+        "destination": "KDPA",
+        "exit": "WORMS",
+        "route": "WORMS JEEMY ACCHE PAINN SHRKS AHN IIU MACES BVT ZORRO EON JOT"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "EJA"
+          }
+        ],
+        "altitude": [12000,14000],
+        "destination": "KJAX",
+        "exit": "WORMS",
+        "route": "WORMS GUANO MEAAT QUBEN2"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "NJM",
+            "types": ["CL60", "LJ35"]
+          }
+        ],
+        "destination": "KTYS",
+        "altitude": [28000,30000,32000,34000,36000,38000,40000,43000],
+        "exit": "WORMS",
+        "route": "WORMS GUANO MMKAY"
+      },
+      {
+        "airlines": [
+          {
+            "callsign": "N756PA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N131DA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N383MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N484MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N362PS",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N786KM",
+            "types": ["DA40"]
+          }
+        ],
+        "destination": "KABY",
+        "altitude": [6000,8000,10000],
+        "exit": "VIZTA",
+        "route": "VIZTA"
+      },
+      {
+        "airlines": [
+          {
+            "callsign": "N756PA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N131DA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N383MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N484MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N362PS",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N786KM",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N464ER",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N66270",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N107MS",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N1297F",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N5464D",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N53540",
+            "types": ["C172"]
+          }
+        ],
+        "destination": "KOCF",
+        "altitude": [4000,6000,8000],
+        "exit": "VIZTA",
+        "route": "VIZTA"
+      },
+        {
+        "airlines": [
+          {
+            "callsign": "N756PA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N131DA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N383MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N484MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N362PS",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N786KM",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N464ER",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N66270",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N107MS",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N1297F",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N5464D",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N53540",
+            "types": ["C172"]
+          }
+        ],
+        "destination": "KGNV",
+        "altitude": [4000,6000,8000],
+        "exit": "VIZTA",
+        "route": "VIZTA GNV"
+      },
+        {
+        "airlines": [
+          {
+            "callsign": "N756PA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N131DA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N383MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N484MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N362PS",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N786KM",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N464ER",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N66270",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N107MS",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N1297F",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N5464D",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N53540",
+            "types": ["C172"]
+          }
+        ],
+        "destination": "KLAL",
+        "altitude": [4000,6000],
+        "exit": "LAL",
+        "route": "LAL"
+      },
+        {
+        "airlines": [
+          {
+            "callsign": "N756PA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N131DA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N383MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N484MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N362PS",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N786KM",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N464ER",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N66270",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N107MS",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N1297F",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N5464D",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N53540",
+            "types": ["C172"]
+          }
+        ],
+        "destination": "KSRQ",
+        "altitude": [4000,6000,8000],
+        "exit": "FSHUN",
+        "route": "FSHUN"
+      },
+        {
+        "airlines": [
+          {
+            "callsign": "N756PA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N131DA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N383MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N484MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N362PS",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N786KM",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N464ER",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N66270",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N107MS",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N1297F",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N5464D",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N53540",
+            "types": ["C172"]
+          }
+        ],
+        "destination": "KPIE",
+        "altitude": [4000,6000,8000],
+        "exit": "KNEED",
+        "route": "KNEED"
+      },
+        {
+        "airlines": [
+          {
+            "callsign": "N756PA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N131DA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N383MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N484MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N362PS",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N786KM",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N464ER",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N66270",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N107MS",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N1297F",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N5464D",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N53540",
+            "types": ["C172"]
+          }
+        ],
+        "destination": "KPGD",
+        "altitude": [4000,6000,8000],
+        "exit": "FSHUN",
+        "route": "FSHUN ROGAN"
+      },
+        {
+        "airlines": [
+          {
+            "callsign": "N756PA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N131DA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N383MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N484MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N362PS",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N786KM",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N464ER",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N66270",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N107MS",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N1297F",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N5464D",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N53540",
+            "types": ["C172"]
+          },
+          {
+            "icao": "ERU"
+          }
+        ],
+        "destination": "KDAB",
+        "altitude": [3000,5000],
+        "exit": "KIZER",
+        "route": "KIZER GUANO"
+      },
+        {
+        "airlines": [
+          {
+            "callsign": "N756PA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N131DA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N383MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N484MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N362PS",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N786KM",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N464ER",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N66270",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N107MS",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N1297F",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N5464D",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N53540",
+            "types": ["C172"]
+          }
+        ],
+        "destination": "KOMN",
+        "altitude": [3000,5000],
+        "exit": "KIZER",
+        "route": "KIZER"
+      },
+        {
+        "airlines": [
+          {
+            "callsign": "N756PA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N131DA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N383MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N484MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N362PS",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N786KM",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N464ER",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N66270",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N107MS",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N1297F",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N5464D",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N53540",
+            "types": ["C172"]
+          }
+        ],
+        "destination": "KCRG",
+        "altitude": [3000,5000,7000],
+        "exit": "WORMS",
+        "route": "WORMS GUANO MMKAY"
+      },
+       {
+        "airlines": [
+          {
+            "callsign": "N756PA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N131DA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N383MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N484MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N362PS",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N786KM",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N464ER",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N66270",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N107MS",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N1297F",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N5464D",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N53540",
+            "types": ["C172"]
+          }
+        ],
+        "destination": "KVRB",
+        "altitude": [3000,5000,7000],
+        "exit": "DEARY",
+        "route": "DEARY"
+      },
+       {
+        "airlines": [
+          {
+            "callsign": "N756PA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N131DA",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N383MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N484MF",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N362PS",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N786KM",
+            "types": ["DA40"]
+          },
+          {
+            "callsign": "N464ER",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N66270",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N107MS",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N1297F",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N5464D",
+            "types": ["C172"]
+          },
+          {
+            "callsign": "N53540",
+            "types": ["C172"]
+          }
+        ],
+        "destination": "KSUA",
+        "altitude": [3000,5000,7000],
+        "exit": "DEARY",
+        "route": "DEARY TRV"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "EJA",
+            "types": ["CL60"]
+          }
+        ],
+        "destination": "KSDF",
+        "altitude": [30000,32000,34000,36000,38000,40000],
+        "exit": "WORMS",
+        "route": "WORMS GUANO BKENI VIYAP Q87 JROSS CAE SPA LAFOX LEDDL1"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "fastGA"
           },
           {
             "icao": "LXJ"
@@ -4282,12 +5004,301 @@
         "destination": "KFXE",
         "exit": "DDANY",
         "route": "DDANY BORRD CPTAN3"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "LXJ"
+          },
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          }
+        ],
+        "altitude": [30000,32000,34000,36000,38000,40000],
+        "destination": "KLFT",
+        "exit": "OSPRY",
+        "route": "OSPRY GDUNN KNOST REMIS Q100 NAITE TOPEZ"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "HER",
+            "types": ["C750"]
+          }
+        ],
+        "altitude": [8000,10000,12000],
+        "destination": "KSRQ",
+        "exit": "FSHUN",
+        "route": "FSHUN PLUMR CURSD"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "EJA"
+          }
+        ],
+        "altitude": [24000,26000,28000,30000,32000],
+        "destination": "KMIA",
+        "exit": "DDANY",
+        "route": "DDANY CSTAL3"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "LXJ"
+          },
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          }
+        ],
+        "altitude": [9000,11000,13000,15000],
+        "destination": "KPBI",
+        "exit": "DDANY",
+        "route": "DDANY BORRD CPTAN3"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "NJM"
+          },
+          {
+            "icao": "EJA"
+          },
+          {
+            "icao": "LXJ"
+          },
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          }
+        ],
+        "altitude": [15000,17000,19000,21000,23000],
+        "destination": "KSSI",
+        "exit": "WORMS",
+        "route": "WORMS GUANO MMKAY"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          }
+        ],
+        "altitude": [18000,20000,22000,24000],
+        "destination": "KTLH",
+        "exit": "VIZTA",
+        "route": "VIZTA"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          }
+         ],
+        "altitude": [18000,20000,22000,24000],
+        "destination": "KCQF",
+        "exit": "RDSOX",
+        "route": "RDSOX MAI CEW"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          }
+        ],
+        "altitude": [30000,32000,34000,36000,38000,40000],
+        "destination": "KCEW",
+        "exit": "VIZTA",
+        "route": "VIZTA JFRYS PATOY Q116 JAWJA CABLO DEFUN"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          },
+          {
+            "icao": "NJM"
+          }
+        ],
+        "altitude": [31000,33000,35000,37000,39000],
+        "destination": "KCRW",
+        "exit": "WORMS",
+        "route": "WORMS GUANO BKENI VIYAP YUTEE ALEAN"
+      },
+       {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          },
+          {
+            "icao": "EJA"
+          }
+        ],
+        "altitude": [24000,26000,28000,30000],
+        "destination": "KPNS",
+        "exit": "VIZTA",
+        "route": "VIZTA"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "EJA"
+          },
+          {
+            "icao": "LXJ"
+          },
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          }
+        ],
+        "altitude": [31000,33000,35000,37000,39000,41000],
+        "destination": "KCLT",
+        "exit": "WORMS",
+        "route": "WORMS GUANO BKENI VIYAP CHECR STOCR4"
+      },
+       {
+        "airlines": [
+          {
+            "icao": "EJA"
+          },
+          {
+            "icao": "LXJ"
+          },
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          }
+        ],
+        "altitude": [15000,17000,19000],
+        "destination": "KBQK",
+        "exit": "WORMS",
+        "route": "WORMS GUANO MMKAY"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "EJA"
+          },
+          {
+            "icao": "LXJ"
+          },
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          }
+        ],
+        "altitude": [21000,23000,25000,27000,29000,31000],
+        "destination": "KJQF",
+        "exit": "WORMS",
+        "route": "WORMS GUANO MMKAY"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "EJA"
+          },
+          {
+            "icao": "NJM"
+          }
+        ],
+        "altitude": [30000,32000,34000,36000,38000,40000],
+        "destination": "KSPI",
+        "exit": "RDSOX",
+        "route": "RDSOX JFRYS BRUTS Q118 JAMIZ JOHNN"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "JCM"
+          },
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          }
+        ],
+        "altitude": [22000,24000,26000],
+        "destination": "KECP",
+        "exit": "RDSOX",
+        "route": "RDSOX JFRYS PATOY Q116 JAWJA"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "EJA"
+          },
+          {
+            "icao": "LXJ"
+          },
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          }
+        ],
+        "altitude": [16000,18000,20000],
+        "destination": "K2IS",
+        "exit": "FSHUN",
+        "route": "FSHUN TOSHE"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          }
+        ],
+        "altitude": [32000,34000,36000,38000,40000],
+        "destination": "KOMA",
+        "exit": "RDSOX",
+        "route": "RDSOX JFRYS BRUTS Q118 JAMIZ"
+      },
+       {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          },
+          {
+            "icao": "EJA"
+          },
+          {
+            "icao": "LXJ"
+          }
+        ],
+        "altitude": [14000,16000],
+        "destination": "KRSW",
+        "exit": "FSHUN",
+        "route": "FSHUN SHFTY SHFTY6"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "fastGA"
+          }
+        ],
+        "altitude": [5000,7000,9000],
+        "destination": "KSGJ",
+        "exit": "WORMS",
+        "route": "WORMS GUANO MMKAY"
       }
     ],
     "exit_categories": {
       "WORMS": "ALL",
       "VALKA": "ALL",
-      "DDANY": "ALL"
+      "DDANY": "ALL",
+      "VIZTA": "ALL",
+      "DEARY": "ALL",
+      "KIZER": "ALL",
+      "FSHUN": "ALL",
+      "LAL": "ALL",
+      "KNEED": "ALL"
     }
   }
 },

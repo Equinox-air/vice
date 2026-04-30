@@ -12058,6 +12058,25 @@
       }
     },
     {
+      "icao": "njm",
+      "name": "Northern Jets Management",
+      "callsign": {
+        "name": "Northern Jet",
+        "callsignFormats": ["###"]
+      },
+      "fleets": {
+        "default": [["CL60", 2],
+      ["LJ75", 5],
+      ["LJ70", 2],
+      ["LJ45", 1],
+      ["LJ40", 2],
+      ["GLF5",1 ],
+      ["CL30", 3],
+      ["C750", 2]
+      ]
+      }
+    },
+    {
       "icao": "nks",
       "name": "Spirit Airlines",
       "callsign": {

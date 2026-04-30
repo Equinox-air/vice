@@ -1066,8 +1066,15 @@
     },
         "lists": {
       "ssa": {
-        "altimeters": ["KMCO"]
-      }
+        "altimeters": ["KMCO", "KORL"]
+      },
+         "coordination": [
+        {
+          "name": ".      ORL COORD",
+          "id": "T",
+          "airports": ["KORL"]
+        }
+      ]
     },
      "stars_macros": [
       {

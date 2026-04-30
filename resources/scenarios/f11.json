@@ -4182,6 +4182,11 @@
     },
     "KORL": {
       "omit_arrival_scratchpad": false,
+      "vfr": {
+        "random_routes": {
+          "rate": 8
+        }
+      },
       "atpa_volumes": {
         "7 ATPA":{
            "runway_threshold": "KORL-7",
@@ -5242,7 +5247,7 @@
           }
         ],
         "altitude": [16000,18000,20000],
-        "destination": "K2IS",
+        "destination": "2IS",
         "exit": "FSHUN",
         "route": "FSHUN TOSHE"
       },
@@ -5299,7 +5304,9 @@
       "FSHUN": "ALL",
       "LAL": "ALL",
       "KNEED": "ALL"
-    }
+    },
+    "tower_list": 3,
+    "hold_for_release": true
   }
 },
   "inbound_flows": {
@@ -8093,7 +8100,7 @@
           "KMCO": 0
         }
       },
-      "vfr_rate_scale": 0.8,
+      "vfr_rate_scale": 1.2,
       "configuration": "CO1",
       "departure_runways": [
         {

@@ -12058,6 +12058,35 @@
       }
     },
     {
+      "icao": "JCM",
+      "name": "Secure Air Charter",
+      "callsign": {
+        "name": "Secure Air",
+        "callsignFormats": ["###"]
+      },
+      "fleets": {
+        "default": [
+          ["H25B", 7],
+          ["BE40", 5]
+        ]
+      }
+    },
+    {
+      "icao": "HER",
+      "name": "Hera Flight",
+      "callsign": {
+        "name": "Hera",
+        "callsignFormats": ["###"]
+      },
+      "fleets": {
+        "default": [
+          ["C750", 4],
+            ["GLF4", 4],
+          ["CL60", 2]
+        ]
+      }
+    },
+    {
       "icao": "njm",
       "name": "Northern Jets Management",
       "callsign": {
@@ -12067,7 +12096,6 @@
       "fleets": {
         "default": [["CL60", 2],
       ["LJ75", 5],
-      ["LJ70", 2],
       ["LJ45", 1],
       ["LJ40", 2],
       ["GLF5",1 ],

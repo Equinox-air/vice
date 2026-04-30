@@ -179,7 +179,8 @@ func (nav *Nav) TargetHeading(callsign string, wxs wx.Sample, simTime Time) (hea
 		nav.Approach.InterceptState == TurningToJoin) && nav.Heading.Assigned != nil {
 		heading, turn = nav.ApproachHeading(callsign, wxs, simTime)
 	} else if len(nav.Heading.Maneuvers) > 0 {
-		return nav.maneuverGetHeading(wxs, simTime)
+		result := nav.flyManeuvers(&nav.Heading.Maneuvers, wxs, simTime)
+		return result.heading, result.turn, result.rate
 	} else if nav.Heading.Hold != nil {
 		nav.FlightState.BankAngle = 0
 		return nav.Heading.Hold.GetHeading(callsign, nav, wxs, simTime)
@@ -399,8 +400,8 @@ func (nav *Nav) updateWaypoints(callsign string, wxs wx.Sample, fp *av.FlightPla
 		}
 
 		if wp.ClearApproach() {
-			if fp != nil && nav.Approach.Assigned != nil {
-				_ = nav.ClearedApproach(fp.ArrivalAirport, nav.Approach.Assigned.Id, false, simTime)
+			if fp != nil {
+				_ = nav.ClearedApproach(fp.ArrivalAirport, nav.Approach.AssignedId, false, simTime)
 			}
 		}
 

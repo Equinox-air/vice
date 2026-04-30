@@ -56,14 +56,21 @@ func (nav *Nav) ApproachHeading(callsign string, wxs wx.Sample, simTime Time) (h
 			return
 		}
 		// If the aircraft is still turning to the assigned heading, don't
-		// evaluate the intercept yet — shouldTurnToIntercept would simulate
-		// a direct turn from the current physical heading to the localizer,
-		// which isn't the path the aircraft is going to fly. Re-check on a
-		// later tick once the aircraft is established on the assigned heading.
-		if math.HeadingDifference(nav.FlightState.Heading, assignedMag) > 5 {
-			return
-		}
+		// reject the intercept from the stale physical heading. However, if
+		// the final approach course lies inside the active turn to the assigned
+		// intercept heading, allow capture before rolling all the way out on
+		// that heading.
 		hdgMag := math.TrueToMagnetic(courseTrue, nav.FlightState.MagneticVariation)
+		turningToAssigned := math.HeadingDifference(nav.FlightState.Heading, assignedMag) > 5
+		if turningToAssigned {
+			assignedTurn := av.TurnClosest
+			if nav.Heading.Turn != nil {
+				assignedTurn = *nav.Heading.Turn
+			}
+			if !math.HeadingInTurnArc(nav.FlightState.Heading, hdgMag, assignedMag, math.TurnDirection(assignedTurn)) {
+				return
+			}
+		}
 		switch nav.shouldTurnToIntercept(courseLine[0], hdgMag, av.TurnClosest, wxs) {
 		case turnToInterceptWait:
 			// Still too far; keep flying the assigned heading.
@@ -105,6 +112,9 @@ func (nav *Nav) ApproachHeading(callsign string, wxs wx.Sample, simTime Time) (h
 			nav.Waypoints = []av.Waypoint{nav.FlightState.ArrivalAirport}
 
 		case turnToInterceptMajorOvershoot:
+			if turningToAssigned {
+				return
+			}
 			nav.approachOvershootRequestVectors()
 		}
 		return
@@ -202,7 +212,7 @@ func (nav *Nav) findInterceptSegment(ap *av.Approach, wxs wx.Sample) (math.TrueH
 
 // approachRecoveryFeasible returns true if the aircraft's current position
 // allows a turn back to the localizer: it must not be too close to the FAF
-// and must be within the localizer capture cone (2° half-width).
+// and must still be close enough laterally for a stable recovery.
 func (nav *Nav) approachRecoveryFeasible(ap *av.Approach) bool {
 	nmPerLong := nav.FlightState.NmPerLongitude
 	magVar := nav.FlightState.MagneticVariation
@@ -217,15 +227,19 @@ func (nav *Nav) approachRecoveryFeasible(ap *av.Approach) bool {
 		}
 	}
 
-	// Check if within the localizer capture cone (2° half-width from threshold).
+	// Check if within a practical localizer recovery envelope. This is not
+	// CDI full-scale deflection; it is the area where a vectored aircraft
+	// that crossed final can still be given a corrective intercept without
+	// immediately asking ATC for new vectors. The previous 2° cone was too
+	// narrow and rejected ordinary intercept recoveries several miles out.
 	cl := ap.ExtendedCenterline(nmPerLong, magVar)
 	posNM := math.LL2NM(pos, nmPerLong)
 	cl0NM := math.LL2NM(cl[0], nmPerLong)
 	cl1NM := math.LL2NM(cl[1], nmPerLong)
 	lateralOffset := math.Abs(math.SignedPointLineDistance(posNM, cl0NM, cl1NM))
 	distFromThreshold := math.NMDistance2LLFast(pos, ap.Threshold, nmPerLong)
-	coneHalfWidth := distFromThreshold * math.Tan(math.Radians(float32(2)))
-	return lateralOffset <= coneHalfWidth
+	recoveryHalfWidth := max(float32(0.8), distFromThreshold*math.Tan(math.Radians(float32(5))))
+	return lateralOffset <= recoveryHalfWidth
 }
 
 // approachOvershootRequestVectors cancels the approach and flags the
@@ -256,7 +270,7 @@ func (nav *Nav) ExpectApproach(airport *av.Airport, id string, runwayWaypoints m
 		return av.MakeUnableIntent("unable. We don't know the {appr} approach.", id)
 	}
 
-	if nav.Approach.Assigned != nil && nav.Approach.Assigned.Id == id {
+	if id == nav.Approach.AssignedId && nav.Approach.Assigned != nil {
 		nav.Approach.StandbyApproach = true
 		return av.ApproachIntent{
 			Type:         av.ApproachExpect,
@@ -265,8 +279,13 @@ func (nav *Nav) ExpectApproach(airport *av.Airport, id string, runwayWaypoints m
 		}
 	}
 
-	nav.Approach.Assigned = ap
-	nav.Approach.ATPAVolume = airport.ATPAVolumes[ap.Runway]
+	requestAltitude := nav.Approach.RequestAltitude
+	nav.Approach = NavApproach{
+		Assigned:        ap,
+		AssignedId:      id,
+		ATPAVolume:      airport.ATPAVolumes[ap.Runway],
+		RequestAltitude: requestAltitude,
+	}
 
 	if waypoints := runwayWaypoints[ap.Runway]; len(waypoints) > 0 {
 		if len(nav.Waypoints) == 0 {
@@ -345,7 +364,7 @@ func (nav *Nav) ExpectApproach(airport *av.Airport, id string, runwayWaypoints m
 }
 
 func (nav *Nav) InterceptApproach(airport string, lg *log.Logger) av.CommandIntent {
-	if nav.Approach.Assigned == nil {
+	if nav.Approach.AssignedId == "" {
 		return av.MakeUnableIntent("unable. you never told us to expect an approach")
 	}
 
@@ -374,11 +393,15 @@ func (nav *Nav) InterceptApproach(airport string, lg *log.Logger) av.CommandInte
 }
 
 func (nav *Nav) AtFixCleared(fix, id string, straightIn bool) av.CommandIntent {
+	if nav.Approach.AssignedId == "" {
+		return av.MakeUnableIntent("unable. you never told us to expect an approach")
+	}
+
 	ap := nav.Approach.Assigned
 	if ap == nil {
 		return av.MakeUnableIntent("unable. We were never told to expect an approach")
 	}
-	if id != "" && ap.Id != id {
+	if id != "" && nav.Approach.AssignedId != id {
 		return av.MakeUnableIntent("unable. We were told to expect the {appr} approach.", ap.FullName)
 	}
 
@@ -410,6 +433,10 @@ func (nav *Nav) AtFixCleared(fix, id string, straightIn bool) av.CommandIntent {
 }
 
 func (nav *Nav) AtFixIntercept(fix, airport string, lg *log.Logger) av.CommandIntent {
+	if nav.Approach.AssignedId == "" {
+		return av.MakeUnableIntent("unable. you never told us to expect an approach")
+	}
+
 	ap := nav.Approach.Assigned
 	if ap == nil {
 		return av.MakeUnableIntent("unable. We were never told to expect an approach")
@@ -431,7 +458,7 @@ func (nav *Nav) AtFixIntercept(fix, airport string, lg *log.Logger) av.CommandIn
 }
 
 func (nav *Nav) prepareForApproach(straightIn bool) av.CommandIntent {
-	if nav.Approach.Assigned == nil {
+	if nav.Approach.AssignedId == "" {
 		return av.MakeUnableIntent("unable. you never told us to expect an approach")
 	}
 
@@ -543,8 +570,24 @@ func (nav *Nav) ClearedApproach(airport string, id string, straightIn bool, simT
 	if ap == nil {
 		return av.MakeUnableIntent("unable. We haven't been told to expect an approach")
 	}
-	if id != "" && ap.Id != id {
+	if id != "" && nav.Approach.AssignedId != id {
 		return av.MakeUnableIntent("unable. We were told to expect the {appr} approach.", ap.FullName)
+	}
+
+	if ap := nav.Approach.Assigned; ap.Type == av.VisualApproach {
+		return nav.ClearedVisualApproach(ap.Runway, nil, []*av.Approach{ap}, "", simTime)
+	}
+
+	if nav.Approach.Cleared {
+		cancelHold := nav.applyClearedApproachState()
+		if straightIn {
+			nav.Approach.NoPT = true
+		}
+		return av.ClearedApproachIntent{
+			Approach:   ap.FullName,
+			StraightIn: straightIn,
+			CancelHold: cancelHold,
+		}
 	}
 
 	if intent := nav.prepareForApproach(straightIn); intent != nil {
@@ -1006,6 +1049,7 @@ func (nav *Nav) clearedVisualApproach(runway string, lahsoRunway string, wps []a
 		OppositeThreshold: opp.Threshold,
 		Waypoints:         []av.WaypointArray{util.DuplicateSlice(wps)},
 	}
+	nav.Approach.AssignedId = nav.Approach.Assigned.Id
 
 	// Visual-approach clearance installs a full precomputed route, so clear
 	// any lingering heading or altitude nav state beyond the shared reset.

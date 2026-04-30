@@ -312,6 +312,7 @@
       "KNEED": {"short_name": "KNE", "abbreviation": "T"},
       "DEARY": {"short_name": "DEA", "abbreviation": "D"},
       "LAL": {"abbreviation": "T"},
+      "GUURR": {"short_name": "GUU", "abbreviation": "T"},
       "LENDS":  {"short_name": "LEN", "abbreviation": "G"},
       "MALET": {},
       "MLB": {},
@@ -352,6 +353,11 @@
         "receiving_controller": "Z23"
       },
       {
+        "fixes": ["GUURR", "DADES"],
+        "altitude_range": [0,12000],
+        "receiving_controller": "11E"
+      },
+      {
         "fixes": ["DEARY"],
         "altitude_range": [0, 5000],
         "receiving_controller": "21N"
@@ -377,7 +383,7 @@
         "receiving_controller": "Z67"
       },
       {
-        "fixes": ["JFRYS", "REMIS", "CIGAR", "VIZTA"],
+        "fixes": ["JFRYS", "REMIS", "CIGAR", "VIZTA", "RDSOX", "OSPRY"],
         "altitude_range": [0, 999000],
         "receiving_controller": "C14"
       }

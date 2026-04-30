@@ -2094,10 +2094,6 @@
         {
           "airlines": [
             {
-              "callsign": "CJT926",
-              "types": ["B763"]
-            },
-            {
               "callsign": "FFT2547",
               "types": ["A20N"]
             },
@@ -3195,10 +3191,6 @@
               "types": ["B38M"]
             },
             {
-              "callsign": "CJT925",
-              "types": ["B763"]
-            },
-            {
               "callsign": "AAL1195",
               "types": ["B38M"]
             },
@@ -3858,7 +3850,7 @@
             },
             {
               "callsign": "FFT4686",
-              "types": "A20N"
+              "types": ["A20N"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -4572,10 +4564,6 @@
             {
               "callsign": "JBU94",
               "types": ["A320"]
-            },
-            {
-              "callsign": "GMH709",
-              "types": ["BE40"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5072,7 +5060,7 @@
         {
           "airlines": [
             {
-              "icao": "DAL90",
+              "callsign": "DAL90",
               "types": ["A339"]
             }
           ],
@@ -5188,8 +5176,8 @@
         {
           "airlines": [
             {
-              "icao": "AZU",
-              "types": ["A339"]
+             "callsign": "AZU8707",
+             "types": ["A332"]
             },
             {
               "icao": "PP",
@@ -5204,19 +5192,12 @@
         {
           "airlines": [
             {
-              "icao": "FFT"
+              "callsign": "JBU113",
+              "types": ["A320", "A321", "A21N"]
             },
             {
-              "icao": "JBU"
-            },
-            {
-              "icao": "SWA"
-            },
-            {
-              "icao": "NKS"
-            },
-            {
-              "icao": "NKS"
+              "callsign": "SWA923",
+              "types": ["B738", "B737", "B38M"]
             }
           ],
           "altitude": [32000,34000,36000,38000],
@@ -5227,7 +5208,7 @@
         {
           "airlines": [
             {
-              "icao": "UAE",
+              "callsign": "UAE220",
               "types": ["B77W"]
             }
           ],
@@ -5239,7 +5220,7 @@
          {
           "airlines": [
             {
-              "icao": "UAE",
+              "callsign": "UAE220",
               "types": ["B77W"]
             }
           ],
@@ -5251,7 +5232,7 @@
         {
           "airlines": [
             {
-              "icao" :"EIN",
+              "callsign": "EIN12G",
               "types": ["A333"]
             }
           ],
@@ -5263,7 +5244,7 @@
         {
           "airlines": [
             {
-              "icao": "VIR",
+              "callsign": "VIR226",
               "types": ["A35K"]
             }
           ],
@@ -5287,7 +5268,7 @@
         {
           "airlines": [
             {
-              "icao": "GLO",
+              "callsign": "GLO7625",
               "types": ["B38M"]
             }
           ],
@@ -5299,7 +5280,7 @@
         {
           "airlines": [
             {
-              "icao": "OCN",
+              "callsign": "OCN69",
               "types": ["A333"]
             }
           ],
@@ -5323,7 +5304,8 @@
         {
           "airlines": [
             {
-              "icao": "SWA"
+              "callsign": "SWA912",
+              "types": ["B737"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5334,11 +5316,8 @@
         {
           "airlines": [
             {
-              "icao": "VOI"
-            },
-            {
-              "icao": "AMX",
-              "types": ["B38M"]
+              "callsign": "VOI1781",
+              "types": ["A20N"]
             }
           ],
           "altitude": [32000,34000,36000,38000],
@@ -5349,10 +5328,8 @@
         {
           "airlines": [
             {
-              "icao": "NKS"
-            },
-            {
-              "icao": "FFT"
+             "callsign": "NKS515",
+              "types": ["A320", "A20N"]
             }
           ],
           "altitude": [32000,34000,36000,38000],
@@ -5363,11 +5340,8 @@
         {
           "airlines": [
             {
-              "icao":"ACA",
-              "types": ["B38M"]
-            },
-            {
-              "icao": "POE"
+              "callsign": "POE560",
+              "types": ["E295"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5377,8 +5351,9 @@
         },
         {
           "airlines": [
-            {
-              "icao": "POE"
+             {
+              "callsign": "POE592",
+              "types": ["E295"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5389,7 +5364,7 @@
         {
           "airlines": [
             {
-              "icao": "LPE",
+             "callsign": "LPE2473",
               "types": ["B763"]
             }
           ],
@@ -5401,11 +5376,15 @@
         {
           "airlines": [
             {
-              "icao": "BAW",
+              "callsign": "BAW63H",
               "types": ["B772"]
             },
             {
-              "icao": "UBT",
+              "callsign": "BAW38W",
+              "types": ["B772"]
+            },
+            {
+              "callsign": "UBT78T",
               "types": ["B789"]
             }
           ],
@@ -5417,11 +5396,15 @@
          {
           "airlines": [
             {
-              "icao": "BAW",
+              "callsign": "BAW63H",
               "types": ["B772"]
             },
             {
-              "icao": "UBT",
+              "callsign": "BAW38W",
+              "types": ["B772"]
+            },
+            {
+              "callsign": "UBT78T",
               "types": ["B789"]
             }
           ],
@@ -5433,11 +5416,11 @@
         {
           "airlines": [
             {
-              "icao": "BAW",
-              "types": ["B772"]
+              "callsign": "VIR92",
+              "types": ["A35K"]
             },
             {
-              "icao": "VIR",
+              "callsign": "VIR136",
               "types": ["A35K"]
             }
           ],
@@ -5449,7 +5432,7 @@
         {
           "airlines": [
             {
-              "icao": "IBE",
+              "callsign": "IBE3GG",
               "types": ["A332"]
             }
           ],
@@ -5461,12 +5444,12 @@
         {
           "airlines": [
             {
-              "icao": "VIR",
+              "callsign": "VIR74",
               "types": ["A35K"]
             },
             {
-              "icao": "EUK",
-              "types": ["A333"]
+              "callsign": "VIR76",
+              "types": ["A35K"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5477,7 +5460,8 @@
         {
           "airlines": [
             {
-              "icao": "NKS"
+             "callsign": "NKS1473",
+              "types": ["A320", "A20N"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5491,8 +5475,9 @@
               "icao": "N",
               "fleet": "fastGA"
             },
-            {
-              "icao": "VIV"
+           {
+             "callsign": "VIV765",
+              "types": ["A20N"]
             }
           ],
           "altitude": [32000,34000,36000,38000],
@@ -5503,12 +5488,21 @@
         {
           "airlines": [
             {
-              "icao" :"VIV"
+              "callsign": "AMX435",
+              "types": ["B38M", "B39M"]
             },
             {
-              "icao": "AMX",
+              "callsign": "VOI781",
+              "types": ["A321"]
+            },
+            {
+              "callsign": "AMX443",
               "types": ["B38M"]
-            }
+            },
+            {
+              "callsign": "AMX441",
+              "types": ["B38M", "B738"]
+}
           ],
           "altitude": [32000,34000,36000,38000],
           "destination": "MMMX",
@@ -5518,10 +5512,16 @@
         {
           "airlines": [
             {
-              "icao": "JBU"
+              "callsign": "JBU621",
+              "types": ["A320"]
             },
             {
-              "icao": "SWA"
+              "callsign": "SWA272",
+              "types": ["B738", "B38M"]
+            },
+            {
+              "callsign": "SWA292",
+              "types": ["B738"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5531,8 +5531,9 @@
         },
         {
           "airlines": [
-            {
-              "icao": "VIV"
+             {
+             "callsign": "VIV701",
+              "types": ["A20N"]
             }
           ],
           "altitude": [32000,34000,36000,38000],
@@ -5543,11 +5544,32 @@
         {
           "airlines": [
             {
-              "icao": "ROU"
+              "callsign": "ROU1639",
+              "types": ["A319"]
             },
             {
-              "icao": "TSC",
+              "callsign": "ROU1643",
+              "types": ["A319"]
+            },
+            {
+              "callsign": "ROU1641",
               "types": ["A321"]
+            },
+            {
+              "callsign": "ROU1637",
+              "types": ["A321"]
+            },
+            {
+              "callsign": "ROU1635",
+              "types": ["A321"]
+            },
+            {
+              "callsign": "TSC823",
+              "types": ["A321"]
+            },
+            {
+              "callsign": "ACA1093",
+              "types": ["A333"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5558,7 +5580,7 @@
         {
           "airlines": [
             {
-              "icao": "OCN",
+              "callsign": "OCN81",
               "types": ["A333"]
             }
           ],
@@ -5569,24 +5591,26 @@
         },
         {
           "airlines": [
-            {
-              "icao": "SWA"
-            },
-            {
-              "icao": "BHS",
-              "types": ["B737"]
-            },
-            {
-              "icao": "JBU"
-            },
-            {
-              "icao": "VJT",
-              "types": ["GLEX"]
-            },
-            {
-              "icao": "N",
-              "fleet": "fastGA"
-            }
+           {
+             "callsign": "SWA616",
+             "types": ["B737"]
+           },
+           {
+             "callsign": "BHS238",
+             "types": ["B737"]
+           },
+           {
+             "callsign": "JBU241",
+             "types": ["A320"]
+           },
+           {
+             "callsign": "SWA600",
+             "types": ["B737"]
+           },
+           {
+             "callsign": "N1Y",
+             "types": ["E550"]
+           }
           ],
           "altitude": [27000,29000,31000,33000],
           "destination": "MYNN",
@@ -5596,7 +5620,12 @@
         {
           "airlines": [
             {
-              "icao": "POE"
+              "callsign": "POE588",
+              "types": ["E295"]
+            },
+             {
+              "callsign": "POE590",
+              "types": ["E295"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5607,8 +5636,32 @@
         {
           "airlines": [
             {
-              "icao": "CMP",
+              "callsign": "CMP435",
+              "types": ["B738"]
+            },
+            {
+              "callsign": "CMP445",
+              "types": ["B38M", "B738"]
+            },
+            {
+              "callsign": "CMP459",
+              "types": ["B738"]
+            },
+            {
+              "callsign": "CMP868",
+              "types": ["B38M"]
+            },
+            {
+              "callsign": "CMP479",
+              "types": ["B38M"]
+            },
+            {
+              "callsign": "CMP239",
               "types": ["B39M", "B738"]
+            },
+            {
+              "callsign": "CMP806",
+              "types": ["B738"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5619,7 +5672,7 @@
         {
           "airlines": [
             {
-              "icao": "AFR",
+              "callsign": "AFR97",
               "types": ["A359"]
             }
           ],
@@ -5631,7 +5684,7 @@
         {
           "airlines": [
             {
-              "icao": "BWA",
+             "callsign": "BWA485",
               "types": ["B38M"]
             }
           ],
@@ -5643,7 +5696,8 @@
         {
           "airlines": [
             {
-              "icao":"SWA"
+              "callsign": "SWA401",
+              "types": ["B737"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5654,10 +5708,12 @@
         {
           "airlines": [
             {
-              "icao": "JBU"
+              "callsign": "SWA782",
+              "types": ["B738", "B38M"]
             },
             {
-              "icao": "SWA"
+              "callsign": "JBU1809",
+              "types": ["A320"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5668,7 +5724,7 @@
         {
           "airlines": [
             {
-              "icao": "TSC",
+              "callsign": "TSC609",
               "types": ["A321"]
             }
           ],
@@ -5680,7 +5736,7 @@
         {
           "airlines": [
             {
-              "icao": "ICE",
+               "callsign": "ICE686",
               "types": ["A21N"]
             }
           ],
@@ -5692,13 +5748,16 @@
         {
           "airlines": [
             {
-              "icao": "VOC"
+              "callsign": "JBU1695",
+              "types": ["A320"]
             },
             {
-              "icao": "JBU"
+              "callsign": "VOC4001",
+              "types": ["A20N"]
             },
             {
-              "icao": "SWA"
+              "callsign": "SWA501",
+              "types": ["B38M"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5720,10 +5779,12 @@
         {
           "airlines": [
             {
-              "icao": "TAI"
+              "callsign": "JBU8590",
+              "types": ["A320"]
             },
             {
-              "icao": "FFT"
+              "callsign": "TAI423",
+              "types": ["A320"]
             }
           ],
           "altitude": [32000,34000,36000,38000],
@@ -5733,8 +5794,9 @@
         },
         {
           "airlines": [
-            {
-              "icao": "JBU"
+             {
+              "callsign": "JBU1265",
+              "types": ["A320"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5744,8 +5806,9 @@
         },
          {
           "airlines": [
-            {
-              "icao": "JBU"
+             {
+              "callsign": "JBU605",
+              "types": ["A320"]
             }
           ],
           "altitude": [31000,33000,35000,37000,39000],
@@ -5756,7 +5819,7 @@
         {
           "airlines": [
             {
-              "icao": "TAM",
+              "callsign": "TAM8187",
               "types": ["B789"]
             }
           ],
@@ -5768,7 +5831,7 @@
         {
           "airlines": [
             {
-              "icao": "WJA",
+              "callsign": "WJA1841",
               "types": ["B738", "B737", "B38M"]
             }
           ],
@@ -5780,7 +5843,8 @@
         {
           "airlines": [
             {
-              "icao": "SWA"
+              "callsign": "SWA1873",
+              "types": ["B737", "B738", "B38M"]
             },
             {
               "icao": "N",
@@ -5795,19 +5859,37 @@
         {
           "airlines": [
             {
-              "icao": "ROU"
-            },
-            {
-              "icao": "FLE",
-              "types": ["B38M"]
-            },
-            {
-              "icao": "POE"
-            },
-            {
-              "icao": "WJA",
-              "types": ["B738", "B737", "B38M"]
-            }
+             "callsign": "ROU1671",
+             "types": ["A319"]
+           },
+           {
+             "callsign": "ROU1681",
+             "types": ["A319"]
+           },
+           {
+             "callsign": "ACA1087",
+             "types": ["A321"]
+           },
+           {
+             "callsign": "ROU1675",
+             "types": ["A320"]
+           },
+           {
+             "callsign": "WJA1033",
+             "types": ["B738"]
+           },
+           {
+             "callsign": "POE582",
+             "types": ["E295"]
+           },
+           {
+             "callsign": "ACA1086",
+             "types": ["A321"]
+           },
+           {
+             "callsign": "WJA1037",
+             "types": ["B737"]
+           }
           ],
           "altitude": [31000,33000,35000,37000,39000],
           "destination": "CYYZ",
@@ -6995,32 +7077,32 @@
         "cifp_id": "R18"
     },
     "I7R": {
-        "cifp_id": "I7R"
+        "cifp_id": "I27R"
     },
     "R7R": {
-        "cifp_id": "R7R"
+        "cifp_id": "R27R"
     },
     "R7L": {
-        "cifp_id": "R7L"
+        "cifp_id": "R27L"
     }
   },
   "departure_routes": {
     "9L": {
-      "WORMS": {
+      "WORMS,DEARY,JFRYS,RDSOX,OSPRY,LAL,VIZTA,KNEED,GUURR,KIZER,GUANO,OMN,OCF,GNV,DDANY,GERCK,MZULO,LENDS,FSHUN,ROGAN": {
         "cleared_altitude": 2000,
         "sid": "SFB1",
         "waypoints": "KSFB-27R/h080"
       }
     },
        "27R": {
-      "WORMS": {
+      "WORMS,DEARY,JFRYS,RDSOX,OSPRY,LAL,VIZTA,KNEED,GUURR,KIZER,GUANO,OMN,OCF,GNV,DDANY,GERCK,MZULO,LENDS,FSHUN,ROGAN": {
         "cleared_altitude": 2000,
         "sid": "SFB1",
         "waypoints": "KSFB-27R/h280"
       }
     }
   },
-  "deaprtures": [
+  "departures": [
     {
       "airlines": [
          {
@@ -7286,7 +7368,7 @@
       "airlines": [
         {
           "icao": "N",
-          "fleet": "shortGA"
+          "fleet": "GAsinglepiston"
         },
         {
           "icao": "LFA"
@@ -7412,7 +7494,19 @@
       "exit": "WORMS",
       "route": "WORMS GUANO MMKAY"
     }
-  ]
+  ],
+  "exit_categories": {
+    "WORMS": "ALL",
+    "VIZTA": "ALL",
+    "KIZER": "ALL",
+    "DEARY": "ALL",
+    "DDANY": "ALL",
+    "GUURR": "ALL",
+    "FSHUN": "ALL",
+    "KNEED": "ALL",
+    "LAL": "ALL",
+    "RDSOX": "ALL"
+  }
 }
 },
   "inbound_flows": {
@@ -10160,6 +10254,14 @@
         {
           "airport": "KMCO",
           "runway": "18R"
+        },
+        {
+          "airport": "KSFB",
+          "runway": "9L"
+        },
+        {
+          "airport": "KSFB",
+          "runway": "9R"
         }
       ],
       "inbound_rates": {
@@ -10271,8 +10373,13 @@
         },
         {
           "airport": "KORL",
-          "rate": 10,
+          "rate": 7,
           "runway": "7"
+        },
+        {
+          "airport": "KSFB",
+          "rate": 17,
+          "runway": "9L"
         }
       ],
       "wind": {

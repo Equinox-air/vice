@@ -142,7 +142,8 @@
           "KMCO/JEEMY4": "1E",
           "KMCO/RDSOX1": "1W",
           "KMCO/OSPRY1": "1W",
-          "KORL/NYTES2": "1V"
+          "KORL/NYTES2": "1V",
+          "KSFB": "1V"
         },
         "default_consolidation": {
           "1A": ["1K"],

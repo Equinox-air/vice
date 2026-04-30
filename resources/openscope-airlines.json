@@ -8368,10 +8368,10 @@
       }
     },
     {
-      "icao": "fit",
+      "icao": "tcf",
       "name": "Florida Institue of Technology",
       "callsign": {
-        "name": "Fit",
+        "name": "Tech Flight",
         "callsignFormats": ["##", "###"]
       },
       "fleets": {

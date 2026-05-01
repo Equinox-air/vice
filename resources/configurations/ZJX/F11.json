@@ -123,7 +123,8 @@
           "MUNGI1": "1B",
           "PRICY5": "1L",
           "SHREK2": "1L",
-          "SLOAO1.MCOS": "1B"
+          "SLOAO1.MCOS": "1B",
+          "TTHOR3": "1V"
         },
         "departure_assignments": {
           "KMCO/WORMS.CITR": "1A",
@@ -577,6 +578,13 @@
           "type": "route",
           "to": "ZJX",
           "from": "ZMA"
+        }
+      ],
+      "TTHOR": [
+        {
+          "type": "route",
+          "to": "F11",
+          "from": "ZJX"
         }
       ],
        "ANDRO": [

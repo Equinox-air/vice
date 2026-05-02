@@ -51,21 +51,21 @@ func (s *Sim) AirportAdvisory(tcw TCW, callsign av.ADSBCallsign, oclock, miles i
 }
 
 // handleAirportAdvisory determines the pilot's response to an AP command.
-// It reuses checkVisualEligibility for METAR/VMC/ceiling/distance/bearing
+// It reuses checkAirportVisibility for METAR/VMC/ceiling/distance/bearing
 // checks, then layers on AP-specific logic (o'clock validation, probability,
 // looking delay).
 func (s *Sim) handleAirportAdvisory(ac *Aircraft, oclock int, miles int) av.CommandIntent {
 	// A fresh AP call supersedes any earlier "looking" event still queued
 	// for this aircraft; the enqueue helper will re-add one if appropriate.
-	s.cancelFutureFieldInSight(ac.ADSBCallsign)
+	s.cancelFutureFieldCheck(ac.ADSBCallsign)
 
 	// Use the shared eligibility check for VMC, ceiling, range, and bearing.
-	elig := s.checkVisualEligibility(ac)
+	elig := s.checkAirportVisibility(ac)
 	if !elig.FieldInSight {
 		if elig.Reason == visualEligibilityIMC {
 			return av.LookForFieldLookingIMC
 		}
-		s.enqueueFutureFieldInSight(ac.ADSBCallsign)
+		s.enqueueFutureFieldCheck(ac.ADSBCallsign)
 		if elig.Reason == visualEligibilityObscured {
 			return av.LookForFieldLookingObscured
 		}
@@ -80,7 +80,7 @@ func (s *Sim) handleAirportAdvisory(ac *Aircraft, oclock int, miles int) av.Comm
 		reportedBearing := math.MagneticHeading(math.NormalizeHeading(float32(ac.Heading()) + oclockHeading))
 		bearingError := math.HeadingDifference(reportedBearing, elig.BearingToAirport)
 		if bearingError > 30 {
-			s.enqueueFutureFieldInSight(ac.ADSBCallsign)
+			s.enqueueFutureFieldCheck(ac.ADSBCallsign)
 			return av.LookForFieldLooking
 		}
 	}
@@ -91,7 +91,7 @@ func (s *Sim) handleAirportAdvisory(ac *Aircraft, oclock int, miles int) av.Comm
 	}
 
 	// "Looking" — schedule possible delayed field-in-sight call.
-	s.enqueueFutureFieldInSight(ac.ADSBCallsign)
+	s.enqueueFutureFieldCheck(ac.ADSBCallsign)
 	return av.LookForFieldLooking
 }
 
@@ -107,28 +107,28 @@ func (s *Sim) samplePilotLookFireTime() (Time, bool) {
 	return s.State.SimTime.Add(s.Rand.DurationRange(pilotLookDurationMin, pilotLookDurationMax)), true
 }
 
-func (s *Sim) enqueueFutureFieldInSight(callsign av.ADSBCallsign) {
-	s.cancelFutureFieldInSight(callsign)
+func (s *Sim) enqueueFutureFieldCheck(callsign av.ADSBCallsign) {
+	s.cancelFutureFieldCheck(callsign)
 	if t, ok := s.samplePilotLookFireTime(); ok {
-		s.FutureFieldInSights = append(s.FutureFieldInSights, FutureFieldInSight{callsign, t})
+		s.FutureFieldChecks = append(s.FutureFieldChecks, FutureFieldCheck{callsign, t})
 	}
 }
 
-func (s *Sim) enqueueFutureTrafficInSight(callsign, traffic av.ADSBCallsign) {
-	s.cancelFutureTrafficInSight(callsign)
+func (s *Sim) enqueueFutureTrafficCheck(callsign, traffic av.ADSBCallsign) {
+	s.cancelFutureTrafficCheck(callsign)
 	if t, ok := s.samplePilotLookFireTime(); ok {
-		s.FutureTrafficInSights = append(s.FutureTrafficInSights, FutureTrafficInSight{callsign, traffic, t})
+		s.FutureTrafficChecks = append(s.FutureTrafficChecks, FutureTrafficCheck{callsign, traffic, t})
 	}
 }
 
-func (s *Sim) cancelFutureFieldInSight(callsign av.ADSBCallsign) {
-	s.FutureFieldInSights = slices.DeleteFunc(s.FutureFieldInSights,
-		func(f FutureFieldInSight) bool { return f.ADSBCallsign == callsign })
+func (s *Sim) cancelFutureFieldCheck(callsign av.ADSBCallsign) {
+	s.FutureFieldChecks = slices.DeleteFunc(s.FutureFieldChecks,
+		func(f FutureFieldCheck) bool { return f.ADSBCallsign == callsign })
 }
 
-func (s *Sim) cancelFutureTrafficInSight(callsign av.ADSBCallsign) {
-	s.FutureTrafficInSights = slices.DeleteFunc(s.FutureTrafficInSights,
-		func(f FutureTrafficInSight) bool { return f.ADSBCallsign == callsign })
+func (s *Sim) cancelFutureTrafficCheck(callsign av.ADSBCallsign) {
+	s.FutureTrafficChecks = slices.DeleteFunc(s.FutureTrafficChecks,
+		func(f FutureTrafficCheck) bool { return f.ADSBCallsign == callsign })
 }
 
 func (s *Sim) ExpectApproach(tcw TCW, callsign av.ADSBCallsign, approach, lahsoRunway string) (av.CommandIntent, error) {
@@ -352,60 +352,77 @@ func (s *Sim) recentApproachTrafficInSight(ac *Aircraft) *Aircraft {
 	return nil
 }
 
-// FutureFieldInSight is enqueued when a pilot says "looking" in response to
-// an AP command. At fire time the processor re-validates eligibility and, if
-// good, reports the field in sight.
-type FutureFieldInSight struct {
+// FutureFieldCheck is enqueued when a pilot says "looking" in response to
+// an AP command. At fire time the processor re-validates visibility.
+type FutureFieldCheck struct {
 	ADSBCallsign av.ADSBCallsign
 	Time         Time
 }
 
-// FutureTrafficInSight is enqueued when a pilot says "looking" in response to
+// FutureTrafficCheck is enqueued when a pilot says "looking" in response to
 // a traffic call. At fire time the pilot reports traffic in sight (no
 // re-validation — matching the original behaviour).
-type FutureTrafficInSight struct {
+type FutureTrafficCheck struct {
 	ADSBCallsign    av.ADSBCallsign
 	TrafficCallsign av.ADSBCallsign
 	Time            Time
 }
 
-func (s *Sim) processFutureFieldInSight() {
-	s.FutureFieldInSights = util.FilterSliceInPlace(s.FutureFieldInSights,
-		func(f FutureFieldInSight) bool {
-			if !s.State.SimTime.After(f.Time) {
-				return true
-			}
-			ac, ok := s.Aircraft[f.ADSBCallsign]
-			if !ok || ac.FieldInSight || ac.ControllerFrequency == "" || ac.Nav.Approach.Cleared {
-				return false
-			}
-			if !s.checkVisualEligibility(ac).FieldInSight {
-				return false
-			}
+func (s *Sim) processFutureFieldChecks() {
+	ffc := make([]FutureFieldCheck, 0, len(s.FutureFieldChecks))
+	for i := range s.FutureFieldChecks {
+		f := s.FutureFieldChecks[i]
+
+		if !s.State.SimTime.After(f.Time) {
+			ffc = append(ffc, f) // skip for now
+			continue
+		}
+		ac, ok := s.Aircraft[f.ADSBCallsign]
+		if !ok || ac.FieldInSight || ac.ControllerFrequency == "" || ac.Nav.Approach.Cleared {
+			continue // drop it
+		}
+
+		if s.checkAirportVisibility(ac).FieldInSight {
 			ac.FieldInSight = true
 			s.enqueuePilotTransmission(ac.ADSBCallsign, TCP(ac.ControllerFrequency), PendingTransmissionFieldInSight)
-			return false
-		})
+		} else {
+			f.Time = f.Time.Add(s.Rand.DurationRange(7*time.Second, 15*time.Second)) // try again in a bit
+			ffc = append(ffc, f)
+		}
+	}
+	s.FutureFieldChecks = ffc
 }
 
-func (s *Sim) processFutureTrafficInSight() {
-	s.FutureTrafficInSights = util.FilterSliceInPlace(s.FutureTrafficInSights,
-		func(f FutureTrafficInSight) bool {
-			if !s.State.SimTime.After(f.Time) {
-				return true
-			}
-			ac, ok := s.Aircraft[f.ADSBCallsign]
-			if !ok || ac.ControllerFrequency == "" {
-				return false
-			}
+func (s *Sim) processFutureTrafficChecks() {
+	ftc := make([]FutureTrafficCheck, 0, len(s.FutureTrafficChecks))
+	for i := range s.FutureTrafficChecks {
+		f := s.FutureTrafficChecks[i]
+
+		if !s.State.SimTime.After(f.Time) {
+			ftc = append(ftc, f) // skip for now
+			continue
+		}
+
+		// Drop this one if either the looking or the traffic aircraft are gone.
+		ac, ok := s.Aircraft[f.ADSBCallsign]
+		if !ok || ac.ControllerFrequency == "" {
+			continue
+		}
+		traffic, ok := s.Aircraft[f.TrafficCallsign]
+		if !ok {
+			continue
+		}
+
+		if s.trafficIsVisible(ac, traffic) {
 			sighting := ac.RecordSighting(f.TrafficCallsign, s.State.SimTime)
 			sighting.OfferedToMaintainSeparation = false
-			if ac.UnseenTrafficCall != nil && ac.UnseenTrafficCall.Callsign == f.TrafficCallsign {
-				ac.clearUnseenTrafficCall()
-			}
 			s.enqueuePilotTransmission(ac.ADSBCallsign, TCP(ac.ControllerFrequency), PendingTransmissionTrafficInSight)
-			return false
-		})
+		} else {
+			f.Time = f.Time.Add(s.Rand.DurationRange(7*time.Second, 15*time.Second)) // try again in a bit
+			ftc = append(ftc, f)
+		}
+	}
+	s.FutureTrafficChecks = ftc
 }
 
 func (s *Sim) refreshSeenTraffic(ac *Aircraft) {
@@ -438,8 +455,9 @@ func (s *Sim) trafficStillVisible(ac *Aircraft, seen *SeenAircraft) bool {
 	}
 
 	altAGL := max(ac.Altitude()-nearestElev, 0)
+	trafficAltAGL := max(traffic.Altitude()-nearestElev, 0)
 	dist := math.NMDistance2LLFast(ac.Position(), traffic.Position(), ac.NmPerLongitude())
-	return pilotSeeProb(nearestMETAR.EffectiveVisualRange(altAGL), dist) > 0
+	return pilotSeeProb(nearestMETAR.EffectiveVisualRange(altAGL, trafficAltAGL), dist) > 0
 }
 
 // canRequestVisualApproach reports whether an aircraft is eligible to
@@ -471,19 +489,15 @@ const (
 // VisualEligibility describes whether an aircraft can see the field
 // and request a visual approach.
 type VisualEligibility struct {
-	FieldInSight     bool   // true if VMC, within range, and airport visible
-	Runway           string // runway for the visual approach (when FieldInSight)
+	FieldInSight     bool // true if VMC, within range, and airport visible
 	Reason           visualEligibilityReason
 	Distance         float32
 	MaxRange         float32
 	BearingToAirport math.MagneticHeading
 }
 
-// checkVisualEligibility determines whether the aircraft can see the field.
-// A visual approach does not require a charted visual procedure; VMC and
-// field in sight are sufficient.
-// Shared by AirportAdvisory and checkSpontaneousVisualRequest.
-func (s *Sim) checkVisualEligibility(ac *Aircraft) VisualEligibility {
+// checkAirportVisibility determines whether the aircraft can see the field.
+func (s *Sim) checkAirportVisibility(ac *Aircraft) VisualEligibility {
 	arrivalAirport := ac.FlightPlan.ArrivalAirport
 	ap := s.State.Airports[arrivalAirport]
 
@@ -503,15 +517,11 @@ func (s *Sim) checkVisualEligibility(ac *Aircraft) VisualEligibility {
 	}
 
 	// Must be within effective visual range (METAR visibility + altitude bonus).
-	var altAGL float32
-	if faa, ok := av.DB.Airports[arrivalAirport]; ok {
-		altAGL = ac.Altitude() - float32(faa.Elevation)
-		if altAGL < 0 {
-			altAGL = 0
-		}
-	}
-	maxRange := metar.EffectiveVisualRange(altAGL)
-	dist := math.NMDistance2LLFast(ac.Position(), ap.Location, ac.NmPerLongitude())
+	faa := av.DB.Airports[arrivalAirport]
+	altAGL := max(0, ac.Altitude()-float32(faa.Elevation))
+
+	maxRange := metar.EffectiveVisualRange(altAGL, 0)
+	dist := math.NMDistance2LL(ac.Position(), ap.Location)
 	if dist > maxRange {
 		reason := util.Select(metar.HasObscuration(), visualEligibilityObscured, visualEligibilityOutOfRange)
 		return VisualEligibility{
@@ -532,14 +542,8 @@ func (s *Sim) checkVisualEligibility(ac *Aircraft) VisualEligibility {
 		}
 	}
 
-	var runway string
-	if ac.Nav.Approach.Assigned != nil {
-		runway = ac.Nav.Approach.Assigned.Runway
-	}
-
 	return VisualEligibility{
 		FieldInSight:     true,
-		Runway:           runway,
 		Reason:           visualEligibilityOK,
 		Distance:         dist,
 		MaxRange:         maxRange,
@@ -549,22 +553,33 @@ func (s *Sim) checkVisualEligibility(ac *Aircraft) VisualEligibility {
 
 // Tunables for the pilot-vision model.
 const (
-	visualMaxBearingOff  = float32(120)  // degrees off nose; forward visibility arc
-	visualFieldProb      = float32(0.10) // fraction of pilots who spontaneously report field in sight
-	visualRequestProb    = float32(0.10) // fraction of field-in-sight pilots who also request the visual
+	visualMaxBearingOff  = 120  // degrees off nose; forward visibility arc
+	visualFieldProb      = 0.15 // fraction of pilots who spontaneously report field in sight
+	visualRequestProb    = 0.3  // fraction of field-in-sight pilots who also request the visual
 	pilotLookDurationMin = 10 * time.Second
 	pilotLookDurationMax = 20 * time.Second
-	pilotNoReportProb    = float32(0.12) // probability a "looking" pilot never speaks up this window
+	pilotNoReportProb    = 0.12 // probability a "looking" pilot never speaks up this window
 )
 
 // pilotSeeProb returns a probability (0..1) that a pilot can visually
-// identify a target at distNM, given the effective visual range (NM). Zero
-// beyond effective range; tapers linearly below it.
+// identify a target at distNM, given the effective visual range (NM).
 func pilotSeeProb(effectiveRangeNM, distNM float32) float32 {
 	if effectiveRangeNM <= 0 || distNM > effectiveRangeNM {
 		return 0
 	}
-	return max(0.4, 0.95*(1-0.5*distNM/effectiveRangeNM))
+
+	t := distNM / effectiveRangeNM
+	if t < 0.5 {
+		// It's fairly close w.r.t. the visual range, so it's highly likely it will be seen.
+		return 0.98
+	} else {
+		// Otherwise ramp probability down to 0.3 at effectiveRangeNM. t is squared so that
+		// distances up until then have higher probabilities, with a faster falloff at the end.
+		// This does give a sharp cutoff at effectiveRangeNM, FWIW.
+		t = 2 * (t - 0.5)
+		t *= t
+		return max(0, math.Lerp(t, 0.98, 0.3))
+	}
 }
 
 // checkSpontaneousVisualRequest handles two per-tick behaviours for an
@@ -584,24 +599,18 @@ func (s *Sim) checkSpontaneousVisualRequest(ac *Aircraft) {
 	}
 
 	if ac.VisualApproachRequestDistance > 0 {
-		ap, ok := s.State.Airports[ac.FlightPlan.ArrivalAirport]
-		if !ok {
-			return
-		}
-		dist := math.NMDistance2LLFast(ac.Position(), ap.Location, ac.NmPerLongitude())
+		ap := s.State.Airports[ac.FlightPlan.ArrivalAirport]
+		dist := math.NMDistance2LL(ac.Position(), ap.Location)
 		if dist > ac.VisualApproachRequestDistance {
 			return
 		}
-		if s.checkVisualEligibility(ac).FieldInSight {
+		if s.checkAirportVisibility(ac).FieldInSight {
 			ac.FieldInSight = true
 			ac.RequestedVisualApproach = true
 			s.enqueuePilotTransmission(ac.ADSBCallsign, ac.ControllerFrequency, PendingTransmissionRequestVisual)
 		}
 		ac.VisualApproachRequestDistance = 0
-		return
-	}
-
-	if ac.WantsVisualApproach && s.checkVisualEligibility(ac).FieldInSight {
+	} else if ac.WantsVisualApproach && s.checkAirportVisibility(ac).FieldInSight {
 		ac.FieldInSight = true
 		s.enqueuePilotTransmission(ac.ADSBCallsign, ac.ControllerFrequency, PendingTransmissionFieldInSight)
 	}

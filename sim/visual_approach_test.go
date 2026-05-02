@@ -155,7 +155,7 @@ func (vs *VisualScenario) AdvanceTime(d time.Duration) {
 
 // CheckDelayedFieldInSight runs the delayed field-in-sight processor.
 func (vs *VisualScenario) CheckDelayedFieldInSight() {
-	vs.Sim.processFutureFieldInSight()
+	vs.Sim.processFutureFieldChecks()
 }
 
 // CheckSpontaneousVisual runs the spontaneous visual request check.
@@ -419,7 +419,7 @@ func TestCheckVisualEligibility(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			elig := tt.sim.checkVisualEligibility(tt.ac)
+			elig := tt.sim.checkAirportVisibility(tt.ac)
 			if elig.FieldInSight != tt.wantField {
 				t.Errorf("FieldInSight = %v, want %v", elig.FieldInSight, tt.wantField)
 			}
@@ -807,6 +807,466 @@ func TestVisualApproachWaypointsUseReferenceApproachDogleg(t *testing.T) {
 	}
 }
 
+func TestVisualApproachInsertsTODWaypoint(t *testing.T) {
+	rwy := av.Runway{
+		Id:                      "36",
+		Heading:                 360,
+		Threshold:               math.Point2LL{0, 0},
+		Elevation:               100,
+		ThresholdCrossingHeight: 50,
+	}
+	setupTestRunway(t, "KTEST", rwy)
+
+	nmPerLong := float32(60)
+	reference := &av.Approach{
+		Type:      av.ILSApproach,
+		Runway:    "36",
+		Threshold: rwy.Threshold,
+		Waypoints: []av.WaypointArray{{
+			{Fix: "FAF36", Location: math.Point2LL{0, -25.0 / 60}},
+			{Fix: "_36_THRESHOLD", Location: rwy.Threshold},
+		}},
+	}
+
+	// Aircraft heading west across the centerline at 14 nm south, 3000 ft. Forward
+	// heading-ray intercept hits the centerline at (0, -14) — joinPoint.finalPoint
+	// is false, so the route should include a synthetic TOD between the join and
+	// the 3-NM final.
+	n := nav.Nav{
+		FlightState: nav.FlightState{
+			Position:          math.Point2LL{1.0 / nmPerLong, -14.0 / 60},
+			Heading:           270,
+			Altitude:          3000,
+			NmPerLongitude:    nmPerLong,
+			MagneticVariation: 0,
+			ArrivalAirport:    av.Waypoint{Fix: "KTEST"},
+		},
+	}
+
+	intent := n.ClearedVisualApproach("36", nil, []*av.Approach{reference}, "", nav.Time{})
+	if _, unable := intent.(av.UnableIntent); unable {
+		t.Fatalf("unexpected UnableIntent: %v", intent)
+	}
+
+	todIdx := slices.IndexFunc(n.Waypoints, func(wp av.Waypoint) bool { return wp.Fix == "_36_TOD" })
+	if todIdx == -1 {
+		t.Fatalf("expected _36_TOD waypoint; got %v", wpNames(n.Waypoints))
+	}
+	tod := n.Waypoints[todIdx]
+	if !tod.FAF() {
+		t.Error("TOD should have FAF flag")
+	}
+	if !tod.OnApproach() {
+		t.Error("TOD should have OnApproach flag")
+	}
+	if ar := tod.AltitudeRestriction(); ar == nil {
+		t.Error("TOD should have an altitude restriction")
+	} else if ar.Range[0] != 3000 || ar.Range[1] != 3000 {
+		t.Errorf("TOD altitude restriction = %v, want at 3000", ar.Range)
+	}
+	// Standard 3° glideslope altitude crossing the threshold at 150 ft (elev 100 +
+	// TCH 50) places the TOD at (3000 - 150) / (tan(3°) * 6076.12) ≈ 8.95 nm south.
+	wantTODDist := float32(3000-150) / (math.Tan(math.Radians(float32(3))) * math.NauticalMilesToFeet)
+	todNM := math.LL2NM(tod.Location, nmPerLong)
+	if math.Abs(todNM[0]) > 0.05 {
+		t.Errorf("TOD x = %.2f, want ~0 (on centerline)", todNM[0])
+	}
+	if math.Abs(-todNM[1]-wantTODDist) > 0.1 {
+		t.Errorf("TOD distance south of threshold = %.2f nm, want %.2f", -todNM[1], wantTODDist)
+	}
+
+	// _36_3NM_FINAL must lose its FAF flag (TOD is the FAF now) but keep the 900-ft
+	// AGL altitude restriction.
+	finalIdx := slices.IndexFunc(n.Waypoints, func(wp av.Waypoint) bool { return wp.Fix == "_36_3NM_FINAL" })
+	if finalIdx == -1 {
+		t.Fatalf("expected _36_3NM_FINAL waypoint; got %v", wpNames(n.Waypoints))
+	}
+	if n.Waypoints[finalIdx].FAF() {
+		t.Error("_36_3NM_FINAL should not have FAF when TOD is the FAF")
+	}
+	if ar := n.Waypoints[finalIdx].AltitudeRestriction(); ar == nil {
+		t.Error("_36_3NM_FINAL should still have an altitude restriction")
+	} else if ar.Range[0] != 1000 {
+		t.Errorf("_36_3NM_FINAL altitude = %v, want at %d (elev+900)", ar.Range, 100+900)
+	}
+}
+
+func TestVisualApproachTODFollowsAssignedDescent(t *testing.T) {
+	rwy := av.Runway{
+		Id:                      "36",
+		Heading:                 360,
+		Threshold:               math.Point2LL{0, 0},
+		Elevation:               0,
+		ThresholdCrossingHeight: 50,
+	}
+	setupTestRunway(t, "KTEST", rwy)
+
+	nmPerLong := float32(60)
+	reference := &av.Approach{
+		Type:      av.ILSApproach,
+		Runway:    "36",
+		Threshold: rwy.Threshold,
+		Waypoints: []av.WaypointArray{{
+			{Fix: "FAF36", Location: math.Point2LL{0, -25.0 / 60}},
+			{Fix: "_36_THRESHOLD", Location: rwy.Threshold},
+		}},
+	}
+
+	// Aircraft at 5000 ft with controller-assigned descent to 3000. TOD altitude
+	// should follow the descent target (3000), not the current altitude (5000).
+	assigned := float32(3000)
+	n := nav.Nav{
+		FlightState: nav.FlightState{
+			Position:          math.Point2LL{1.0 / nmPerLong, -14.0 / 60},
+			Heading:           270,
+			Altitude:          5000,
+			NmPerLongitude:    nmPerLong,
+			MagneticVariation: 0,
+			ArrivalAirport:    av.Waypoint{Fix: "KTEST"},
+		},
+		Altitude: nav.NavAltitude{Assigned: &assigned},
+	}
+
+	intent := n.ClearedVisualApproach("36", nil, []*av.Approach{reference}, "", nav.Time{})
+	if _, unable := intent.(av.UnableIntent); unable {
+		t.Fatalf("unexpected UnableIntent: %v", intent)
+	}
+
+	todIdx := slices.IndexFunc(n.Waypoints, func(wp av.Waypoint) bool { return wp.Fix == "_36_TOD" })
+	if todIdx == -1 {
+		t.Fatalf("expected _36_TOD waypoint; got %v", wpNames(n.Waypoints))
+	}
+	if ar := n.Waypoints[todIdx].AltitudeRestriction(); ar == nil {
+		t.Error("TOD should have an altitude restriction")
+	} else if ar.Range[0] != 3000 {
+		t.Errorf("TOD altitude = %v, want at 3000 (assigned descent target)", ar.Range)
+	}
+
+	// The clearance must preserve the in-progress descent so the aircraft continues
+	// at standard rate to 3000 before leveling for the TOD.
+	if n.Altitude.Assigned == nil {
+		t.Error("nav.Altitude.Assigned should be preserved after visual approach clearance")
+	} else if *n.Altitude.Assigned != 3000 {
+		t.Errorf("nav.Altitude.Assigned = %v, want 3000", *n.Altitude.Assigned)
+	}
+}
+
+func TestVisualApproachJoinIsFAFWhenPastNaturalTOD(t *testing.T) {
+	rwy := av.Runway{
+		Id:                      "36",
+		Heading:                 360,
+		Threshold:               math.Point2LL{0, 0},
+		Elevation:               0,
+		ThresholdCrossingHeight: 50,
+	}
+	setupTestRunway(t, "KTEST", rwy)
+
+	nmPerLong := float32(60)
+	reference := &av.Approach{
+		Type:      av.ILSApproach,
+		Runway:    "36",
+		Threshold: rwy.Threshold,
+		Waypoints: []av.WaypointArray{{
+			{Fix: "FAF36", Location: math.Point2LL{0, -25.0 / 60}},
+			{Fix: "_36_THRESHOLD", Location: rwy.Threshold},
+		}},
+	}
+
+	// Aircraft at 5000 ft, joining at 8 nm out — TOD for 5000 ft is ~15.6 nm so the
+	// natural top-of-descent is well behind the join. The join itself should become
+	// the FAF, with an altitude restriction on the standard 3° glideslope at the
+	// join's distance from the threshold.
+	n := nav.Nav{
+		FlightState: nav.FlightState{
+			Position:          math.Point2LL{1.0 / nmPerLong, -8.0 / 60},
+			Heading:           270,
+			Altitude:          5000,
+			NmPerLongitude:    nmPerLong,
+			MagneticVariation: 0,
+			ArrivalAirport:    av.Waypoint{Fix: "KTEST"},
+		},
+	}
+
+	intent := n.ClearedVisualApproach("36", nil, []*av.Approach{reference}, "", nav.Time{})
+	if _, unable := intent.(av.UnableIntent); unable {
+		t.Fatalf("unexpected UnableIntent: %v", intent)
+	}
+
+	if todIdx := slices.IndexFunc(n.Waypoints, func(wp av.Waypoint) bool { return wp.Fix == "_36_TOD" }); todIdx != -1 {
+		t.Fatalf("did not expect _36_TOD waypoint; got %v", wpNames(n.Waypoints))
+	}
+
+	join := n.Waypoints[0]
+	if !join.FAF() {
+		t.Errorf("join waypoint %q should be the FAF; got %v", join.Fix, wpNames(n.Waypoints))
+	}
+	// Glideslope altitude at 8 nm with TCH 50 ft is 50 + 8*tan(3°)*6076 ≈ 2597 ft;
+	// allow a few feet of tolerance for the lat/long precision of the heading-ray
+	// intercept (joinPoint.distanceToThreshold is computed via NMDistance2LL).
+	wantJoinAlt := float32(50) + math.Tan(math.Radians(float32(3)))*math.NauticalMilesToFeet*8
+	if ar := join.AltitudeRestriction(); ar == nil {
+		t.Error("join should have an altitude restriction when it is the FAF")
+	} else if math.Abs(ar.Range[0]-wantJoinAlt) > 10 || ar.Range[0] != ar.Range[1] {
+		t.Errorf("join altitude = %v, want at ~%.0f (3° glideslope at 8 nm)", ar.Range, wantJoinAlt)
+	}
+
+	// The 3-NM final should still be present without FAF (the join took it).
+	finalIdx := slices.IndexFunc(n.Waypoints, func(wp av.Waypoint) bool { return wp.Fix == "_36_3NM_FINAL" })
+	if finalIdx == -1 {
+		t.Fatalf("expected _36_3NM_FINAL waypoint; got %v", wpNames(n.Waypoints))
+	}
+	if n.Waypoints[finalIdx].FAF() {
+		t.Error("_36_3NM_FINAL should not have FAF when join is the FAF")
+	}
+}
+
+func TestVisualApproachDropsNonDescentAssignment(t *testing.T) {
+	rwy := av.Runway{
+		Id:                      "36",
+		Heading:                 360,
+		Threshold:               math.Point2LL{0, 0},
+		Elevation:               0,
+		ThresholdCrossingHeight: 50,
+	}
+	setupTestRunway(t, "KTEST", rwy)
+
+	nmPerLong := float32(60)
+	reference := &av.Approach{
+		Type:      av.ILSApproach,
+		Runway:    "36",
+		Threshold: rwy.Threshold,
+		Waypoints: []av.WaypointArray{{
+			{Fix: "FAF36", Location: math.Point2LL{0, -25.0 / 60}},
+			{Fix: "_36_THRESHOLD", Location: rwy.Threshold},
+		}},
+	}
+
+	// Aircraft level at 3000, with a stale "maintain 3000" assignment from earlier.
+	// The visual clearance should drop that assignment so it doesn't shadow the
+	// TOD/FAF altitude restrictions via TargetAltitude.activeAssignedAltitude.
+	maintain := float32(3000)
+	n := nav.Nav{
+		FlightState: nav.FlightState{
+			Position:          math.Point2LL{1.0 / nmPerLong, -14.0 / 60},
+			Heading:           270,
+			Altitude:          3000,
+			NmPerLongitude:    nmPerLong,
+			MagneticVariation: 0,
+			ArrivalAirport:    av.Waypoint{Fix: "KTEST"},
+		},
+		Altitude: nav.NavAltitude{Assigned: &maintain, ActiveAssigned: &maintain},
+	}
+
+	intent := n.ClearedVisualApproach("36", nil, []*av.Approach{reference}, "", nav.Time{})
+	if _, unable := intent.(av.UnableIntent); unable {
+		t.Fatalf("unexpected UnableIntent: %v", intent)
+	}
+
+	if n.Altitude.Assigned != nil {
+		t.Errorf("nav.Altitude.Assigned = %v, want nil for non-descent maintain assignment", *n.Altitude.Assigned)
+	}
+	if n.Altitude.ActiveAssigned != nil {
+		t.Errorf("nav.Altitude.ActiveAssigned = %v, want nil for non-descent maintain assignment", *n.Altitude.ActiveAssigned)
+	}
+	// And the TOD should have been placed at the current altitude (3000), not
+	// gated by the (dropped) maintain assignment.
+	todIdx := slices.IndexFunc(n.Waypoints, func(wp av.Waypoint) bool { return wp.Fix == "_36_TOD" })
+	if todIdx == -1 {
+		t.Fatalf("expected _36_TOD waypoint; got %v", wpNames(n.Waypoints))
+	}
+	if ar := n.Waypoints[todIdx].AltitudeRestriction(); ar == nil || ar.Range[0] != 3000 {
+		t.Errorf("TOD altitude = %v, want at 3000", ar)
+	}
+}
+
+func TestVisualApproachTODHonorsPendingDescent(t *testing.T) {
+	rwy := av.Runway{
+		Id:                      "36",
+		Heading:                 360,
+		Threshold:               math.Point2LL{0, 0},
+		Elevation:               0,
+		ThresholdCrossingHeight: 50,
+	}
+	setupTestRunway(t, "KTEST", rwy)
+
+	nmPerLong := float32(60)
+	reference := &av.Approach{
+		Type:      av.ILSApproach,
+		Runway:    "36",
+		Threshold: rwy.Threshold,
+		Waypoints: []av.WaypointArray{{
+			{Fix: "FAF36", Location: math.Point2LL{0, -25.0 / 60}},
+			{Fix: "_36_THRESHOLD", Location: rwy.Threshold},
+		}},
+	}
+
+	// Aircraft at 5000 ft; a "descend and maintain 3000" was just issued and is
+	// still pending activation (Assigned=3000 but ActivateAt is in the future).
+	// The visual clearance should place the TOD for 3000, not 5000 — otherwise
+	// once the descent activates a few seconds later the aircraft drops below
+	// the (high) TOD geometry.
+	pendingDescent := float32(3000)
+	currentLevel := float32(5000)
+	n := nav.Nav{
+		FlightState: nav.FlightState{
+			Position:          math.Point2LL{1.0 / nmPerLong, -14.0 / 60},
+			Heading:           270,
+			Altitude:          5000,
+			NmPerLongitude:    nmPerLong,
+			MagneticVariation: 0,
+			ArrivalAirport:    av.Waypoint{Fix: "KTEST"},
+		},
+		Altitude: nav.NavAltitude{
+			Assigned:       &pendingDescent,
+			ActiveAssigned: &currentLevel,
+			ActivateAt:     nav.NewTime(time.Now().Add(5 * time.Second)),
+		},
+	}
+
+	intent := n.ClearedVisualApproach("36", nil, []*av.Approach{reference}, "", nav.Time{})
+	if _, unable := intent.(av.UnableIntent); unable {
+		t.Fatalf("unexpected UnableIntent: %v", intent)
+	}
+
+	todIdx := slices.IndexFunc(n.Waypoints, func(wp av.Waypoint) bool { return wp.Fix == "_36_TOD" })
+	if todIdx == -1 {
+		t.Fatalf("expected _36_TOD waypoint; got %v", wpNames(n.Waypoints))
+	}
+	if ar := n.Waypoints[todIdx].AltitudeRestriction(); ar == nil || ar.Range[0] != 3000 {
+		t.Errorf("TOD altitude = %v, want at 3000 (pending descent target)", ar)
+	}
+	// The pending assignment should be preserved so the descent activates as
+	// scheduled (and the aircraft continues at standard rate to 3000 before
+	// holding for the TOD).
+	if n.Altitude.Assigned == nil || *n.Altitude.Assigned != 3000 {
+		t.Errorf("nav.Altitude.Assigned = %v, want preserved pending 3000", n.Altitude.Assigned)
+	}
+	if n.Altitude.ActivateAt.IsZero() {
+		t.Error("nav.Altitude.ActivateAt should remain non-zero so the pending descent still activates")
+	}
+}
+
+func TestVisualApproachDropsAssignedDescentBelowProfile(t *testing.T) {
+	// High-elevation runway exaggerates the case: profile floor is 5000 + 900 =
+	// 5900 ft, so a "descend and maintain 4500" assignment is below it.
+	rwy := av.Runway{
+		Id:                      "36",
+		Heading:                 360,
+		Threshold:               math.Point2LL{0, 0},
+		Elevation:               5000,
+		ThresholdCrossingHeight: 50,
+	}
+	setupTestRunway(t, "KTEST", rwy)
+
+	nmPerLong := float32(60)
+	reference := &av.Approach{
+		Type:      av.ILSApproach,
+		Runway:    "36",
+		Threshold: rwy.Threshold,
+		Waypoints: []av.WaypointArray{{
+			{Fix: "FAF36", Location: math.Point2LL{0, -25.0 / 60}},
+			{Fix: "_36_THRESHOLD", Location: rwy.Threshold},
+		}},
+	}
+
+	// Aircraft at 7000 ft assigned 4500 ft. todDist for 4500 over a 5050-ft
+	// threshold crossing is negative — the legacy fallback applies and the
+	// _3NM_FINAL keeps its 5900-ft restriction. Preserving the 4500-ft assignment
+	// would let TargetAltitude's activeAssignedAltitude shadow that restriction
+	// and command the aircraft through the visual profile's floor.
+	belowProfile := float32(4500)
+	n := nav.Nav{
+		FlightState: nav.FlightState{
+			Position:          math.Point2LL{1.0 / nmPerLong, -8.0 / 60},
+			Heading:           270,
+			Altitude:          7000,
+			NmPerLongitude:    nmPerLong,
+			MagneticVariation: 0,
+			ArrivalAirport:    av.Waypoint{Fix: "KTEST"},
+		},
+		Altitude: nav.NavAltitude{Assigned: &belowProfile, ActiveAssigned: &belowProfile},
+	}
+
+	intent := n.ClearedVisualApproach("36", nil, []*av.Approach{reference}, "", nav.Time{})
+	if _, unable := intent.(av.UnableIntent); unable {
+		t.Fatalf("unexpected UnableIntent: %v", intent)
+	}
+
+	if n.Altitude.Assigned != nil {
+		t.Errorf("nav.Altitude.Assigned = %v, want nil — assignment is below the visual profile floor", *n.Altitude.Assigned)
+	}
+	if n.Altitude.ActiveAssigned != nil {
+		t.Errorf("nav.Altitude.ActiveAssigned = %v, want nil", *n.Altitude.ActiveAssigned)
+	}
+
+	// Sanity: this scenario should land in the legacy fallback (no TOD, FAF on
+	// _3NM_FINAL). If something changes that and an in-route restriction takes
+	// over, the preservation rule above no longer matters and the test loses
+	// its meaning — fail loudly so it's noticed.
+	if todIdx := slices.IndexFunc(n.Waypoints, func(wp av.Waypoint) bool { return wp.Fix == "_36_TOD" }); todIdx != -1 {
+		t.Fatalf("did not expect _36_TOD in this scenario; got %v", wpNames(n.Waypoints))
+	}
+	finalIdx := slices.IndexFunc(n.Waypoints, func(wp av.Waypoint) bool { return wp.Fix == "_36_3NM_FINAL" })
+	if finalIdx == -1 || !n.Waypoints[finalIdx].FAF() {
+		t.Fatalf("expected _36_3NM_FINAL with FAF (legacy fallback); got %v", wpNames(n.Waypoints))
+	}
+}
+
+func TestVisualApproachLowAircraftKeepsFAFOn3NMFinal(t *testing.T) {
+	rwy := av.Runway{
+		Id:                      "36",
+		Heading:                 360,
+		Threshold:               math.Point2LL{0, 0},
+		Elevation:               0,
+		ThresholdCrossingHeight: 50,
+	}
+	setupTestRunway(t, "KTEST", rwy)
+
+	nmPerLong := float32(60)
+	reference := &av.Approach{
+		Type:      av.ILSApproach,
+		Runway:    "36",
+		Threshold: rwy.Threshold,
+		Waypoints: []av.WaypointArray{{
+			{Fix: "FAF36", Location: math.Point2LL{0, -25.0 / 60}},
+			{Fix: "_36_THRESHOLD", Location: rwy.Threshold},
+		}},
+	}
+
+	// Aircraft at 800 ft, 6 nm out. Natural TOD is ~2.36 nm — inside the 3-NM ring,
+	// so we fall back to the legacy behavior of FAF on the _3NM_FINAL waypoint.
+	n := nav.Nav{
+		FlightState: nav.FlightState{
+			Position:          math.Point2LL{1.0 / nmPerLong, -6.0 / 60},
+			Heading:           270,
+			Altitude:          800,
+			NmPerLongitude:    nmPerLong,
+			MagneticVariation: 0,
+			ArrivalAirport:    av.Waypoint{Fix: "KTEST"},
+		},
+	}
+
+	intent := n.ClearedVisualApproach("36", nil, []*av.Approach{reference}, "", nav.Time{})
+	if _, unable := intent.(av.UnableIntent); unable {
+		t.Fatalf("unexpected UnableIntent: %v", intent)
+	}
+
+	if todIdx := slices.IndexFunc(n.Waypoints, func(wp av.Waypoint) bool { return wp.Fix == "_36_TOD" }); todIdx != -1 {
+		t.Fatalf("did not expect _36_TOD waypoint; got %v", wpNames(n.Waypoints))
+	}
+	if n.Waypoints[0].FAF() {
+		t.Errorf("join waypoint %q should not be the FAF for a low aircraft; got %v", n.Waypoints[0].Fix, wpNames(n.Waypoints))
+	}
+
+	finalIdx := slices.IndexFunc(n.Waypoints, func(wp av.Waypoint) bool { return wp.Fix == "_36_3NM_FINAL" })
+	if finalIdx == -1 {
+		t.Fatalf("expected _36_3NM_FINAL waypoint; got %v", wpNames(n.Waypoints))
+	}
+	if !n.Waypoints[finalIdx].FAF() {
+		t.Error("_36_3NM_FINAL should have FAF in the legacy fallback case")
+	}
+}
+
 func TestVisualReferenceApproachSelection(t *testing.T) {
 	ac := &Aircraft{
 		FlightPlan: av.FlightPlan{ArrivalAirport: "KTEST"},
@@ -1149,11 +1609,14 @@ func TestAirportAdvisoryObscuration(t *testing.T) {
 	airportLoc := math.Point2LL{0, 0}
 	setupTestRunway(t, "KJFK", av.Runway{Id: "13L", Heading: 130, Threshold: airportLoc})
 	sim := makeVisualTestSim(airportLoc, "13L")
-	sim.State.METAR["KJFK"] = wx.METAR{Raw: "KJFK 10SM HZ BKN050"}
+	metar := wx.METAR{Raw: "KJFK 10SM HZ BKN050"}
+	sim.State.METAR["KJFK"] = metar
 
-	// Haze reduces the effective range below this distance even with 10SM reported visibility.
-	ac := makeVisualTestAircraft(math.Point2LL{0, 21.0 / 60}, 180)
-	intent := sim.handleAirportAdvisory(ac, 12, 21)
+	ac := makeVisualTestAircraft(math.Point2LL{}, 180)
+	distanceNM := metar.EffectiveVisualRange(ac.Altitude(), 0) + 1
+	ac.Nav.FlightState.Position = math.Point2LL{0, distanceNM / 60}
+
+	intent := sim.handleAirportAdvisory(ac, 12, int(distanceNM+0.5))
 	fi, ok := intent.(av.LookForFieldIntent)
 	if !ok {
 		t.Fatalf("expected LookForFieldIntent, got %T", intent)
@@ -1167,16 +1630,14 @@ func TestEffectiveVisualRangeObscurationPenalty(t *testing.T) {
 	clear := wx.METAR{Raw: "KJFK 10SM BKN050"}
 	haze := wx.METAR{Raw: "KJFK 10SM HZ BKN050"}
 
-	clearRange := clear.EffectiveVisualRange(0)
-	hazeRange := haze.EffectiveVisualRange(0)
+	clearRange := clear.EffectiveVisualRange(0, 0)
+	hazeRange := haze.EffectiveVisualRange(0, 0)
 	if hazeRange >= clearRange {
 		t.Fatalf("obscured range = %.2f, clear range = %.2f; expected obscuration penalty", hazeRange, clearRange)
 	}
 }
 
-func TestFutureFieldInSightDropsWhenFieldNotVisible(t *testing.T) {
-	// Field is out of range → processor fires at event.Time but drops without
-	// setting FieldInSight. Event is removed from the queue.
+func TestFutureFieldCheckRetriesWhenFieldNotVisible(t *testing.T) {
 	airportLoc := math.Point2LL{0, 0}
 	setupTestRunway(t, "KJFK", av.Runway{Id: "13L", Heading: 130, Threshold: airportLoc})
 	sim := makeVisualTestSim(airportLoc, "13L")
@@ -1186,14 +1647,19 @@ func TestFutureFieldInSightDropsWhenFieldNotVisible(t *testing.T) {
 	sim.Aircraft = map[av.ADSBCallsign]*Aircraft{"AAL123": ac}
 	sim.PendingContacts = make(map[TCP][]PendingContact)
 
-	sim.FutureFieldInSights = []FutureFieldInSight{{ac.ADSBCallsign, sim.State.SimTime.Add(-time.Second)}}
+	originalCheckTime := sim.State.SimTime.Add(-time.Second)
+	sim.FutureFieldChecks = []FutureFieldCheck{{ac.ADSBCallsign, originalCheckTime}}
 
-	sim.processFutureFieldInSight()
+	sim.processFutureFieldChecks()
 	if ac.FieldInSight {
 		t.Fatal("aircraft beyond effective range should not report field in sight")
 	}
-	if len(sim.FutureFieldInSights) != 0 {
-		t.Fatal("fired event should be removed from queue")
+	if len(sim.FutureFieldChecks) != 1 {
+		t.Fatalf("not-yet-visible field check should be rescheduled, got %d checks", len(sim.FutureFieldChecks))
+	}
+	if !sim.FutureFieldChecks[0].Time.After(originalCheckTime) {
+		t.Fatalf("rescheduled check time %v should be after original time %v",
+			sim.FutureFieldChecks[0].Time, originalCheckTime)
 	}
 }
 
@@ -1205,24 +1671,23 @@ func TestFutureTrafficInSightFiresAtDeadline(t *testing.T) {
 	sim.PendingContacts = make(map[TCP][]PendingContact)
 
 	ac := makeVisualTestAircraft(math.Point2LL{0, 5.0 / 60}, 180)
-	sim.Aircraft = map[av.ADSBCallsign]*Aircraft{ac.ADSBCallsign: ac}
-	ac.UnseenTrafficCall = &UnseenTrafficCall{
-		Callsign:   "DAL456",
-		CalledTime: sim.State.SimTime.Add(-15 * time.Second),
+	traffic := makeVisualTestAircraft(math.Point2LL{0, 5.0 / 60}, 180)
+	traffic.ADSBCallsign = "DAL456"
+	sim.Aircraft = map[av.ADSBCallsign]*Aircraft{
+		ac.ADSBCallsign:      ac,
+		traffic.ADSBCallsign: traffic,
 	}
-	sim.FutureTrafficInSights = []FutureTrafficInSight{
-		{ac.ADSBCallsign, "DAL456", sim.State.SimTime.Add(-time.Second)},
+	sim.Rand.Seed(1)
+	sim.FutureTrafficChecks = []FutureTrafficCheck{
+		{ac.ADSBCallsign, traffic.ADSBCallsign, sim.State.SimTime.Add(-time.Second)},
 	}
 
-	sim.processFutureTrafficInSight()
+	sim.processFutureTrafficChecks()
 
 	if sighting := requireSeenTraffic(t, ac, "DAL456"); sighting.OfferedToMaintainSeparation {
 		t.Fatal("delayed traffic-in-sight report should not volunteer separation")
 	}
-	if ac.UnseenTrafficCall != nil {
-		t.Fatal("future traffic-in-sight report should clear the matching unseen traffic call")
-	}
-	if len(sim.FutureTrafficInSights) != 0 {
+	if len(sim.FutureTrafficChecks) != 0 {
 		t.Fatal("fired event should be removed from queue")
 	}
 }
@@ -1232,22 +1697,19 @@ func TestFutureTrafficInSightFiresAtDeadline(t *testing.T) {
 func TestFutureTrafficInSightSupersededByNewAdvisory(t *testing.T) {
 	airportLoc := math.Point2LL{0, 0}
 	setupTestRunway(t, "KJFK", av.Runway{Id: "13L", Heading: 130, Threshold: airportLoc})
-	sim := makeVisualTestSim(airportLoc, "13L")
-	sim.State.SimTime = NewSimTime(time.Now())
-	sim.PendingContacts = make(map[TCP][]PendingContact)
-
-	ac := makeVisualTestAircraft(math.Point2LL{0, 5.0 / 60}, 180)
-	sim.Aircraft = map[av.ADSBCallsign]*Aircraft{ac.ADSBCallsign: ac}
+	vs := NewVisualScenario(t, airportLoc, "13L", math.Point2LL{0, 5.0 / 60}, 180)
 
 	// Stale event from an earlier advisory.
-	sim.FutureTrafficInSights = []FutureTrafficInSight{
-		{ac.ADSBCallsign, "OLD456", sim.State.SimTime.Add(10 * time.Second)},
+	vs.Sim.FutureTrafficChecks = []FutureTrafficCheck{
+		{vs.callsign, "OLD456", vs.Sim.State.SimTime.Add(10 * time.Second)},
 	}
 
 	// Any new advisory path must purge the stale entry.
-	sim.handleTrafficAdvisory(ac, 12, 5, ac.Altitude())
+	if _, err := vs.Sim.TrafficAdvisory(vs.tcw, vs.callsign, 12, 5, int(vs.AC.Altitude()), false); err != nil {
+		t.Fatalf("TrafficAdvisory returned error: %v", err)
+	}
 
-	for _, f := range sim.FutureTrafficInSights {
+	for _, f := range vs.Sim.FutureTrafficChecks {
 		if f.TrafficCallsign == "OLD456" {
 			t.Fatal("stale FutureTrafficInSight for OLD456 should be purged by a new advisory")
 		}
@@ -1328,15 +1790,14 @@ func TestTrafficAdvisoryClearsOfferedStateButKeepsSightingHistory(t *testing.T) 
 
 	sighting := vs.AC.RecordSighting("DAL456", vs.Sim.State.SimTime.Add(-20*time.Second))
 	sighting.OfferedToMaintainSeparation = true
-	vs.AC.UnseenTrafficCall = &UnseenTrafficCall{
-		Callsign:   "DAL456",
-		CalledTime: vs.Sim.State.SimTime.Add(-15 * time.Second),
-	}
-	vs.Sim.FutureTrafficInSights = []FutureTrafficInSight{
+	vs.Sim.FutureTrafficChecks = []FutureTrafficCheck{
 		{vs.callsign, "DAL456", vs.Sim.State.SimTime.Add(10 * time.Second)},
 	}
 
-	intent := vs.Sim.handleTrafficAdvisory(vs.AC, 12, 5, vs.AC.Altitude())
+	intent, err := vs.Sim.TrafficAdvisory(vs.tcw, vs.callsign, 12, 5, int(vs.AC.Altitude()), false)
+	if err != nil {
+		t.Fatalf("TrafficAdvisory returned error: %v", err)
+	}
 	ti, ok := intent.(av.TrafficAdvisoryIntent)
 	if !ok {
 		t.Fatalf("expected TrafficAdvisoryIntent, got %T", intent)
@@ -1351,10 +1812,7 @@ func TestTrafficAdvisoryClearsOfferedStateButKeepsSightingHistory(t *testing.T) 
 	if sighting.OfferedToMaintainSeparation {
 		t.Fatal("new traffic advisory should clear stale offered-to-maintain state")
 	}
-	if vs.AC.UnseenTrafficCall != nil {
-		t.Fatal("no-traffic advisory response should clear the unresolved unseen traffic call")
-	}
-	if len(vs.Sim.FutureTrafficInSights) != 0 {
+	if len(vs.Sim.FutureTrafficChecks) != 0 {
 		t.Fatal("new traffic advisory should cancel stale delayed traffic-in-sight events")
 	}
 }

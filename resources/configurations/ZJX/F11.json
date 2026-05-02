@@ -144,7 +144,8 @@
           "KMCO/RDSOX1": "1W",
           "KMCO/OSPRY1": "1W",
           "KORL/NYTES2": "1V",
-          "KSFB": "1V"
+          "KSFB": "1V",
+          "KISM": "1D"
         },
         "default_consolidation": {
           "1A": ["1K"],
@@ -1088,6 +1089,11 @@
           "name": ".      ORL COORD",
           "id": "T",
           "airports": ["KORL"]
+        },
+         {
+          "name": ".      ISM COORD",
+          "id": "K",
+          "airports": ["KISM"]
         }
       ]
     },

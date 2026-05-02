@@ -12087,6 +12087,94 @@
       }
     },
     {
+      "icao": "dwi",
+      "name": "Arajet",
+      "callsign": {
+        "name": "Dominican",
+        "callsignFormats": ["###","####"]
+      },
+      "fleets": {
+        "default": [
+          ["B38M",14]
+        ]
+      }
+    },
+    {
+      "icao": "sfy",
+      "name": "Skyborne Airline Academy",
+      "callsign": {
+        "name": "Sky Flite",
+        "callsignFormats": ["###"]
+      },
+      "fleets": {
+        "default": [
+          ["P28A", 49],
+          ["DA42", 6],
+          ["P28R", 7],
+          ["PA44", 7]
+        ]
+      }
+    },
+    {
+      "icao": "frg",
+      "name": "Freight Runners Express",
+      "callsign": {
+        "name": "Freight Runners",
+        "callsignFormats": ["##", "###"]
+      },
+      "fleets": {
+        "default": [
+          ["E120", 4],
+          ["BE99", 10]
+        ]
+      }
+    },
+    {
+      "icao": "FTT",
+      "name": "Flight Fast Track",
+      "callsign": {
+        "name": "Fast Air",
+        "callsignFormats": ["#", "##"]
+      },
+      "fleets": {
+        "default": [
+          ["P28A", 10]
+        ]
+      }
+    },
+    {
+      "icao": "PJC",
+      "name": "Holman Leasing Systems, Inc. d/b/a Pittsburgh Jet Center",
+      "callsign": {
+        "name": "Pittsburgh Jet",
+        "callsignFormats": ["###"]
+      },
+      "fleets": {
+        "default": [
+          ["C25B", 3],
+          ["C25C", 1],
+          ["C56X", 7],
+          ["CL60", 1]
+        ]
+      }
+    },
+    {
+      "icao": "KOW",
+      "name": "Baker Aviation, LLC",
+      "callsign": {
+        "name": " Rodeo",
+        "callsignFormats": ["##", "###"]
+      },
+      "fleets": {
+        "default": [
+       ["B350", 1],
+       ["C550",3],
+       ["C750", 22],
+       ["CL60", 1]
+        ]
+      }
+    },
+    {
       "icao": "njm",
       "name": "Northern Jets Management",
       "callsign": {

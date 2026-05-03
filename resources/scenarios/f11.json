@@ -12836,6 +12836,9 @@
             {
               "icao": "N",
               "fleet": "fastGA"
+            },
+            {
+              "icao": "JRE"
             }
           ],
           "altitude": [32000,34000,36000,38000,40000,43000],
@@ -12960,6 +12963,45 @@
           "route": "WORMS GUANO MMKAY"
         },
         {
+          "airlines":[
+            {
+              "icao": "TCN"
+            }
+           ],
+           "altitude": [33000,35000,37000,39000],
+           "destination": "KRDU",
+           "exit": "RDSOX",
+           "route": "RDSOX JFRYS WILON CAMJO TEEEM PETTO DMSTR2"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "CNS",
+              "types": ["PC12"]
+            },
+            {
+              "icao": "N",
+              "types": ["SF50"]
+            }
+          ],
+          "altitude": [20000,24000,22000,26000],
+          "destination": "KMAI",
+          "exit": "RDSOX",
+          "route": "RDSOX JFRYS PATOY Q116 JAWJA"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "N",
+              "fleet": "GAsinglepiston"
+            }
+          ],
+          "altitude": [4000,6000],
+          "destination": "KAPF",
+          "exit": "FSHUN",
+          "route": "FSHUN LBELL"
+        },
+        {
           "airlines": [
             {
               "icao": "N",
@@ -12970,6 +13012,100 @@
           "destination": "KFSD",
           "exit": "RDSOX",
           "route": "RDSOX JFRYS"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "PS",
+              "types": ["C680"]
+            }
+          ],
+          "altitude": [31000,33000,35000,37000,39000],
+          "destination": "SBBV",
+          "exit": "DDANY",
+          "route": "DDANY FOMGU Y624 JAKEL Y624 ZFP BR65V PEACH BR65V ZQA Y441 RUMFO Y396 MALVN UL343 PTA UT20 KARIB UL337 NEGON L337 ARMUR UL337 EDMAX UM423 MOPKO"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "WUP",
+              "types": ["E55P"]
+            }
+          ],
+          "altitude": [32000,34000,36000,38000,40000],
+          "destination": "KJWN",
+          "exit": "RDSOX",
+          "route": "RDSOX JFRYS BRUTS Q118 JOHNN"
+        },
+        {
+          "airlines":[{
+            "icao": "EJA"
+          },
+        {
+          "icao": "LXJ"
+        },
+      {
+        "icao": "N",
+        "fleet": "fastGA"
+      }],
+      "altitude": [10000,12000,14000],
+      "destination": "KAPF",
+      "exit": "FSHUN",
+      "route": "FSHUN SHFTY SHFTY6"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "N",
+              "fleet": "fastGA"
+            }
+          ],
+          "altitude": [31000,33000,35000,37000,39000,41000],
+          "destination": "KVJI",
+          "exit": "WORMS",
+          "route": "WORMS GUANO BKENI VIYAP"
+        },
+         {
+          "airlines": [
+            {
+              "icao": "N",
+              "fleet": "fastGA"
+            }
+          ],
+          "altitude": [31000,33000,35000,37000,39000,41000],
+          "destination": "KBKW",
+          "exit": "WORMS",
+          "route": "WORMS GUANO BKENI VIYAP"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "VTE"
+            },
+            {
+              "icao": "N",
+              "fleet": "fastGA"
+            }
+          ],
+          "altitude": [32000,34000,36000,38000,40000],
+          "destination": "KJWN",
+          "exit": "WORMS",
+          "route": "WORMS JEEMY ACCHE PAINN SHRKS YANTI"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "EJA"
+            },
+            {
+              "icao": "N",
+              "fleet": "fastGA"
+            }
+          ],
+          "altitude": [31000,33000,35000,37000,39000],
+          "destination": "KBUF",
+          "exit": "WORMS",
+          "route": "WORMS GUANO BKENI VIYAP RYCKI Q69 RICCS DKK"
         },
         {
           "airlines": [
@@ -13009,8 +13145,513 @@
         "LAL": "ALL",
         "KNEED": "ALL"
       }
-    }
+    },
+    "KMLB": {
+      "omit_arrival_scratchpad": false,
+      "atpa_volumes": {
+          "27L ATPA": {
+    "runway_threshold": "KMLB-27L",
+    "heading": 274,
+    "max_heading_deviation": 90,
+    "floor": 0,
+    "ceiling": 3000,
+    "left_width": 20000,
+    "right_width": 20000,
+    "2.5nm_distance": 15,
+    "enable_2.5nm": false,
+    "excluded_scratchpads": [
+      "A",
+      "AZ",
+      "B",
+      "BZ",
+      "COF",
+      "F",
+      "FG",
+      "FG/",
+      "FGG",
+      "FGI",
+      "FGL",
+      "FGZ",
+      "FI",
+      "FI/",
+      "FIG",
+      "FII",
+      "FIL",
+      "FIZ",
+      "FL",
+      "FL/",
+      "FLG",
+      "FLI",
+      "FLL",
+      "FLZ",
+      "FVA",
+      "GE",
+      "GL",
+      "GR",
+      "GZ",
+      "IE",
+      "IR",
+      "IZ",
+      "JVA",
+      "K",
+      "KG",
+      "KG*",
+      "KG/",
+      "KGC",
+      "KGG",
+      "KGI",
+      "KGL",
+      "KGZ",
+      "KI",
+      "KI*",
+      "KI/",
+      "KIC",
+      "KIG",
+      "KIL",
+      "KIZ",
+      "KL",
+      "KL*",
+      "KL/",
+      "KLC",
+      "KLG",
+      "KLL",
+      "KLZ",
+      "KVA",
+      "LE",
+      "LR",
+      "LZ",
+      "ME",
+      "ML",
+      "MLB",
+      "MR",
+      "MZ",
+      "NE",
+      "NR",
+      "ORL",
+      "P",
+      "PG",
+      "PGG",
+      "PGI",
+      "PGO",
+      "PGR",
+      "PGT",
+      "PGV",
+      "PGZ",
+      "PI",
+      "PIG",
+      "PII",
+      "PIO",
+      "PIR",
+      "PIT",
+      "PIV",
+      "PIZ",
+      "PS",
+      "PT",
+      "PTG",
+      "PTI",
+      "PTO",
+      "PTR",
+      "PTT",
+      "PTV",
+      "PTZ",
+      "PV",
+      "PVA",
+      "PVG",
+      "PVI",
+      "PVO",
+      "PVR",
+      "PVT",
+      "PVV",
+      "PVZ",
+      "S",
+      "SG",
+      "SG*",
+      "SGC",
+      "SGG",
+      "SGI",
+      "SGL",
+      "SGZ",
+      "SI",
+      "SI*",
+      "SIC",
+      "SIG",
+      "SII",
+      "SIZ",
+      "SL",
+      "SL*",
+      "SLC",
+      "SLG",
+      "SLI",
+      "SLL",
+      "SLZ",
+      "SVA",
+      "T",
+      "TG",
+      "TG/",
+      "TGG",
+      "TGI",
+      "TGL",
+      "TI",
+      "TI/",
+      "TIG",
+      "TII",
+      "TIL",
+      "TL",
+      "TL/",
+      "TLG",
+      "TLI",
+      "TLL",
+      "TVA",
+      "VE",
+      "VEV",
+      "VL",
+      "VLV",
+      "VR",
+      "VRV",
+      "VZ",
+      "VZV"
+    ],
+    "filtered_scratchpads": []
   },
+  "9R ATPA": {
+    "runway_threshold": "KMLB-9R",
+    "heading": 94,
+    "max_heading_deviation": 90,
+    "floor": 0,
+    "ceiling": 3000,
+    "left_width": 20000,
+    "right_width": 20000,
+    "2.5nm_distance": 15,
+    "enable_2.5nm": false,
+    "excluded_scratchpads": [
+      "A",
+      "AZ",
+      "B",
+      "BZ",
+      "COF",
+      "F",
+      "FG",
+      "FG/",
+      "FGG",
+      "FGI",
+      "FGL",
+      "FGZ",
+      "FI",
+      "FI/",
+      "FIG",
+      "FII",
+      "FIL",
+      "FIZ",
+      "FL",
+      "FL/",
+      "FLG",
+      "FLI",
+      "FLL",
+      "FLZ",
+      "FVA",
+      "GE",
+      "GL",
+      "GR",
+      "GZ",
+      "IE",
+      "IR",
+      "IZ",
+      "JVA",
+      "K",
+      "KG",
+      "KG*",
+      "KG/",
+      "KGC",
+      "KGG",
+      "KGI",
+      "KGL",
+      "KGZ",
+      "KI",
+      "KI*",
+      "KI/",
+      "KIC",
+      "KIG",
+      "KIL",
+      "KIZ",
+      "KL",
+      "KL*",
+      "KL/",
+      "KLC",
+      "KLG",
+      "KLL",
+      "KLZ",
+      "KVA",
+      "LE",
+      "LR",
+      "LZ",
+      "ME",
+      "ML",
+      "MLB",
+      "MR",
+      "MZ",
+      "NE",
+      "NR",
+      "ORL",
+      "P",
+      "PG",
+      "PGG",
+      "PGI",
+      "PGO",
+      "PGR",
+      "PGT",
+      "PGV",
+      "PGZ",
+      "PI",
+      "PIG",
+      "PII",
+      "PIO",
+      "PIR",
+      "PIT",
+      "PIV",
+      "PIZ",
+      "PS",
+      "PT",
+      "PTG",
+      "PTI",
+      "PTO",
+      "PTR",
+      "PTT",
+      "PTV",
+      "PTZ",
+      "PV",
+      "PVA",
+      "PVG",
+      "PVI",
+      "PVO",
+      "PVR",
+      "PVT",
+      "PVV",
+      "PVZ",
+      "S",
+      "SG",
+      "SG*",
+      "SGC",
+      "SGG",
+      "SGI",
+      "SGL",
+      "SGZ",
+      "SI",
+      "SI*",
+      "SIC",
+      "SIG",
+      "SII",
+      "SIL",
+      "SIZ",
+      "SL",
+      "SL*",
+      "SLC",
+      "SLG",
+      "SLI",
+      "SLL",
+      "SLZ",
+      "SVA",
+      "T",
+      "TG",
+      "TG/",
+      "TGG",
+      "TGI",
+      "TGL",
+      "TI",
+      "TI/",
+      "TIG",
+      "TII",
+      "TIL",
+      "TL",
+      "TL/",
+      "TLG",
+      "TLI",
+      "TLL",
+      "TVA",
+      "VE",
+      "VEV",
+      "VL",
+      "VL",
+      "VR",
+      "VRV",
+      "VZ",
+      "VZV"
+    ],
+    "filtered_scratchpads": []
+  }
+     },
+     "approaches": {
+          "I9R": {
+            "cifp_id": "I9R"
+          },
+          "R9R": {
+            "cifp_id": "R9R"
+          },
+          "R9L": {
+            "cifp_id": "R9L"
+          },
+          "R7L": {
+            "cifp_id": "R27L"
+          },
+          "R7R": {
+            "cifp_id": "R27R"
+          }
+     },
+     "departure_routes": {
+          "9R": {
+          "SMYRA,APOLO,WORMS,DEARY,JFRYS,RDSOX,OSPRY,LAL,VIZTA,KNEED,GUURR,KIZER,GUANO,OMN,OCF,GNV,DDANY,GERCK,MZULO,LENDS,FSHUN,ROGAN": {
+            "cleared_altitude": 2000,
+            "waypoints": "KMLB-27L/h90"
+          }
+        },
+        "27L": {
+          "SMYRA,APOLO,WORMS,DEARY,JFRYS,RDSOX,OSPRY,LAL,VIZTA,KNEED,GUURR,KIZER,GUANO,OMN,OCF,GNV,DDANY,GERCK,MZULO,LENDS,FSHUN,ROGAN": {
+            "cleared_altitude": 2000,
+            "waypoints": "KMLB-9R/h270"
+          }
+        }
+     },
+     "departures": [
+          {
+            "airlines": [
+             {
+              "callsign": "DAL3043",
+              "types": ["B712"]
+            },
+            {
+              "callsign": "DAL3127",
+              "types": ["B712"]
+            },
+            {
+              "callsign": "DAL3118",
+              "types": ["A319", "B712"]
+            },
+            {
+              "callsign": "DAL2953",
+              "types": ["A319"]
+            }
+            ],
+            "destination": "KATL",
+            "exit": "WORMS",
+            "altitude": [31000,33000,35000],
+            "route": "WORMS JEEMY ACCHE PAINN SHRKS LAIRI LARZZ JJEDI4"
+          },
+          {
+            "airlines": [
+              {
+                "callsign": "JIA5341",
+                "types": ["CRJ9"]
+              },
+              {
+                "callsign": "JIA5339",
+                "types": ["CRJ7"]
+              },
+              {
+                "callsign": "JIA5386",
+                "types": ["CRJ9"]
+              }
+            ],
+            "destination": "KCLT",
+            "exit": "WORMS",
+            "altitude": [31000,33000,35000,37000],
+            "route": "WORMS GUANO BKENI VIYAP CHECR"
+          },
+          {
+            "airlines": [
+              {
+                "callsign": "AAY163",
+                "types": ["A320"]
+              },
+               {
+                "callsign": "AAY1820",
+                "types": ["A320"]
+              }
+            ],
+            "destination": "KABE",
+            "altitude": [29000,31000,33000, 35000,37000,39000],
+            "exit": "WORMS",
+            "route": "WORMS GUANO BKENI VIYAP Q87 ALWZZ OGRAE COURG BAMMY T299 SCAPE T299 DUMMR"
+          },
+           {
+            "airlines": [
+              {
+                "callsign": "AAY427",
+                "types": ["A320"]
+              }
+            ],
+            "destination": "KCVG",
+            "altitude": [30000,32000,34000,36000,38000],
+            "exit": "RDSOX",
+            "route": "RDSOX JFRYS BRUTS Q118 THRSR VXV JAKIE7"
+          },
+           {
+            "airlines": [
+              {
+                "callsign": "AAY2727",
+                "types": ["A320"]
+              }
+            ],
+            "destination": "KABE",
+            "altitude": [29000,31000,33000, 35000,37000,39000],
+            "exit": "WORMS",
+            "route": "WORMS GUANO BKENI VIYAP IRQ SPA J85 NEALS HNN FEWGA7"
+          },
+          {
+            "airlines": [
+              {
+                "callsign": "JZA7839",
+                "types": ["E75S"]
+              }
+            ],
+            "destination": "CYYZ",
+            "altitude": [31000,33000,35000,37000,39000],
+            "exit": "WORMS",
+            "route": "WORMS GUANO BKENI VIYAP JANIE DOUGH HEELZ MGW OXMAN LINNG3"
+          },
+          {
+            "airlines": [
+              {
+                "callsign": "TOM755F",
+                "types": ["B788"]
+              }
+            ],
+            "destination": "EGNT",
+            "altitude": [31000,33000,35000,37000,39000],
+            "exit": "APOLO",
+            "route": "APOLO HESTA LENDS M202 CARPX TUBBS Y493 VEGAA M201 CARAC GRUPI PEPRA PORTI 4700N/05000W 5100N/04000W 5400N/03000W 5500N/02000W PIKIL SOVED MIMKU TLA Y96 NATEB"
+          },
+          {
+            "airlines": [
+              {
+                "icao": "ERU"
+              },
+              {
+                "icao": "BPX"
+              }
+            ],
+            "destination": "KDAB",
+            "altitude": [3000,5000],
+            "exit": "SMYRA",
+            "route": "SMYRA"
+          },
+           {
+            "airlines": [
+              {
+                "icao": "EPI"
+              }
+            ],
+            "destination": "KEVB",
+            "altitude": [3000,5000],
+            "exit": "SMYRA",
+            "route": "SMYRA"
+          }
+     ],
+     "exit_categories": {
+      "WORMS": "ALL",
+      "SMYRA": "ALL",
+      "APOLO": "ALL"
+     }
+  }
+},
   "inbound_flows": {
     "HIBAC.ALYNA4": {
       "arrivals": [
@@ -15705,6 +16346,14 @@
         {
           "airport": "KISM",
           "runway": "15"
+        },
+        {
+          "airport": "KMLB",
+          "runway": "9L"
+        },
+         {
+          "airport": "KMLB",
+          "runway": "9R"
         }
       ],
       "inbound_rates": {
@@ -15833,6 +16482,11 @@
           "airport": "KISM",
           "rate": 4,
           "runway": "15"
+        },
+        {
+          "airport": "KMLB",
+          "rate": 10,
+          "runway": "9R"
         }
       ],
       "wind": {

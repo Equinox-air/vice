@@ -145,7 +145,8 @@
           "KMCO/OSPRY1": "1W",
           "KORL/NYTES2": "1V",
           "KSFB": "1V",
-          "KISM": "1D"
+          "KISM": "1D",
+          "KMLB": "1A"
         },
         "default_consolidation": {
           "1A": ["1K"],
@@ -301,6 +302,7 @@
       }
     },
         "significant_points": {
+          "APOLO": {"short_name": "APO", "abbreviation": "D"},
       "BORRD": {"short_name": "BOR", "abbreviation": "D"},
       "CIGAR": {"short_name": "CIG", "abbreviation": "O"},
       "CRG": {},
@@ -342,6 +344,7 @@
       "SZW": {},
       "VALKA": {"short_name": "VAL", "abbreviation": "D"},
       "VARZE": {},
+      "SMYRA": {"short_name": "SMY", "abbreviation": "A" },
         "FATHE": {"short_name": "FAT","abbreviation": "W"},
       "VIYAP": {"short_name": "VIY","abbreviation": "W"},
       "VIZTA": {"short_name": "VIZ", "abbreviation": "V"},
@@ -351,7 +354,7 @@
     "range": 30,
     "airspace_awareness": [
       {
-        "fixes": ["BORRD", "VALKA", "JIPOD", "ZALEN", "ETECK", "FAROV", "LENDS", "MLB", "DDANY"],
+        "fixes": ["BORRD", "VALKA", "JIPOD", "ZALEN", "ETECK", "FAROV", "LENDS", "MLB", "DDANY", "APOLO"],
         "altitude_range": [0, 999000],
         "receiving_controller": "Z23"
       },
@@ -381,7 +384,7 @@
         "receiving_controller": "31N"
       },
       {
-        "fixes": ["PLUMR", "FSHUN"],
+        "fixes": ["PLUMR", "FSHUN", "ODDEL"],
         "altitude_range": [0, 999000],
         "receiving_controller": "Z67"
       },
@@ -1082,13 +1085,18 @@
     },
         "lists": {
       "ssa": {
-        "altimeters": ["KMCO", "KORL"]
+        "altimeters": ["KMCO", "KSFB", "KORL", "KMLB"]
       },
          "coordination": [
         {
           "name": ".      ORL COORD",
           "id": "T",
           "airports": ["KORL"]
+        },
+        {
+          "name": ".      MLB COORD",
+          "id": "B",
+          "airports": ["KMLB"]
         },
          {
           "name": ".      ISM COORD",

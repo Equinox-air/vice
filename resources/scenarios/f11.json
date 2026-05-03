@@ -8710,7 +8710,7 @@
       },
       "departure_routes": {
         "7": {
-          "WORMS,GUANO,KIZER,MMKAY,CRG,LAL,MLB,KNEED,VIZTA,TPA,OCF,DEARY,FSHUN,ROGAN,OSPRY,REMIS,CIGAR,RDSOX,JFRYS": {
+          "KSFB,WORMS,GUANO,KIZER,MMKAY,CRG,LAL,MLB,KNEED,VIZTA,TPA,OCF,DEARY,FSHUN,ROGAN,OSPRY,REMIS,CIGAR,RDSOX,JFRYS": {
             "cleared_altitude": 1500,
             "sid": "NYTES2",
             "is_rnav": true,
@@ -8718,7 +8718,7 @@
           }
         },
         "25": {
-          "WORMS,GUANO,KIZER,MMKAY,CRG,LAL,MLB,KNEED,VIZTA,TPA,OCF,DEARY,FSHUN,ROGAN,OSPRY,REMIS,CIGAR,RDSOX,JFRYS": {
+          "KSFB,WORMS,GUANO,KIZER,MMKAY,CRG,LAL,MLB,KNEED,VIZTA,TPA,OCF,DEARY,FSHUN,ROGAN,OSPRY,REMIS,CIGAR,RDSOX,JFRYS": {
             "cleared_altitude": 2000,
             "sid": "TOLLZ2",
             "is_rnav": true,
@@ -8750,6 +8750,60 @@
           "destination": "KTEB",
           "exit": "WORMS",
           "route": "WORMS GUANO BKENI VIYAP Q87 GEARS SWNGR JAIKE4"
+        },
+        {
+          "airlines": [
+             {
+              "callsign": "N756PA",
+              "types": [
+                "DA40"
+              ]
+            },
+            {
+              "callsign": "N131DA",
+              "types": [
+                "DA40"
+              ]
+            },
+            {
+              "callsign": "N383MF",
+              "types": [
+                "DA40"
+              ]
+            },
+            {
+              "callsign": "N484MF",
+              "types": [
+                "DA40"
+              ]
+            },
+            {
+              "callsign": "N362PS",
+              "types": [
+                "DA40"
+              ]
+            },
+            {
+              "callsign": "N786KM",
+              "types": [
+                "DA40"
+              ]
+            },
+            {
+              "icao": "LFA"
+            },
+            {
+              "icao": "N",
+              "fleet": "GAsinglepiston"
+            }
+          ],
+          "altitude": [
+            3000
+          ],
+          "destination": "KSFB",
+          "exit": "KSFB",
+          "route": "KSFB",
+          "scratchpad": "SFB"
         },
         {
           "airlines": [
@@ -10273,7 +10327,8 @@
         "KIZER": "ALL",
         "FSHUN": "ALL",
         "LAL": "ALL",
-        "KNEED": "ALL"
+        "KNEED": "ALL",
+        "KSFB": "INTRA"
       },
       "tower_list": 3,
       "hold_for_release": true
@@ -13534,6 +13589,315 @@
             "exit": "WORMS",
             "altitude": [31000,33000,35000],
             "route": "WORMS JEEMY ACCHE PAINN SHRKS LAIRI LARZZ JJEDI4"
+          },
+          {
+            "airlines": [
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              },
+              {
+                "icao": "TCF"
+              }
+            ],
+            "destination": "KMTH",
+            "exit": "VALKA",
+            "altitude": [4000,6000,8000],
+            "route": "VALKA T208 WIXED TRV SMUGS V3 MNATE TAZER"
+          },
+          {
+            "airlines": [
+              {
+                "icao" : "TCF"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KPIE",
+            "exit": "ODDEL",
+            "altitude": [4000],
+            "scratchpad": "T04",
+            "route": "ODDEL T343 YOJIX LAL"
+          },
+           {
+            "airlines": [
+              {
+                "icao" : "TCF"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KPIE",
+            "exit": "ODDEL",
+            "altitude": [6000],
+            "scratchpad": "T06",
+            "route": "ODDEL T343 YOJIX LAL"
+          },
+           {
+            "airlines": [
+              {
+                "icao" : "TCF"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KLAL",
+            "exit": "ODDEL",
+            "altitude": [4000],
+            "scratchpad": "T04",
+            "route": "ODDEL T343 YOJIX LAL"
+          },
+           {
+            "airlines": [
+              {
+                "icao" : "TCF"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KTPA",
+            "exit": "ODDEL",
+            "altitude": [4000],
+            "scratchpad": "T04",
+            "route": "ODDEL T343 YOJIX LAL"
+          },
+           {
+            "airlines": [
+              {
+                "icao" : "TCF"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KSRQ",
+            "exit": "ODDEL",
+            "altitude": [4000],
+            "scratchpad": "T04",
+            "route": "ODDEL T343 YOJIX LAL"
+          },
+           {
+            "airlines": [
+              {
+                "icao" : "TCF"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KTPF",
+            "exit": "ODDEL",
+            "altitude": [4000],
+            "scratchpad": "T04",
+            "route": "ODDEL T343 YOJIX LAL"
+          },
+           {
+            "airlines": [
+              {
+                "icao" : "TCF"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KTPF",
+            "altitude": [6000],
+            "scratchpad": "T06",
+            "route": "ODDEL T343 YOJIX LAL"
+          },
+           {
+            "airlines": [
+              {
+                "icao" : "TCF"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KVDF",
+            "exit": "ODDEL",
+            "altitude": [4000],
+            "scratchpad": "T04",
+            "route": "ODDEL T343 YOJIX LAL"
+          },
+           {
+            "airlines": [
+              {
+                "icao" : "TCF"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KSPG",
+            "exit": "ODDEL",
+            "altitude": [4000],
+            "scratchpad": "T04",
+            "route": "ODDEL T343 YOJIX LAL"
+          },
+          {
+            "airlines": [
+              {
+                "icao": "TCF"
+              },
+              {
+                "icao": "LFA"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA" 
+              }
+            ],
+            "destination": "KSFB",
+            "exit": "KSFB",
+            "route": "KSFB",
+            "altitude": [4000,6000,8000],
+            "scratchpad": "SFB"
+          },
+          {
+            "airlines": [
+              {
+                "callsign": "TOM734F",
+                "types": ["B788"]
+              }
+            ],
+            "altitude": [31000,33000,35000,37000,39000],
+            "destination": "EGPH",
+            "exit": "WORMS",
+            "route": "WORMS GUANO BKENI VIYAP FAY JAGEM SCOOB NALES DITCH GXU RBV Q22 FOXWD EBONY N567B TUDEP 5200N/05000W 5500N/04000W 5700N/03000W 5730N/02000W 5730N/01500W GOMUP GINGA BRUCE BRUCE1G"
+          },
+          {
+            "airlines": [
+              {
+                "icao" :"JRE"
+              },
+              {
+                "icao": "EJA"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA"
+              }
+            ],
+            "altitude": [31000,33000,35000,37000,39000],
+            "destination": "KMDT",
+            "exit": "WORMS",
+            "route": "WORMS GUANO BKENI VIYAP GSO COURG SCAPE V377 HAR"
+          },
+          {
+            "airlines": [
+              {
+                "icao": "CYT"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA"
+              },
+              {
+                "icao": "EJA"
+              }
+            ],
+            "altitude": [30000,32000,34000,36000,38000],
+            "destination": "KTYS",
+            "exit": "RDSOX",
+            "route": "RDSOX JFRYS BRUTS Q118 JAMIZ"
+          },
+           {
+            "airlines": [
+              {
+                "icao" : "TCF"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KSPG",
+            "exit": "ODDEL",
+            "altitude": [6000],
+            "scratchpad": "T06",
+            "route": "ODDEL T343 YOJIX LAL"
+          },
+           {
+            "airlines": [
+              {
+                "icao" : "TCF"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KVDF",
+            "exit": "ODDEL",
+            "altitude": [6000],
+            "scratchpad": "T06",
+            "route": "ODDEL T343 YOJIX LAL"
+          },
+           {
+            "airlines": [
+              {
+                "icao" : "TCF"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KSRQ",
+            "exit": "ODDEL",
+            "altitude": [6000],
+            "scratchpad": "T06",
+            "route": "ODDEL T343 YOJIX LAL"
+          },
+           {
+            "airlines": [
+              {
+                "icao" : "TCF"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KTPA",
+            "exit": "ODDEL",
+            "altitude": [6000],
+            "scratchpad": "T06",
+            "route": "ODDEL T343 YOJIX LAL"
+          },
+           {
+            "airlines": [
+              {
+                "icao" : "TCF"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KLAL",
+            "exit": "ODDEL",
+            "altitude": [6000],
+            "scratchpad": "T06",
+            "route": "ODDEL T343 YOJIX LAL"
           },
           {
             "airlines": [

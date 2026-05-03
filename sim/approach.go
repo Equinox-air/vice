@@ -5,6 +5,7 @@
 package sim
 
 import (
+	"maps"
 	"slices"
 	"time"
 
@@ -25,10 +26,69 @@ func (s *Sim) AirportInSightInquiry(tcw TCW, callsign av.ADSBCallsign) (av.Comma
 	return s.dispatchControlledAircraftCommand(tcw, callsign,
 		func(tcw TCW, ac *Aircraft) av.CommandIntent {
 			if ac.FieldInSight || ac.RequestedVisualApproach || ac.Nav.Approach.Cleared {
+				s.cancelFutureFieldCheck(ac.ADSBCallsign)
 				return av.LookForFieldFound
 			}
 			return s.handleAirportAdvisory(ac, 0, 0)
 		})
+}
+
+// TrafficInSightInquiry handles the bare "TRAFFIC" command — the controller
+// asking "do you have the traffic?" without restating the call. If a queued
+// FutureTrafficCheck still references a live aircraft, the pilot re-checks
+// that target immediately. Otherwise the pilot looks for a single nearby
+// aircraft in front and within tight tolerances; if exactly one matches, the
+// pilot reports it in sight, otherwise the pilot asks where the traffic was.
+func (s *Sim) TrafficInSightInquiry(tcw TCW, callsign av.ADSBCallsign) (av.CommandIntent, error) {
+	s.mu.Lock(s.lg)
+	defer s.mu.Unlock(s.lg)
+
+	return s.dispatchControlledAircraftCommand(tcw, callsign,
+		func(tcw TCW, ac *Aircraft) av.CommandIntent {
+			return s.handleTrafficInSightInquiry(ac)
+		})
+}
+
+// handleTrafficInSightInquiry implements the bare TRAFFIC inquiry resolution.
+// Caller must hold the sim mutex.
+func (s *Sim) handleTrafficInSightInquiry(ac *Aircraft) av.CommandIntent {
+	// If there is a queued FutureTrafficCheck for this aircraft, re-evaluate
+	// visibility.
+	if f, ok := s.FutureTrafficChecks[ac.ADSBCallsign]; ok {
+		traffic, ok := s.Aircraft[f.TrafficCallsign]
+		if !ok {
+			// Traffic is gone; drop the entry and fall through to the "in front of us" search
+			// below.
+			delete(s.FutureTrafficChecks, ac.ADSBCallsign)
+		} else if s.trafficIsVisible(ac, traffic) {
+			ac.RecordSighting(f.TrafficCallsign, s.State.SimTime)
+			delete(s.FutureTrafficChecks, ac.ADSBCallsign)
+			return av.TrafficAdvisoryIntent{Response: av.TrafficResponseTrafficSeen}
+		} else {
+			return av.TrafficAdvisoryIntent{Response: av.TrafficResponseLooking}
+		}
+	}
+
+	// Look for a single aircraft within 3 NM, ±1000 ft, and ±45 degrees of the aircraft's nose.
+	matches := slices.Collect(util.FilterSeq(maps.Values(s.Aircraft), func(candidate *Aircraft) bool {
+		const horizontalNM = 3
+		const verticalFeet = 1000
+		const bearingTolerance = 45
+
+		bearing := math.TrueToMagnetic(
+			math.Heading2LL(ac.Position(), candidate.Position(), ac.NmPerLongitude()),
+			ac.MagneticVariation())
+		return candidate.ADSBCallsign != ac.ADSBCallsign &&
+			math.Abs(candidate.Altitude()-ac.Altitude()) < verticalFeet &&
+			math.NMDistance2LL(ac.Position(), candidate.Position()) < horizontalNM &&
+			math.HeadingDifference(ac.Heading(), bearing) < bearingTolerance
+	}))
+
+	if len(matches) == 1 {
+		ac.RecordSighting(matches[0].ADSBCallsign, s.State.SimTime)
+		return av.TrafficAdvisoryIntent{Response: av.TrafficResponseTrafficSeen}
+	}
+	return av.TrafficAdvisoryIntent{Response: av.TrafficResponseWhereWasIt}
 }
 
 // AirportAdvisory handles the AP/{oclock}/{miles} command. The controller tells the
@@ -110,25 +170,23 @@ func (s *Sim) samplePilotLookFireTime() (Time, bool) {
 func (s *Sim) enqueueFutureFieldCheck(callsign av.ADSBCallsign) {
 	s.cancelFutureFieldCheck(callsign)
 	if t, ok := s.samplePilotLookFireTime(); ok {
-		s.FutureFieldChecks = append(s.FutureFieldChecks, FutureFieldCheck{callsign, t})
+		s.FutureFieldChecks[callsign] = &FutureFieldCheck{Time: t}
 	}
 }
 
 func (s *Sim) enqueueFutureTrafficCheck(callsign, traffic av.ADSBCallsign) {
 	s.cancelFutureTrafficCheck(callsign)
 	if t, ok := s.samplePilotLookFireTime(); ok {
-		s.FutureTrafficChecks = append(s.FutureTrafficChecks, FutureTrafficCheck{callsign, traffic, t})
+		s.FutureTrafficChecks[callsign] = &FutureTrafficCheck{TrafficCallsign: traffic, Time: t}
 	}
 }
 
 func (s *Sim) cancelFutureFieldCheck(callsign av.ADSBCallsign) {
-	s.FutureFieldChecks = slices.DeleteFunc(s.FutureFieldChecks,
-		func(f FutureFieldCheck) bool { return f.ADSBCallsign == callsign })
+	delete(s.FutureFieldChecks, callsign)
 }
 
 func (s *Sim) cancelFutureTrafficCheck(callsign av.ADSBCallsign) {
-	s.FutureTrafficChecks = slices.DeleteFunc(s.FutureTrafficChecks,
-		func(f FutureTrafficCheck) bool { return f.ADSBCallsign == callsign })
+	delete(s.FutureTrafficChecks, callsign)
 }
 
 func (s *Sim) ExpectApproach(tcw TCW, callsign av.ADSBCallsign, approach, lahsoRunway string) (av.CommandIntent, error) {
@@ -355,74 +413,65 @@ func (s *Sim) recentApproachTrafficInSight(ac *Aircraft) *Aircraft {
 // FutureFieldCheck is enqueued when a pilot says "looking" in response to
 // an AP command. At fire time the processor re-validates visibility.
 type FutureFieldCheck struct {
-	ADSBCallsign av.ADSBCallsign
-	Time         Time
+	Time Time
 }
 
 // FutureTrafficCheck is enqueued when a pilot says "looking" in response to
 // a traffic call. At fire time the pilot reports traffic in sight (no
 // re-validation — matching the original behaviour).
 type FutureTrafficCheck struct {
-	ADSBCallsign    av.ADSBCallsign
 	TrafficCallsign av.ADSBCallsign
 	Time            Time
 }
 
 func (s *Sim) processFutureFieldChecks() {
-	ffc := make([]FutureFieldCheck, 0, len(s.FutureFieldChecks))
-	for i := range s.FutureFieldChecks {
-		f := s.FutureFieldChecks[i]
-
+	for callsign, f := range s.FutureFieldChecks {
 		if !s.State.SimTime.After(f.Time) {
-			ffc = append(ffc, f) // skip for now
 			continue
 		}
-		ac, ok := s.Aircraft[f.ADSBCallsign]
+		ac, ok := s.Aircraft[callsign]
 		if !ok || ac.FieldInSight || ac.ControllerFrequency == "" || ac.Nav.Approach.Cleared {
-			continue // drop it
+			delete(s.FutureFieldChecks, callsign)
+			continue
 		}
 
 		if s.checkAirportVisibility(ac).FieldInSight {
 			ac.FieldInSight = true
-			s.enqueuePilotTransmission(ac.ADSBCallsign, TCP(ac.ControllerFrequency), PendingTransmissionFieldInSight)
+			s.enqueuePilotTransmission(callsign, TCP(ac.ControllerFrequency), PendingTransmissionFieldInSight)
+			delete(s.FutureFieldChecks, callsign)
 		} else {
 			f.Time = f.Time.Add(s.Rand.DurationRange(7*time.Second, 15*time.Second)) // try again in a bit
-			ffc = append(ffc, f)
 		}
 	}
-	s.FutureFieldChecks = ffc
 }
 
 func (s *Sim) processFutureTrafficChecks() {
-	ftc := make([]FutureTrafficCheck, 0, len(s.FutureTrafficChecks))
-	for i := range s.FutureTrafficChecks {
-		f := s.FutureTrafficChecks[i]
-
+	for callsign, f := range s.FutureTrafficChecks {
 		if !s.State.SimTime.After(f.Time) {
-			ftc = append(ftc, f) // skip for now
 			continue
 		}
 
 		// Drop this one if either the looking or the traffic aircraft are gone.
-		ac, ok := s.Aircraft[f.ADSBCallsign]
+		ac, ok := s.Aircraft[callsign]
 		if !ok || ac.ControllerFrequency == "" {
+			delete(s.FutureTrafficChecks, callsign)
 			continue
 		}
 		traffic, ok := s.Aircraft[f.TrafficCallsign]
 		if !ok {
+			delete(s.FutureTrafficChecks, callsign)
 			continue
 		}
 
 		if s.trafficIsVisible(ac, traffic) {
 			sighting := ac.RecordSighting(f.TrafficCallsign, s.State.SimTime)
 			sighting.OfferedToMaintainSeparation = false
-			s.enqueuePilotTransmission(ac.ADSBCallsign, TCP(ac.ControllerFrequency), PendingTransmissionTrafficInSight)
+			s.enqueuePilotTransmission(callsign, TCP(ac.ControllerFrequency), PendingTransmissionTrafficInSight)
+			delete(s.FutureTrafficChecks, callsign)
 		} else {
 			f.Time = f.Time.Add(s.Rand.DurationRange(7*time.Second, 15*time.Second)) // try again in a bit
-			ftc = append(ftc, f)
 		}
 	}
-	s.FutureTrafficChecks = ftc
 }
 
 func (s *Sim) refreshSeenTraffic(ac *Aircraft) {

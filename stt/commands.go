@@ -500,7 +500,28 @@ func extractApproach(tokens []Token, approaches map[string]string, assignedAppro
 			}
 			prefixPhrase := strings.Join(prefixParts, " ")
 
-			// Find the best matching approach by comparing prefix to approach type portion
+			// Also build a suffix phrase from tokens after the runway number+direction.
+			// This handles non-canonical pilot phrasings where the approach type comes
+			// after the runway, e.g., "runway four right rnav zulu approach".
+			var suffixParts []string
+			suffixStart := numPos + 1
+			if runwayDir != "" {
+				suffixStart++
+			}
+			for k := suffixStart; k < len(tokens); k++ {
+				text := strings.ToLower(tokens[k].Text)
+				if text == "approach" || text == "runway" || IsFillerWord(text) {
+					continue
+				}
+				if tokens[k].Type == TokenNumber {
+					suffixParts = append(suffixParts, spokenDigits(tokens[k].Value))
+				} else {
+					suffixParts = append(suffixParts, text)
+				}
+			}
+			suffixPhrase := strings.Join(suffixParts, " ")
+
+			// Find the best matching approach by comparing prefix/suffix to approach type portion
 			var bestMatch string
 			var bestMatchScore float64
 			for _, ma := range matchingApproaches {
@@ -512,11 +533,15 @@ func extractApproach(tokens []Token, approaches map[string]string, assignedAppro
 				}
 				approachTypePortion := strings.TrimSpace(spokenLower[:typeEnd])
 
-				// Compare using Jaro-Winkler
+				// Compare using Jaro-Winkler against both prefix and suffix; take the better.
 				score := JaroWinkler(prefixPhrase, approachTypePortion)
+				if s := JaroWinkler(suffixPhrase, approachTypePortion); s > score {
+					score = s
+				}
 
 				// Also try phonetic matching for short garbled inputs
-				if PhoneticMatch(prefixPhrase, approachTypePortion) {
+				if PhoneticMatch(prefixPhrase, approachTypePortion) ||
+					PhoneticMatch(suffixPhrase, approachTypePortion) {
 					score = max(score, 0.85)
 				}
 
@@ -2141,18 +2166,32 @@ func extractTraffic(tokens []Token) (int, int, int, bool, int) {
 	// Consume trailing traffic advisory words that follow the altitude.
 	// These are part of the traffic call and should not be re-parsed as commands.
 	// Pattern: "[descending/climbing] [report [traffic] in sight]"
-	for consumed < len(tokens) {
-		text := strings.ToLower(tokens[consumed].Text)
-		if FuzzyMatch(text, "descending", 0.8) || FuzzyMatch(text, "climbing", 0.8) ||
-			text == "descend" || text == "climb" {
-			consumed++
-			continue
+	//
+	// If "airport" or "field" appears in the upcoming tokens, the trailing
+	// phrase is requesting an airport sighting (e.g. "report it and the airport
+	// in sight"). Leave those tokens in place so the AP handler can match.
+	hasAirportSighting := false
+	for j := consumed; j < len(tokens) && j < consumed+8; j++ {
+		text := strings.ToLower(tokens[j].Text)
+		if text == "airport" || text == "field" {
+			hasAirportSighting = true
+			break
 		}
-		if text == "report" || text == "sight" || text == "in" || IsFillerWord(text) {
-			consumed++
-			continue
+	}
+	if !hasAirportSighting {
+		for consumed < len(tokens) {
+			text := strings.ToLower(tokens[consumed].Text)
+			if FuzzyMatch(text, "descending", 0.8) || FuzzyMatch(text, "climbing", 0.8) ||
+				text == "descend" || text == "climb" {
+				consumed++
+				continue
+			}
+			if text == "report" || text == "sight" || text == "in" || IsFillerWord(text) {
+				consumed++
+				continue
+			}
+			break
 		}
-		break
 	}
 
 	return oclock, miles, alt, otherAircraftWillMaintainVisualSeparation, consumed

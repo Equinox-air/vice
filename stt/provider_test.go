@@ -155,6 +155,95 @@ func TestBasicAltitudeCommands(t *testing.T) {
 	}
 }
 
+func TestCrossFixAltitudeSpeedCombined(t *testing.T) {
+	makeAC := func(fixes map[string]string) map[string]Aircraft {
+		return map[string]Aircraft{
+			"United 452": {
+				Callsign: "UAL452", Altitude: 28000, State: "overflight",
+				Fixes: fixes,
+			},
+		}
+	}
+	izeko := map[string]string{"Izeko": "IZEKO"}
+	detgy := map[string]string{"Detgy": "DETGY"}
+
+	tests := []struct {
+		name       string
+		transcript string
+		aircraft   map[string]Aircraft
+		expected   string
+	}{
+		// Plain alt × plain spd, both orders.
+		{"plain alt then spd",
+			"United 452 cross IZEKO at 8000 at 250 knots",
+			makeAC(izeko), "UAL452 CIZEKO/A80/S250"},
+		{"plain spd then alt",
+			"United 452 cross IZEKO at 250 knots at 8000",
+			makeAC(izeko), "UAL452 CIZEKO/A80/S250"},
+		{"plain alt and spd",
+			"United 452 cross IZEKO at 8000 and 250 knots",
+			makeAC(izeko), "UAL452 CIZEKO/A80/S250"},
+		{"plain spd and alt",
+			"United 452 cross IZEKO at 250 knots and 8000",
+			makeAC(izeko), "UAL452 CIZEKO/A80/S250"},
+		// Speed modifiers
+		{"plain alt + or-greater spd",
+			"United 452 cross IZEKO at 8000 at 250 or greater",
+			makeAC(izeko), "UAL452 CIZEKO/A80/S250+"},
+		{"plain alt + do-not-exceed spd",
+			"United 452 cross IZEKO at 8000 do not exceed 250",
+			makeAC(izeko), "UAL452 CIZEKO/A80/S250-"},
+		// Altitude modifier
+		{"or-above alt + plain spd",
+			"United 452 cross IZEKO at or above 8000 at 250",
+			makeAC(izeko), "UAL452 CIZEKO/A80+/S250"},
+		// Dual modifiers
+		{"or-above alt + or-greater spd",
+			"United 452 cross IZEKO at or above 8000 at 250 or greater",
+			makeAC(izeko), "UAL452 CIZEKO/A80+/S250+"},
+		{"or-above alt + do-not-exceed spd",
+			"United 452 cross IZEKO at or above 8000 do not exceed 250",
+			makeAC(izeko), "UAL452 CIZEKO/A80+/S250-"},
+		// Mach
+		{"plain alt + mach",
+			"United 452 cross IZEKO at 8000 mach point 80",
+			makeAC(izeko), "UAL452 CIZEKO/A80/M80"},
+		{"or-above alt + mach",
+			"United 452 cross IZEKO at or above 8000 mach point 80",
+			makeAC(izeko), "UAL452 CIZEKO/A80+/M80"},
+		// Distance-direction
+		{"dist/dir plain alt + plain spd",
+			"United 452 cross 5 miles west of DETGY at 8000 at 250 knots",
+			makeAC(detgy), "UAL452 CDETGY/5W/A80/S250"},
+		{"dist/dir plain spd + plain alt",
+			"United 452 cross 5 miles west of DETGY at 250 knots and 8000",
+			makeAC(detgy), "UAL452 CDETGY/5W/A80/S250"},
+		{"dist/dir alt + or-greater spd",
+			"United 452 cross 5 miles west of DETGY at 8000 at 250 or greater",
+			makeAC(detgy), "UAL452 CDETGY/5W/A80/S250+"},
+		{"dist/dir alt + do-not-exceed spd",
+			"United 452 cross 5 miles west of DETGY at 8000 do not exceed 250",
+			makeAC(detgy), "UAL452 CDETGY/5W/A80/S250-"},
+		{"dist/dir alt + mach",
+			"United 452 cross 5 miles west of DETGY at 8000 mach point 80",
+			makeAC(detgy), "UAL452 CDETGY/5W/A80/M80"},
+	}
+
+	provider := NewTranscriber(nil)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := provider.DecodeTranscript(tt.aircraft, tt.transcript, "")
+			if err != nil {
+				t.Errorf("unexpected error: %v", err)
+				return
+			}
+			if result != tt.expected {
+				t.Errorf("got %q, want %q", result, tt.expected)
+			}
+		})
+	}
+}
+
 func TestBasicHeadingCommands(t *testing.T) {
 	tests := []struct {
 		name       string
@@ -1027,6 +1116,62 @@ func TestNavigationCommands(t *testing.T) {
 			},
 			expected: "AAL456 AMERIT/I",
 		},
+		{
+			name:       "direct fix intercept localizer",
+			transcript: "Delta 8499 direct Fergi intercept the localizer",
+			aircraft: map[string]Aircraft{
+				"Delta 8499": {
+					Callsign:         "DAL8499",
+					Altitude:         4000,
+					State:            "arrival",
+					AssignedApproach: "I22L",
+					Fixes:            map[string]string{"Fergi": "FERGI"},
+				},
+			},
+			expected: "DAL8499 DFERGI AFERGI/I",
+		},
+		{
+			name:       "proceed direct fix intercept with runway identifier",
+			transcript: "United 123 proceed direct Rosly intercept the 2 2 left localizer",
+			aircraft: map[string]Aircraft{
+				"United 123": {
+					Callsign:         "UAL123",
+					Altitude:         3000,
+					State:            "arrival",
+					AssignedApproach: "I22L",
+					Fixes:            map[string]string{"Rosly": "ROSLY"},
+				},
+			},
+			expected: "UAL123 DROSLY AROSLY/I",
+		},
+		{
+			name:       "direct fix intercept with runway keyword",
+			transcript: "American 456 direct Merit intercept the runway 3 1 right localizer",
+			aircraft: map[string]Aircraft{
+				"American 456": {
+					Callsign:         "AAL456",
+					Altitude:         5000,
+					State:            "arrival",
+					AssignedApproach: "I31R",
+					Fixes:            map[string]string{"Merit": "MERIT"},
+				},
+			},
+			expected: "AAL456 DMERIT AMERIT/I",
+		},
+		{
+			name:       "direct fix intercept final approach course",
+			transcript: "Delta 8499 direct Fergi intercept the final approach course",
+			aircraft: map[string]Aircraft{
+				"Delta 8499": {
+					Callsign:         "DAL8499",
+					Altitude:         4000,
+					State:            "arrival",
+					AssignedApproach: "R22L",
+					Fixes:            map[string]string{"Fergi": "FERGI"},
+				},
+			},
+			expected: "DAL8499 DFERGI AFERGI/I",
+		},
 		// Hold commands
 		{
 			name:       "hold at fix as published",
@@ -1781,6 +1926,13 @@ func TestNormalizeTranscript(t *testing.T) {
 		{"flighting 030", []string{"fly", "heading", "030"}},
 		// "@" should be treated as "at"
 		{"@ cameron descend", []string{"at", "cameron", "descend"}},
+		// processAndDigit: single digits on both sides → "and" → "1" (mishearing of "one")
+		{"two and zero", []string{"2", "1", "0"}},
+		// processAndDigit: prev-prev also digit → multi-digit-sequence skip wins
+		{"two nine and zero", []string{"2", "9", "0"}},
+		// processAndDigit: multi-digit on either side → "and" is a connector, dropped
+		{"8000 and 250", []string{"8000", "250"}},
+		{"5 and 8000", []string{"5", "8000"}},
 	}
 
 	for _, tt := range tests {
@@ -2417,6 +2569,79 @@ func TestVisualApproachSTTPatterns(t *testing.T) {
 			},
 			expected: []string{"EVA22L/LAHSO26"},
 		},
+		{
+			// "expect Mount Vernon visual runway one" — the charted visual
+			// approach name precedes "visual", so this must match the
+			// charted-visual code (MTV) via the {approach} parser, not be
+			// stolen by the priority-17 {visual_approach} pattern.
+			name: "expect named charted visual emits charted code",
+			tokens: []Token{
+				{Text: "expect", Type: TokenWord},
+				{Text: "Mount", Type: TokenWord},
+				{Text: "Vernon", Type: TokenWord},
+				{Text: "visual", Type: TokenWord},
+				{Text: "runway", Type: TokenWord},
+				{Text: "1", Type: TokenNumber, Value: 1},
+			},
+			ac: Aircraft{
+				State: "arrival",
+				CandidateApproaches: map[string]string{
+					"Mount Vernon Visual runway one": "MTV",
+				},
+				CandidateVisualApproaches: map[string]string{
+					"visual runway one":          "1",
+					"visual approach runway one": "1",
+					"visual one":                 "1",
+				},
+			},
+			expected: []string{"EMTV"},
+		},
+		{
+			name: "cleared named charted visual emits charted code",
+			tokens: []Token{
+				{Text: "cleared", Type: TokenWord},
+				{Text: "Mount", Type: TokenWord},
+				{Text: "Vernon", Type: TokenWord},
+				{Text: "visual", Type: TokenWord},
+				{Text: "runway", Type: TokenWord},
+				{Text: "1", Type: TokenNumber, Value: 1},
+			},
+			ac: Aircraft{
+				State: "arrival",
+				CandidateApproaches: map[string]string{
+					"Mount Vernon Visual runway one": "MTV",
+				},
+				CandidateVisualApproaches: map[string]string{
+					"visual runway one":          "1",
+					"visual approach runway one": "1",
+					"visual one":                 "1",
+				},
+			},
+			expected: []string{"CMTV"},
+		},
+		{
+			name: "vectors named charted visual emits charted code",
+			tokens: []Token{
+				{Text: "vectors", Type: TokenWord},
+				{Text: "Mount", Type: TokenWord},
+				{Text: "Vernon", Type: TokenWord},
+				{Text: "visual", Type: TokenWord},
+				{Text: "runway", Type: TokenWord},
+				{Text: "1", Type: TokenNumber, Value: 1},
+			},
+			ac: Aircraft{
+				State: "arrival",
+				CandidateApproaches: map[string]string{
+					"Mount Vernon Visual runway one": "MTV",
+				},
+				CandidateVisualApproaches: map[string]string{
+					"visual runway one":          "1",
+					"visual approach runway one": "1",
+					"visual one":                 "1",
+				},
+			},
+			expected: []string{"EMTV"},
+		},
 	}
 
 	for _, tt := range tests {
@@ -2504,6 +2729,111 @@ func TestAirportAdvisorySTTPatterns(t *testing.T) {
 				"American 123": {Callsign: "AAL123", State: "arrival", Altitude: 5000},
 			},
 			expected: "AAL123 AP",
+		},
+		{
+			name:       "do you have the field (no in sight suffix)",
+			transcript: "American 123 do you have the field",
+			aircraft: map[string]Aircraft{
+				"American 123": {Callsign: "AAL123", State: "arrival", Altitude: 5000},
+			},
+			expected: "AAL123 AP",
+		},
+		{
+			name:       "do you have the airport (no in sight suffix)",
+			transcript: "American 123 do you have the airport",
+			aircraft: map[string]Aircraft{
+				"American 123": {Callsign: "AAL123", State: "arrival", Altitude: 5000},
+			},
+			expected: "AAL123 AP",
+		},
+		{
+			name:       "report the field in sight",
+			transcript: "American 123 report the field in sight",
+			aircraft: map[string]Aircraft{
+				"American 123": {Callsign: "AAL123", State: "arrival", Altitude: 5000},
+			},
+			expected: "AAL123 AP",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := provider.DecodeTranscript(tt.aircraft, tt.transcript, "")
+			if err != nil {
+				t.Errorf("unexpected error: %v", err)
+				return
+			}
+			if result != tt.expected {
+				t.Errorf("got %q, want %q", result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestTrafficInSightSTTPatterns(t *testing.T) {
+	provider := NewTranscriber(nil)
+
+	tests := []struct {
+		name       string
+		transcript string
+		aircraft   map[string]Aircraft
+		expected   string
+	}{
+		{
+			name:       "do you have the traffic",
+			transcript: "American 123 do you have the traffic",
+			aircraft: map[string]Aircraft{
+				"American 123": {Callsign: "AAL123", State: "arrival", Altitude: 5000},
+			},
+			expected: "AAL123 TRAFFIC",
+		},
+		{
+			name:       "do you have the traffic in sight",
+			transcript: "American 123 do you have the traffic in sight",
+			aircraft: map[string]Aircraft{
+				"American 123": {Callsign: "AAL123", State: "arrival", Altitude: 5000},
+			},
+			expected: "AAL123 TRAFFIC",
+		},
+		{
+			name:       "you have the traffic in sight (do garbled)",
+			transcript: "American 123 you have the traffic in sight",
+			aircraft: map[string]Aircraft{
+				"American 123": {Callsign: "AAL123", State: "arrival", Altitude: 5000},
+			},
+			expected: "AAL123 TRAFFIC",
+		},
+		{
+			name:       "report traffic in sight",
+			transcript: "American 123 report traffic in sight",
+			aircraft: map[string]Aircraft{
+				"American 123": {Callsign: "AAL123", State: "arrival", Altitude: 5000},
+			},
+			expected: "AAL123 TRAFFIC",
+		},
+		{
+			name:       "report the traffic in sight",
+			transcript: "American 123 report the traffic in sight",
+			aircraft: map[string]Aircraft{
+				"American 123": {Callsign: "AAL123", State: "arrival", Altitude: 5000},
+			},
+			expected: "AAL123 TRAFFIC",
+		},
+		{
+			name:       "report traffic and field in sight",
+			transcript: "American 123 report traffic and field in sight",
+			aircraft: map[string]Aircraft{
+				"American 123": {Callsign: "AAL123", State: "arrival", Altitude: 5000},
+			},
+			expected: "AAL123 TRAFFIC AP",
+		},
+		{
+			name:       "report the traffic and the airport in sight",
+			transcript: "American 123 report the traffic and the airport in sight",
+			aircraft: map[string]Aircraft{
+				"American 123": {Callsign: "AAL123", State: "arrival", Altitude: 5000},
+			},
+			expected: "AAL123 TRAFFIC AP",
 		},
 	}
 

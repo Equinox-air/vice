@@ -108,10 +108,12 @@ func NewVisualScenario(t *testing.T, airportLoc math.Point2LL, runway string, ac
 				},
 			},
 		},
-		Aircraft:        map[av.ADSBCallsign]*Aircraft{callsign: ac},
-		PendingContacts: make(map[TCP][]PendingContact),
-		PrivilegedTCWs:  map[TCW]bool{tcw: true},
-		eventStream:     NewEventStream(lg),
+		Aircraft:            map[av.ADSBCallsign]*Aircraft{callsign: ac},
+		PendingContacts:     make(map[TCP][]PendingContact),
+		FutureFieldChecks:   make(map[av.ADSBCallsign]*FutureFieldCheck),
+		FutureTrafficChecks: make(map[av.ADSBCallsign]*FutureTrafficCheck),
+		PrivilegedTCWs:      map[TCW]bool{tcw: true},
+		eventStream:         NewEventStream(lg),
 	}
 
 	return &VisualScenario{t: t, Sim: sim, AC: ac, callsign: callsign, tcw: tcw}
@@ -293,6 +295,8 @@ func makeVisualTestSim(airportLoc math.Point2LL, runway string) *Sim {
 				},
 			},
 		},
+		FutureFieldChecks:   make(map[av.ADSBCallsign]*FutureFieldCheck),
+		FutureTrafficChecks: make(map[av.ADSBCallsign]*FutureTrafficCheck),
 	}
 }
 
@@ -1648,7 +1652,9 @@ func TestFutureFieldCheckRetriesWhenFieldNotVisible(t *testing.T) {
 	sim.PendingContacts = make(map[TCP][]PendingContact)
 
 	originalCheckTime := sim.State.SimTime.Add(-time.Second)
-	sim.FutureFieldChecks = []FutureFieldCheck{{ac.ADSBCallsign, originalCheckTime}}
+	sim.FutureFieldChecks = map[av.ADSBCallsign]*FutureFieldCheck{
+		ac.ADSBCallsign: {Time: originalCheckTime},
+	}
 
 	sim.processFutureFieldChecks()
 	if ac.FieldInSight {
@@ -1657,9 +1663,13 @@ func TestFutureFieldCheckRetriesWhenFieldNotVisible(t *testing.T) {
 	if len(sim.FutureFieldChecks) != 1 {
 		t.Fatalf("not-yet-visible field check should be rescheduled, got %d checks", len(sim.FutureFieldChecks))
 	}
-	if !sim.FutureFieldChecks[0].Time.After(originalCheckTime) {
+	f, ok := sim.FutureFieldChecks[ac.ADSBCallsign]
+	if !ok {
+		t.Fatalf("not-yet-visible field check should remain queued for %s", ac.ADSBCallsign)
+	}
+	if !f.Time.After(originalCheckTime) {
 		t.Fatalf("rescheduled check time %v should be after original time %v",
-			sim.FutureFieldChecks[0].Time, originalCheckTime)
+			f.Time, originalCheckTime)
 	}
 }
 
@@ -1678,8 +1688,8 @@ func TestFutureTrafficInSightFiresAtDeadline(t *testing.T) {
 		traffic.ADSBCallsign: traffic,
 	}
 	sim.Rand.Seed(1)
-	sim.FutureTrafficChecks = []FutureTrafficCheck{
-		{ac.ADSBCallsign, traffic.ADSBCallsign, sim.State.SimTime.Add(-time.Second)},
+	sim.FutureTrafficChecks = map[av.ADSBCallsign]*FutureTrafficCheck{
+		ac.ADSBCallsign: {TrafficCallsign: traffic.ADSBCallsign, Time: sim.State.SimTime.Add(-time.Second)},
 	}
 
 	sim.processFutureTrafficChecks()
@@ -1700,8 +1710,8 @@ func TestFutureTrafficInSightSupersededByNewAdvisory(t *testing.T) {
 	vs := NewVisualScenario(t, airportLoc, "13L", math.Point2LL{0, 5.0 / 60}, 180)
 
 	// Stale event from an earlier advisory.
-	vs.Sim.FutureTrafficChecks = []FutureTrafficCheck{
-		{vs.callsign, "OLD456", vs.Sim.State.SimTime.Add(10 * time.Second)},
+	vs.Sim.FutureTrafficChecks = map[av.ADSBCallsign]*FutureTrafficCheck{
+		vs.callsign: {TrafficCallsign: "OLD456", Time: vs.Sim.State.SimTime.Add(10 * time.Second)},
 	}
 
 	// Any new advisory path must purge the stale entry.
@@ -1790,8 +1800,8 @@ func TestTrafficAdvisoryClearsOfferedStateButKeepsSightingHistory(t *testing.T) 
 
 	sighting := vs.AC.RecordSighting("DAL456", vs.Sim.State.SimTime.Add(-20*time.Second))
 	sighting.OfferedToMaintainSeparation = true
-	vs.Sim.FutureTrafficChecks = []FutureTrafficCheck{
-		{vs.callsign, "DAL456", vs.Sim.State.SimTime.Add(10 * time.Second)},
+	vs.Sim.FutureTrafficChecks = map[av.ADSBCallsign]*FutureTrafficCheck{
+		vs.callsign: {TrafficCallsign: "DAL456", Time: vs.Sim.State.SimTime.Add(10 * time.Second)},
 	}
 
 	intent, err := vs.Sim.TrafficAdvisory(vs.tcw, vs.callsign, 12, 5, int(vs.AC.Altitude()), false)
@@ -2301,4 +2311,211 @@ func TestScenarioAboveCeilingIMC(t *testing.T) {
 
 	intent := vs.AirportAdvisory(12, 5)
 	vs.ExpectIMC(intent) // Aircraft in clouds → IMC response
+}
+
+// AP inquiry must purge any queued FutureFieldCheck even when the aircraft
+// already has the field in sight (the early-return path).
+func TestAirportInSightInquiryClearsFutureFieldCheckEvenIfAlreadyInSight(t *testing.T) {
+	airportLoc := math.Point2LL{0, 0}
+	setupTestRunway(t, "KJFK", av.Runway{Id: "13L", Heading: 130, Threshold: airportLoc})
+	vs := NewVisualScenario(t, airportLoc, "13L", math.Point2LL{0, 5.0 / 60}, 180)
+
+	vs.AC.FieldInSight = true
+	vs.Sim.FutureFieldChecks = map[av.ADSBCallsign]*FutureFieldCheck{
+		vs.callsign: {Time: vs.Sim.State.SimTime.Add(10 * time.Second)},
+	}
+
+	intent, err := vs.Sim.AirportInSightInquiry(vs.tcw, vs.callsign)
+	if err != nil {
+		t.Fatalf("AirportInSightInquiry error: %v", err)
+	}
+	vs.ExpectFieldInSight(intent)
+	if len(vs.Sim.FutureFieldChecks) != 0 {
+		t.Fatalf("queued FutureFieldCheck should be cleared, got %d", len(vs.Sim.FutureFieldChecks))
+	}
+}
+
+// makeTrafficInSightSim builds a minimal sim with an asker aircraft at
+// {0, 5/60} (5nm north of the origin) heading south. Additional traffic can
+// be added by the caller.
+func makeTrafficInSightSim(t *testing.T) (*Sim, *Aircraft) {
+	t.Helper()
+	airportLoc := math.Point2LL{0, 0}
+	setupTestRunway(t, "KJFK", av.Runway{Id: "13L", Heading: 130, Threshold: airportLoc})
+	sim := makeVisualTestSim(airportLoc, "13L")
+	sim.State.SimTime = NewSimTime(time.Now())
+	sim.Rand.Seed(1)
+
+	ac := makeVisualTestAircraft(math.Point2LL{0, 5.0 / 60}, 180)
+	sim.Aircraft = map[av.ADSBCallsign]*Aircraft{ac.ADSBCallsign: ac}
+	return sim, ac
+}
+
+// addTraffic places another aircraft at the given offset from the asker's
+// position with an altitude offset (negative = below, positive = above).
+func addTraffic(sim *Sim, ac *Aircraft, callsign av.ADSBCallsign, dLatNM, dLonNM, dAlt float32) *Aircraft {
+	traffic := makeVisualTestAircraft(
+		math.Point2LL{ac.Position()[0] + dLonNM/60, ac.Position()[1] + dLatNM/60},
+		180)
+	traffic.ADSBCallsign = callsign
+	traffic.Nav.FlightState.Altitude = ac.Altitude() + dAlt
+	sim.Aircraft[callsign] = traffic
+	return traffic
+}
+
+func TestTrafficInSightInquiryQueuedTrafficVisible(t *testing.T) {
+	sim, ac := makeTrafficInSightSim(t)
+	traffic := addTraffic(sim, ac, "DAL456", -1, 0, 0) // 1 NM south, same altitude → in front
+
+	sim.FutureTrafficChecks = map[av.ADSBCallsign]*FutureTrafficCheck{
+		ac.ADSBCallsign: {TrafficCallsign: traffic.ADSBCallsign, Time: sim.State.SimTime.Add(15 * time.Second)},
+	}
+
+	intent := sim.handleTrafficInSightInquiry(ac)
+	ti, ok := intent.(av.TrafficAdvisoryIntent)
+	if !ok {
+		t.Fatalf("expected TrafficAdvisoryIntent, got %T", intent)
+	}
+	if ti.Response != av.TrafficResponseTrafficSeen {
+		t.Errorf("expected TrafficResponseTrafficSeen, got %v", ti.Response)
+	}
+	if len(sim.FutureTrafficChecks) != 0 {
+		t.Errorf("queued check should be removed on success, got %d", len(sim.FutureTrafficChecks))
+	}
+	requireSeenTraffic(t, ac, "DAL456")
+}
+
+func TestTrafficInSightInquiryQueuedTrafficNotVisible(t *testing.T) {
+	sim, ac := makeTrafficInSightSim(t)
+	// IMC at the nearest reporting station forces trafficIsVisible to return
+	// false regardless of geometry. ICAO must be set so the METAR is selected
+	// by nearestMETAR.
+	sim.State.METAR["KJFK"] = wx.METAR{ICAO: "KJFK", Raw: "KJFK 1/4SM BR OVC003"}
+	addTraffic(sim, ac, "DAL456", -1, 0, 0)
+
+	queued := &FutureTrafficCheck{TrafficCallsign: "DAL456", Time: sim.State.SimTime.Add(15 * time.Second)}
+	sim.FutureTrafficChecks = map[av.ADSBCallsign]*FutureTrafficCheck{ac.ADSBCallsign: queued}
+
+	intent := sim.handleTrafficInSightInquiry(ac)
+	ti, ok := intent.(av.TrafficAdvisoryIntent)
+	if !ok {
+		t.Fatalf("expected TrafficAdvisoryIntent, got %T", intent)
+	}
+	if ti.Response != av.TrafficResponseLooking {
+		t.Errorf("expected TrafficResponseLooking, got %v", ti.Response)
+	}
+	if len(sim.FutureTrafficChecks) != 1 {
+		t.Errorf("queued check should be preserved when traffic still not visible, got %d", len(sim.FutureTrafficChecks))
+	}
+}
+
+func TestTrafficInSightInquiryQueuedTrafficGoneFallsThrough(t *testing.T) {
+	sim, ac := makeTrafficInSightSim(t)
+
+	// Queued entry refers to a callsign that is not in s.Aircraft. Inquiry must
+	// drop the entry and fall through to the nearby search (nothing nearby →
+	// where-was-it).
+	sim.FutureTrafficChecks = map[av.ADSBCallsign]*FutureTrafficCheck{
+		ac.ADSBCallsign: {TrafficCallsign: "GONE999", Time: sim.State.SimTime.Add(15 * time.Second)},
+	}
+
+	intent := sim.handleTrafficInSightInquiry(ac)
+	ti, ok := intent.(av.TrafficAdvisoryIntent)
+	if !ok {
+		t.Fatalf("expected TrafficAdvisoryIntent, got %T", intent)
+	}
+	if ti.Response != av.TrafficResponseWhereWasIt {
+		t.Errorf("expected TrafficResponseWhereWasIt, got %v", ti.Response)
+	}
+	if len(sim.FutureTrafficChecks) != 0 {
+		t.Errorf("orphan queued check should be removed, got %d", len(sim.FutureTrafficChecks))
+	}
+}
+
+func TestTrafficInSightInquirySingleNearbyTraffic(t *testing.T) {
+	sim, ac := makeTrafficInSightSim(t)
+	addTraffic(sim, ac, "DAL456", -1, 0, 0) // 1 NM south, same altitude → in front
+
+	intent := sim.handleTrafficInSightInquiry(ac)
+	ti, ok := intent.(av.TrafficAdvisoryIntent)
+	if !ok {
+		t.Fatalf("expected TrafficAdvisoryIntent, got %T", intent)
+	}
+	if ti.Response != av.TrafficResponseTrafficSeen {
+		t.Errorf("expected TrafficResponseTrafficSeen, got %v", ti.Response)
+	}
+	requireSeenTraffic(t, ac, "DAL456")
+}
+
+func TestTrafficInSightInquiryNoNearbyTraffic(t *testing.T) {
+	sim, ac := makeTrafficInSightSim(t)
+
+	intent := sim.handleTrafficInSightInquiry(ac)
+	ti, ok := intent.(av.TrafficAdvisoryIntent)
+	if !ok {
+		t.Fatalf("expected TrafficAdvisoryIntent, got %T", intent)
+	}
+	if ti.Response != av.TrafficResponseWhereWasIt {
+		t.Errorf("expected TrafficResponseWhereWasIt, got %v", ti.Response)
+	}
+}
+
+func TestTrafficInSightInquiryAmbiguousMultiple(t *testing.T) {
+	sim, ac := makeTrafficInSightSim(t)
+	addTraffic(sim, ac, "DAL456", -1, 0, 0)   // 1 NM south, in front
+	addTraffic(sim, ac, "UAL789", -2, 0.5, 0) // ~2 NM south-east, in front
+	addTraffic(sim, ac, "SWA111", -1.5, 0, 0) // 1.5 NM south, in front
+
+	intent := sim.handleTrafficInSightInquiry(ac)
+	ti, ok := intent.(av.TrafficAdvisoryIntent)
+	if !ok {
+		t.Fatalf("expected TrafficAdvisoryIntent, got %T", intent)
+	}
+	if ti.Response != av.TrafficResponseWhereWasIt {
+		t.Errorf("expected TrafficResponseWhereWasIt with multiple candidates, got %v", ti.Response)
+	}
+}
+
+func TestTrafficInSightInquiryRejectsBehind(t *testing.T) {
+	sim, ac := makeTrafficInSightSim(t)
+	// Traffic 1 NM north of the asker; asker heads south. Traffic is at the
+	// 6 o'clock — outside the ±45° forward arc → not "in front".
+	addTraffic(sim, ac, "DAL456", 1, 0, 0)
+
+	intent := sim.handleTrafficInSightInquiry(ac)
+	ti, ok := intent.(av.TrafficAdvisoryIntent)
+	if !ok {
+		t.Fatalf("expected TrafficAdvisoryIntent, got %T", intent)
+	}
+	if ti.Response != av.TrafficResponseWhereWasIt {
+		t.Errorf("expected TrafficResponseWhereWasIt for traffic behind, got %v", ti.Response)
+	}
+}
+
+func TestTrafficInSightInquiryRejectsAltitudeOutOfBand(t *testing.T) {
+	sim, ac := makeTrafficInSightSim(t)
+	addTraffic(sim, ac, "DAL456", -1, 0, 1500) // 1500 ft above → outside ±1000
+
+	intent := sim.handleTrafficInSightInquiry(ac)
+	ti, ok := intent.(av.TrafficAdvisoryIntent)
+	if !ok {
+		t.Fatalf("expected TrafficAdvisoryIntent, got %T", intent)
+	}
+	if ti.Response != av.TrafficResponseWhereWasIt {
+		t.Errorf("expected TrafficResponseWhereWasIt for altitude out of band, got %v", ti.Response)
+	}
+}
+
+func TestTrafficInSightInquiryRejectsTooFar(t *testing.T) {
+	sim, ac := makeTrafficInSightSim(t)
+	addTraffic(sim, ac, "DAL456", -4, 0, 0) // 4 NM south → outside 3 NM
+
+	intent := sim.handleTrafficInSightInquiry(ac)
+	ti, ok := intent.(av.TrafficAdvisoryIntent)
+	if !ok {
+		t.Fatalf("expected TrafficAdvisoryIntent, got %T", intent)
+	}
+	if ti.Response != av.TrafficResponseWhereWasIt {
+		t.Errorf("expected TrafficResponseWhereWasIt for traffic too far, got %v", ti.Response)
+	}
 }

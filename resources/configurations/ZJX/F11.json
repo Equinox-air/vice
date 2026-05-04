@@ -111,6 +111,7 @@
       "CO1": {
         "inbound_assignments": {
           "HIBAC.ALYNA4": "1R",
+          "HIBAC.DADES2": "1R",
           "TIMIE.ALYNA4": "1R",
           "BITHO7": "1B",
           "GRNCH5": "1L",
@@ -124,19 +125,15 @@
           "PRICY5": "1L",
           "SHREK2": "1L",
           "SLOAO1.MCOS": "1B",
-          "TTHOR3": "1V"
+          "TTHOR3": "1V",
+          "DAB DEP": "1R",
+          "T208S": "1K"
         },
         "departure_assignments": {
-          "KMCO/WORMS.CITR": "1A",
-          "KMCO/KIZER.CITR": "1A",
-          "KMCO/KNEED.CITR": "1D",
-          "KMCO/RDSOX.CITR": "1D",
-          "KMCO/DEARY.CITR": "1A",
-          "KMCO/DEARY.ORLA": "1E",
-          "KMCO/KIZER.ORLA": "1E",
-          "KMCO/ORLA6": "1E",
+          "KMCO/CITR": "1A",
           "KMCO/CITR1": "1D",
-           "KMCO/DDANY3": "1E",
+          "KMCO/ORLA6": "1E",
+         "KMCO/DDANY3": "1E",
           "KMCO/FATHE4": "1E",
           "KMCO/MZULO3": "1E",
           "KMCO/FSHUN4": "1W",
@@ -354,7 +351,7 @@
     "range": 30,
     "airspace_awareness": [
       {
-        "fixes": ["BORRD", "VALKA", "JIPOD", "ZALEN", "ETECK", "FAROV", "LENDS", "MLB", "DDANY", "APOLO"],
+        "fixes": ["ILIND","BORRD", "VALKA", "JIPOD", "ZALEN", "ETECK", "FAROV", "LENDS", "MLB", "DDANY", "APOLO"],
         "altitude_range": [0, 999000],
         "receiving_controller": "Z23"
       },
@@ -382,6 +379,21 @@
         "fixes": ["VIYAP", "PAINN", "WORMS"],
         "altitude_range": [0, 11000],
         "receiving_controller": "31N"
+      },
+      {
+        "fixes": ["SMYRA"],
+        "altitude_range": [0,3000],
+        "receiving_controller": "31N"
+      },
+      {
+        "fixes": ["SMYRA"],
+        "altitude_range": [3000,11000],
+        "receiving_controller": "31H"
+      },
+      {
+        "fixes": ["SMYRA"],
+        "altitude_range": [11000, 999000],
+        "receiving_controller": "C58"
       },
       {
         "fixes": ["PLUMR", "FSHUN", "ODDEL"],
@@ -1019,6 +1031,30 @@
         {
           "type": "route",
           "from" :"F11",
+          "to": "ZJX"
+        }
+      ],
+      "MALET": [
+        {
+          "type": "route",
+          "from": "ZJX",
+          "to": "F11"
+        },
+        {
+          "type": "route",
+          "from": "F11",
+          "to": "ZJX"
+        }
+      ],
+      "ILIND": [
+        {
+          "type": "route",
+          "from": "ZJX",
+          "to": "F11"
+        },
+        {
+          "type": "route",
+          "from": "F11",
           "to": "ZJX"
         }
       ]

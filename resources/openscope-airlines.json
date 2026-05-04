@@ -12159,6 +12159,36 @@
       }
     },
     {
+      "icao": "CYT",
+      "name": "Crystal Air",
+      "callsign": {
+        "name": "Crystal Air",
+        "callsignFormats": ["##"]
+      },
+      "fleets": {
+        "default": [
+          ["C25C", 1],
+          ["PC12", 1]
+        ]
+      }
+    },
+    {
+      "icao": "HRT",
+      "name": "Chartright Air Inc.",
+      "callsign": {
+        "name": "Chartright",
+        "callsignFormats": ["###"]
+      },
+      "fleets": {
+        "default": [
+          ["C56X", 3],
+          ["CL30", 2],
+          ["CL35", 3],
+          ["CL60", 1]
+        ]
+      }
+    },
+    {
       "icao": "KOW",
       "name": "Baker Aviation, LLC",
       "callsign": {

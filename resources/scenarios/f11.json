@@ -13201,6 +13201,279 @@
         "KNEED": "ALL"
       }
     },
+    "KLEE": {
+      "omit_arrival_scratchpad": false,
+      "hold_for_release": true,
+      "approaches": {
+        "R4": {
+          "cifp_id": "R4"
+        },
+        "R13": {
+          "cifp_id": "R13"
+        },
+        "R31": {
+          "cifp_id": "R31"
+        }
+      },
+      "departure_routes": {
+        "13": {
+          "OSPRY,WORMS,KSFB,KISM,KMLB,VIZTA,FSHUN,DDANY,DADES": {
+            "cleared_altitude": 2000,
+            "waypoints": "KLEE-31/h130"
+          }
+        },
+        "31": {
+           "OSPRY,WORMS,KSFB,KISM,KMLB,VIZTA,FSHUN,DDANY,DADES": {
+            "cleared_altitude": 2000,
+            "waypoints": "KLEE-13/h090"
+          }
+        }
+      },
+      "departures": [
+        {
+          "airlines": [
+            {
+              "icao": "N",
+              "fleet": "fastGA"
+            }
+          ],
+          "destination": "KBTP",
+          "exit": "WORMS",
+          "altitude": [31000,33000,35000,37000,39000],
+          "route": "WORMS JEEMY ACCHE PAINN SHRKS GEFFS WISKE"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "N",
+              "fleet": "GAsinglepiston"
+            }
+          ],
+          "destination": "KSAV",
+          "exit": "WORMS",
+          "altitude": [5000,7000,9000],
+          "route": "WORMS GUANO MMKAY"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "N",
+              "fleet": "fastGA"
+            },
+            {
+              "icao": "SGX",
+              "types": ["CRJ2"]
+            }
+          ],
+          "destination": "KPBI",
+          "exit": "DDANY",
+          "altitude": [14000,16000,18000],
+          "route": "DDANY BORRD CPTAN3"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "EJA"
+            },
+            {
+              "icao": "N",
+              "fleet": "fastGA"
+            }
+          ],
+          "destination": "KDAL",
+          "exit": "FSHUN",
+          "altitude": [32000,34000,36000,38000,40000],
+          "route": "FSHUN SRQ Q100 LEV TBD AEX BYP SPS J76 FTI J8 GUP Q162 HAHAA RKSTR4"
+        },
+         {
+          "airlines": [
+            {
+              "icao": "EJA"
+            },
+            {
+              "icao": "N",
+              "fleet": "fastGA"
+            }
+          ],
+          "destination": "KDAL",
+          "exit": "OSPRY",
+          "altitude": [32000,34000,36000,38000,40000],
+          "route": "OSPRY GDUNN KNOST LEV TBD AEX BYP SPS J76 FTI J8 GUP Q162 HAHAA RKSTR4"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "TWY"
+            },
+            {
+              "icao": "EJA"
+            },
+            {
+              "icao": "N",
+              "fleet": "fastGA"
+            }
+          ],
+          "destination": "KFLL",
+          "exit": "FSHUN",
+          "altitude": [17000,19000,21000,23000],
+          "route": "FSHUN FIGNA TEEKY4"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "TWY"
+            },
+            {
+              "icao": "EJA"
+            },
+            {
+              "icao": "N",
+              "fleet": "fastGA"
+            }
+          ],
+          "destination": "KRSW",
+          "exit": "FSHUN",
+          "altitude": [17000,19000,21000,23000],
+          "route": "FSHUN SHFTY SHFTY6"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "EJA"
+            },
+            {
+              "icao": "N",
+              "fleet": "fastGA"
+            }
+          ],
+          "destination": "KTEB",
+          "exit": "WORMS",
+          "altitude": [31000,33000,35000,37000,39000],
+          "route": "WORMS GUANO BKENI VIYAP Q87 JROSS SWNGR JAIKE4"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "N",
+              "types": ["SF50", "PC12"]
+            }
+          ],
+          "destination": "KOPF",
+          "exit": "FSHUN",
+          "altitude": [19000,21000,23000],
+          "route": "FSHUN"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "N",
+              "fleet": "fastGA"
+            }
+          ],
+          "destination": "KTPA",
+          "exit": "DADES",
+          "altitude": [10000,12000],
+          "route": "DADES"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "N",
+              "fleet": "fastGA"
+            }
+          ],
+          "destination": "KHEF",
+          "exit": "WORMS",
+          "altitude": [31000,33000,35000,37000,39000],
+          "route": "WORMS GUANO BKENI VIYAP Q87 JROSS REDFH Q87 ASHEL LORAA TRSTN4"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "N",
+              "fleet": "GAsinglepiston"
+            }
+          ],
+          "destination": "KAAF",
+          "exit": "VIZTA",
+          "route": "VIZTA OCF HEVVN",
+          "altitude": [4000,6000,8000]
+        },
+        {
+          "airlines": [
+            {
+              "icao": "N",
+              "fleet": "GAsinglepiston"
+            },
+            {
+              "icao": "LFA"
+            },
+            {
+              "icao": "BPX"
+            }
+          ],
+          "destination": "KSFB",
+          "exit": "KSFB",
+          "route": "KSFB",
+          "altitude": [3000],
+          "scratchpad": "SFB"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "N",
+              "fleet": "GAsinglepiston"
+            }
+          ],
+          "destination": "KISM",
+          "exit": "KISM",
+          "route": "KISM",
+          "altitude": [3000],
+          "scratchpad": "ISM"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "N",
+              "fleet": "GAsinglepiston"
+            },
+            {
+              "icao": "TCF"
+            }
+          ],
+          "destination": "KMLB",
+          "exit": "KMLB",
+          "route": "KMLB",
+          "altitude": [3000,5000],
+          "scratchpad": "MLB"
+        },
+        {
+          "airlines": [
+            {
+              "icao": "N",
+              "fleet": "GAsinglepiston"
+            }
+          ],
+          "destination": "KORL",
+          "exit": "KORL",
+          "route": "KORL",
+          "altitude": [3000],
+          "scratchpad": "ORL"
+        }
+      ],
+      "exit_categories": {
+        "KORL": "INTRA",
+        "KSFB": "INTRA",
+        "KISM": "INTRA",
+        "KMLB": "INTRA",
+        "VIZTA": "ALL",
+        "WORMS": "ALL",
+        "FSHUN": "ALL", 
+        "DDANY": "ALL",
+        "DADES": "ALL",
+        "OSPRY": "ALL"
+      }
+    },
     "KMLB": {
       "omit_arrival_scratchpad": false,
       "atpa_volumes": {
@@ -17328,6 +17601,10 @@
          {
           "airport": "KMLB",
           "runway": "9R"
+        },
+        {
+          "airport": "KLEE",
+          "runway": "13"
         }
       ],
       "inbound_rates": {
@@ -17476,6 +17753,18 @@
           "airport": "KMLB",
           "rate": 5,
           "runway": "9R",
+          "category": "INTRA"
+        },
+        {
+          "airport": "KLEE",
+          "rate": 3,
+          "runway": "13",
+          "category": "ALL"
+        },
+         {
+          "airport": "KLEE",
+          "rate": 5,
+          "runway": "13",
           "category": "INTRA"
         }
       ],

@@ -143,7 +143,8 @@
           "KORL/NYTES2": "1V",
           "KSFB": "1V",
           "KISM": "1D",
-          "KMLB": "1A"
+          "KMLB": "1A",
+          "KLEE": "1N"
         },
         "default_consolidation": {
           "1A": ["1K"],
@@ -303,6 +304,7 @@
       "BORRD": {"short_name": "BOR", "abbreviation": "D"},
       "CIGAR": {"short_name": "CIG", "abbreviation": "O"},
       "CRG": {},
+      "DADES": {"short_name": "DAD", "abbreviation": "T"},
       "DDANY": {"short_name": "DDA", "abbreviation": "D"},
       "ETECK":  {"short_name": "ETE", "abbreviation": "G"},
       "FAROV":  {"short_name": "FAR", "abbreviation": "G"},
@@ -401,9 +403,14 @@
         "receiving_controller": "Z67"
       },
       {
-        "fixes": ["JFRYS", "REMIS", "CIGAR", "VIZTA", "RDSOX", "OSPRY"],
-        "altitude_range": [0, 999000],
+        "fixes": ["JFRYS", "REMIS", "CIGAR", "VIZTA", "RDSOX", "OSPRY", "KNEED"],
+        "altitude_range": [13000, 999000],
         "receiving_controller": "C14"
+      },
+       {
+        "fixes": ["JFRYS", "REMIS", "CIGAR", "VIZTA", "RDSOX", "OSPRY"],
+        "altitude_range": [0,12000],
+        "receiving_controller": "11E"
       }
     ],
     "coordination_fixes": {
@@ -1098,7 +1105,8 @@
           "RVMMLB002S",
           "RVMMCO154S"
         ],
-        "center": "N028.25.45.781,W081.18.32.260"
+        "center": "N028.25.45.781,W081.18.32.260",
+         "beacon_code_blocks": "12"
       }
     },
     "datablocks": {
@@ -1121,7 +1129,7 @@
     },
         "lists": {
       "ssa": {
-        "altimeters": ["KMCO", "KSFB", "KORL", "KMLB"]
+        "altimeters": ["KMCO", "KSFB", "KORL", "KMLB", "KLEE"]
       },
          "coordination": [
         {
@@ -1142,6 +1150,84 @@
       ]
     },
      "stars_macros": [
+      {
+        "input": "[F16]0[SLEW]",
+        "commands": [ "[HND OFF]", "[MULTI FUNC]YGE" ],
+        "output": "",
+        "description": "Handoff + Macro 0 = Handoff Accept + GE Scratch"
+      },
+      {
+        "input": "[F16]1[SLEW]",
+        "commands": [ "[HND OFF]", "[MULTI FUNC]YOL" ],
+        "output": "",
+        "description": "Handoff + Macro 1 = Handoff Accept + OL Scratch"
+      },
+      {
+        "input": "[F16]2[SLEW]",
+        "commands": [ "[HND OFF]", "[MULTI FUNC]YOR" ],
+        "output": "",
+        "description": "Handoff + Macro 2 = Handoff Accept + OR Scratch"
+      },
+       {
+        "input": "[F16]3[SLEW]",
+        "commands": [ "[HND OFF]", "[MULTI FUNC]YGL" ],
+        "output": "",
+        "description": "Handoff + Macro 3 = Handoff Accept + GL Scratch"
+      },
+       {
+        "input": "[F16]5[SLEW]",
+        "commands": [ "[HND OFF]", "[MULTI FUNC]YIR" ],
+        "output": "",
+        "description": "Handoff + Macro 5 = Handoff Accept + IR Scratch"
+      },
+      {
+        "input": "[F16]6[SLEW]",
+        "commands": [ "[HND OFF]", "[MULTI FUNC]YIZ" ],
+        "output": "",
+        "description": "Handoff + Macro 6 = Handoff Accept + IZ Scratch"
+      },
+      {
+        "input": "[F16]7[SLEW]",
+        "commands": [ "[HND OFF]", "[MULTI FUNC]YGR" ],
+        "output": "",
+        "description": "Handoff + Macro 7 = Handoff Accept + GR Scratch"
+      },
+      {
+        "input": "[F16]8[SLEW]",
+        "commands": [ "[HND OFF]", "[MULTI FUNC]YIE" ],
+        "output": "",
+        "description": "Handoff + Macro 8 = Handoff Accept + IE Scratch"
+      },
+      {
+        "input": "[F16]9[SLEW]",
+        "commands": [ "[HND OFF]", "[MULTI FUNC]YGZ" ],
+        "output": "",
+        "description": "Handoff + Macro 9 = Handoff Accept + GZ Scratch"
+      },
+      {
+        "input": "[F16]/[SLEW]",
+        "commands": [ "[HND OFF]", "[MULTI FUNC]YVE" ],
+        "output": "",
+        "description": "Handoff + Macro / = Handoff Accept + VE Scratch"
+      },
+       {
+        "input": "[F16][DELTA][SLEW]",
+        "commands": [ "[HND OFF]", "[MULTI FUNC]YVL" ],
+        "output": "",
+        "description": "Handoff + Macro Δ = Handoff Accept + VL Scratch"
+      },
+      {
+        "input": "[F16].[SLEW]",
+        "commands": [ "[HND OFF]", "[MULTI FUNC]YVR" ],
+        "output": "",
+        "description": "Handoff + Macro . = Handoff Accept + VR Scratch"
+      },
+       {
+        "input": "[F16]+[SLEW]",
+        "commands": [ "[HND OFF]", "[MULTI FUNC]YVZ" ],
+        "output": "",
+        "description": "Handoff + Macro + = Handoff Accept + VZ Scratch"
+      },
       {
         "input": "[F16]A",
         "commands": ["[MAP]113"],

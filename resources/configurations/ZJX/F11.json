@@ -1211,7 +1211,13 @@
         "description": "Handoff + Macro / = Handoff Accept + VE Scratch"
       },
        {
-        "input": "[F16][DELTA][SLEW]",
+        "input": "[F16]`[SLEW]",
+        "commands": [ "[HND OFF]", "[MULTI FUNC]YVL" ],
+        "output": "",
+        "description": "Handoff + Macro ` = Handoff Accept + VL Scratch"
+      },
+      {
+        "input": "[F16]Δ[SLEW]",
         "commands": [ "[HND OFF]", "[MULTI FUNC]YVL" ],
         "output": "",
         "description": "Handoff + Macro Δ = Handoff Accept + VL Scratch"

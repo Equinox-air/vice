@@ -3954,6 +3954,20 @@
       }
     },
     {
+      "icao": "cap",
+      "name": "Civil Air Patrol",
+      "callsign": {
+        "name": "CAP",
+        "callsignFormats": ["###"]
+      },
+      "fleets": {
+        "default": [
+          ["C172",211],
+          ["C182", 298]
+        ]
+      }
+    },
+    {
       "icao": "axm",
       "name": "AirAsia",
       "callsign": {
@@ -3962,6 +3976,32 @@
       },
       "fleets": {
         "default": [["A320", 81]]
+      }
+    },
+    {
+      "icao": "FWK",
+      "name": "Flightworks",
+      "callsign": {
+        "name": "Flightworks",
+        "callsignFormats": ["###"]
+      },
+      "fleets": {
+        "default": [
+          ["H25B", 1]
+        ]
+      }
+    },
+    {
+      "icao": "pfa",
+      "name": "Paris Air",
+      "callsign": {
+        "name": "Paris Air",
+        "callsignFormats": ["###"]
+      },
+      "fleets": {
+        "default": [
+          ["P28A", 16]
+        ]
       }
     },
     {

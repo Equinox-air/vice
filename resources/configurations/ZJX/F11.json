@@ -144,7 +144,8 @@
           "KSFB": "1V",
           "KISM": "1D",
           "KMLB": "1A",
-          "KLEE": "1N"
+          "KLEE": "1N",
+          "KTIX": "1K"
         },
         "default_consolidation": {
           "1A": ["1K"],
@@ -247,6 +248,15 @@
           "ceiling": 2000,
           "center": "KISM",
           "radius": 7
+        },
+        {
+          "id": "LEENOCA",
+          "description": "LEE CONFLICT SUPPRESS",
+          "type": "circle",
+          "floor": 0,
+          "ceiling": 2000,
+          "center": "KLEE",
+          "radius": 7
         }
       ],
       "arrival_drop": []
@@ -304,6 +314,7 @@
       "BORRD": {"short_name": "BOR", "abbreviation": "D"},
       "CIGAR": {"short_name": "CIG", "abbreviation": "O"},
       "CRG": {},
+      "DIDDY": {"short_name": "DID", "abbreviation": "D"},
       "DADES": {"short_name": "DAD", "abbreviation": "T"},
       "DDANY": {"short_name": "DDA", "abbreviation": "D"},
       "ETECK":  {"short_name": "ETE", "abbreviation": "G"},
@@ -353,7 +364,7 @@
     "range": 30,
     "airspace_awareness": [
       {
-        "fixes": ["ILIND","BORRD", "VALKA", "JIPOD", "ZALEN", "ETECK", "FAROV", "LENDS", "MLB", "DDANY", "APOLO"],
+        "fixes": ["DIDDY","ILIND","BORRD", "VALKA", "JIPOD", "ZALEN", "ETECK", "FAROV", "LENDS", "MLB", "DDANY", "APOLO"],
         "altitude_range": [0, 999000],
         "receiving_controller": "Z23"
       },
@@ -1146,6 +1157,11 @@
           "name": ".      ISM COORD",
           "id": "K",
           "airports": ["KISM"]
+        },
+         {
+          "name": ".      TIX COORD",
+          "id": "S",
+          "airports": ["KTIX"]
         }
       ]
     },

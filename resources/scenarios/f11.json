@@ -154,13 +154,6 @@
         }
       }
     },
-    "X59": {
-      "vfr": {
-        "random_routes": {
-          "rate": 5
-        }
-      }
-    },
     "KEVB": {
       "vfr": {
         "random_routes": {
@@ -13310,6 +13303,11 @@
         "FSHUN": "ALL",
         "LAL": "ALL",
         "KNEED": "ALL"
+      },
+       "vfr": {
+        "random_routes": {
+          "rate": 5
+        }
       }
     },
     "KLEE": {
@@ -13682,6 +13680,11 @@
         "DADES": "ALL",
         "OSPRY": "ALL",
         "RDSOX": "ALL"
+      },
+       "vfr": {
+        "random_routes": {
+          "rate": 5
+        }
       }
     },
     "KTIX": {
@@ -15227,7 +15230,600 @@
       "ODDEL": "ALL",
       "MALET": "ALL",
       "VALKA": "ALL"
-     }
+     },
+      "vfr": {
+        "random_routes": {
+          "rate": 5
+        }
+      }
+  },
+  "X23": {
+    "omit_arrival_scratchpad": false,
+    "hold_for_release": true,
+    "approaches": {
+      "RA": {
+        "runway": "1",
+        "type": "RNAV",
+        "full_name": "RNAV A Circling Runway 1",
+        "waypoints": [
+          "WOBUV/iaf/a2000 TENUY/a2000 JATGA/a1800/faf",
+          "TENUY/a2000/iaf JATGA/a1800/faf",
+          "OTIZY/a2000/iaf TENUY/a2000/if JATGA/a1800/faf"
+        ]
+      },
+      "RB": {
+        "runway": "19",
+        "type": "RNAV",
+        "full_name": "RNAV B Circling Runway 19",
+        "waypoints": [
+          "ZASIM/a3000/iaf JOKEG/a3000/if YUDPU/a1800/faf",
+          "JOKEG/a3000/iaf YUDPU/a1800/faf",
+          "WOSIV/a3000/iaf JOKEG/a3000/if YUDPU/a1800/faf"
+        ]
+      }
+    },
+    "departure_routes": {
+      "1": {
+        "KORL,SMYRA,KSFB,KIZER,WORMS": {
+          "cleared_altitude": 2000,
+          "waypoints": "N028.55.50.150,W081.39.05.306/h110"
+        }
+      },
+      "19": {
+        "KORL,SMYRA,KSFB,KIZER,WORMS": {
+          "cleared_altitude": 2000,
+          "waypoints": "N028.55.13.661,W081.39.05.938/h110"
+        }
+      }
+    },
+    "departures": [
+      {
+            "airlines": [
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KORL",
+            "exit": "KORL",
+            "altitude": [3000],
+            "route": "KORL",
+            "scratchpad": "ORL"
+          },
+           {
+            "airlines": [
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              },
+              {
+                "icao": "LFA"
+              }
+            ],
+            "destination": "KSFB",
+            "exit": "KSFB",
+            "altitude": [3000],
+            "route": "KSFB",
+            "scratchpad": "SFB"
+          },
+          {
+            "airlines": [
+              {
+                "icao": "ERU"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              },
+              {
+                "icao": "BPX"
+              }
+            ],
+            "destination": "KDAB",
+            "exit": "KIZER",
+            "route": "KIZER GUANO",
+            "altitude": [3000]
+          }
+    ],
+    "exit_categories": {
+          "KORL": "INTRA",
+          "KSFB": "INTRA",
+          "SMYRA": "ALL",
+          "WORMS": "ALL",
+          "KIZER": "ALL"
+        },
+      "vfr": {
+        "random_routes": {
+          "rate": 5
+        }
+      }
+  },
+        "X59": {
+        "omit_arrival_scratchpad": false,
+        "hold_for_release": true,
+        "approaches": {
+          "RA": { 
+          "runway": "10",
+          "type": "RNAV",
+          "full_name": "RNAV A Circling Runway 10",
+          "waypoints": [
+            "RAMZY/a2000/if NADEA/a1500/faf N027.58.13.068,W080.32.17.274/a540"
+          ]
+          },  
+          "RB": {
+            "runway": "28",
+            "type": "RNAV",
+            "full_name": "RNAV B Circling Runway 28",
+            "waypoints": [
+              "ADAAM/if/a2000 TCOXX/faf/a1600 GOEAA/a660 "
+            ]
+          }
+        },
+        "departure_routes": {
+          "10": {
+            "KORL,KSFB,SMYRA,WORMS": {
+              "cleared_altitude": 2000,
+              "waypoints": "N027.57.35.536,W080.33.13.551/h070"
+            }
+          },
+          "28": {
+            "KORL,KSFB,SMYRA,WORMS": {
+              "cleared_altitude": 2000,
+              "waypoints": "N027.57.37.184,W080.33.57.634"
+            }
+          }
+        },
+        "departures": [
+          {
+            "airlines": [
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              }
+            ],
+            "destination": "KORL",
+            "exit": "KORL",
+            "altitude": [4000],
+            "route": "KORL",
+            "scratchpad": "ORL"
+          },
+           {
+            "airlines": [
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              },
+              {
+                "icao": "LFA"
+              }
+            ],
+            "destination": "KSFB",
+            "exit": "KSFB",
+            "altitude": [4000],
+            "route": "KSFB",
+            "scratchpad": "SFB"
+          },
+          {
+            "airlines": [
+              {
+                "icao": "ERU"
+              },
+              {
+                "icao": "N",
+                "fleet": "GAsinglepiston"
+              },
+              {
+                "icao": "BPX"
+              }
+            ],
+            "destination": "KDAB",
+            "exit": "SMYRA",
+            "route": "SMYRA",
+            "altitude": [3000]
+          }
+        ],
+        "exit_categories": {
+          "KORL": "INTRA",
+          "KSFB": "INTRA",
+          "SMYRA": "ALL",
+          "WORMS": "ALL"
+        },
+      "vfr": {
+        "random_routes": {
+          "rate": 5
+        }
+      }
+    },
+  "KCOI": {
+    "omit_arrival_scratchpad": false,
+    "hold_for_release": true,
+    "approaches": {
+      "R11": {
+        "cifp_id": "R11"
+      }
+    },
+    "departure_routes": {
+      "11": {
+        "KORL,KMCO,VALKA,MALET,ODDEL,SMYRA,APOLO,WORMS,DEARY,JFRYS,RDSOX,OSPRY,LAL,VIZTA,KNEED,GUURR,KIZER,GUANO,OMN,OCF,GNV,DDANY,GERCK,MZULO,LENDS,FSHUN,ROGAN": {
+          "cleared_altitude": 2000,
+          "waypoints": "KCOI-29/h090"
+        }
+      }
+    },
+    "departures": [
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          }
+        ],
+        "destination": "KORL",
+        "exit": "KORL",
+        "altitude": [4000],
+        "scratchpad": "ORL",
+        "route": "KORL"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          },
+          {
+            "icao": "TCF"
+          }
+        ],
+        "destination": "KMLB",
+        "exit": "KMLB",
+        "altitude": [3000],
+        "scratchpad": "MLB",
+        "route": "KMLB"
+      },
+       {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          },
+          {
+            "icao": "LFA"
+          },
+          {
+            "icao": "BPX"
+          }
+        ],
+        "destination": "KSFB",
+        "exit": "KSFB",
+        "altitude": [4000],
+        "scratchpad": "SFB",
+        "route": "KSFB"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          }
+        ],
+        "destination": "KOBE",
+        "exit": "VALKA",
+        "altitude": [4000],
+        "route": "VALKA T208 WIXED TRV"
+      },
+       {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          }
+        ],
+        "destination": "KSUA",
+        "exit": "VALKA",
+        "altitude": [4000],
+        "route": "VALKA"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "ERU"
+          },
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          },
+          {
+            "icao": "BPX"
+          }
+        ],
+        "destination": "KDAB",
+        "exit": "SMYRA",
+        "altitude": [3000],
+        "route": "SMYRA"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "EPI"
+          },
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          }
+        ],
+        "destination": "KEVB",
+        "exit": "SMYRA",
+        "altitude": [3000],
+        "route": "SMYRA"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          }
+        ],
+        "destination": "KOMN",
+        "exit": "SMYRA",
+        "altitude": [3000],
+        "route": "SMYRA"
+      }
+    ],
+    "exit_categories": {
+      "VALKA": "ALL",
+      "KMCO": "INTRA",
+      "SMYRA": "ALL",
+      "KORL": "INTRA",
+      "KMLB": "INTRA",
+      "KSFB": "INTRA",
+      "MALET": "ALL",
+      "ODDEL": "ALL",
+      "APOLO": "ALL",
+      "WORMS": "ALL",
+      "DEARY": "ALL",
+      "JFRYS": "ALL",
+      "RDSOX": "ALL",
+      "OSPRY": "ALL",
+      "LAL": "ALL",
+      "VIZTA": "ALL",
+      "KNEED": "ALL",
+      "GUURR": "ALL",
+      "KIZER": "ALL",
+      "GUANO": "ALL",
+      "OMN": "ALL",
+      "OCF": "ALL",
+      "GNV": "ALL",
+      "DDANY": "ALL",
+      "GERCK": "ALL",
+      "MZULO": "ALL",
+      "LENDS": "ALL",
+      "FSHUN": "ALL",
+      "ROGAN": "ALL"
+    },
+     "vfr": {
+        "random_routes": {
+          "rate": 5
+        }
+      }
+  },
+  "X04": {
+    "approaches": {
+       "RA": {
+          "runway": "15",
+          "type": "RNAV",
+          "full_name": "RNAV A Circling Runway 15",
+          "waypoints": [
+            "MODIN/if/iaf/a2000 JUZTN/a1700/faf",
+            "SHIMM/iaf MODIN/if/iaf/a2000 JUZTN/a1700/faf",
+            "WORMS/iaf OXAGE MODIN/if/iaf/a2000 JUZTN/a1700/faf"
+          ]
+        },
+        "RB": {
+          "runway": "33",
+          "type": "RNAV",
+          "full_name": "RNAV B Circling Runway 33",
+          "waypoints": ["JENSN JAXIN/iaf UZUBU/if/a2000 TBEAU/a1700/faf"]
+        }
+    },
+    "hold_for_release": true,
+    "departure_routes": {
+      "15": {
+          "VIZTA,KIZER,KORL,KSFB,KMLB,WORMS,VALKA,KNEED,RDSOX,OSPRY": {
+            "cleared_altitude": 2000,
+             "waypoints": "N028.41.40.302,W081.34.30.593/h150"
+          }
+      },
+      "33": {
+         "VIZTA,KIZER,KORL,KSFB,KMLB,WORMS,VALKA,KNEED,RDSOX,OSPRY": {
+            "cleared_altitude": 2000,
+           "waypoints": "N028.43.40.987,W081.35.42.718/h330"
+          }
+      }
+    },
+    "departures": [
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          }
+        ],
+        "destination": "KORL",
+        "exit": "KORL",
+        "altitude": [3000],
+        "route": "KORL",
+        "scratchpad": "ORL"
+      },
+       {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          },
+          {
+            "icao": "TCF"
+          }
+        ],
+        "destination": "KMLB",
+        "exit": "KMLB",
+        "altitude": [3000,5000],
+        "route": "KMLB",
+        "scratchpad": "MLB"
+      },
+       {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          },
+          {
+            "icao": "LFA"
+          },
+          {
+            "icao": "BPX"
+          }
+        ],
+        "destination": "KSFB",
+        "exit": "KSFB",
+        "altitude": [3000],
+        "route": "KSFB",
+        "scratchpad": "SFB"
+      },
+      {
+        "airlines": [
+          {
+            "icao" :"N",
+            "fleet": "GAsinglepiston"
+          },
+          {
+            "icao": "ERU"
+          },
+          {
+            "icao": "BPX"
+          }
+        ],
+        "destination": "KDAB",
+        "exit": "KIZER",
+        "altitude": [3000],
+        "route": "KIZER GUANO"
+      },
+      {
+        "airlines": [
+          {
+            "icao" :"N",
+            "fleet": "GAsinglepiston"
+          },
+          {
+            "icao": "EPI"
+          }
+        ],
+        "destination": "KEVB",
+        "exit": "KIZER",
+        "altitude": [3000],
+        "route": "KIZER GUANO"
+      },
+        {
+        "airlines": [
+          {
+            "icao" :"N",
+            "fleet": "GAsinglepiston"
+          }
+        ],
+        "destination": "KOMN",
+        "exit": "KIZER",
+        "altitude": [3000],
+        "route": "KIZER GUANO"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          }
+        ],
+        "destination": "KSAV",
+        "exit": "WORMS",
+        "altitude": [5000,7000,9000],
+        "route": "WORMS GUANO MMKAY VIYAP"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          }
+        ],
+        "destination": "KSPG",
+        "exit": "KNEED",
+        "altitude": [4000],
+        "route": "KNEED"
+      },
+       {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          }
+        ],
+        "destination": "KSRQ",
+        "exit": "KNEED",
+        "altitude": [4000],
+        "route": "KNEED"
+      },
+       {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          }
+        ],
+        "destination": "KPIE",
+        "exit": "KNEED",
+        "altitude": [4000],
+        "route": "KNEED"
+      },
+      {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          }
+        ],
+        "destination": "KOCF",
+        "exit": "VIZTA",
+        "altitude": [4000],
+        "route": "VIZTA OCF"
+      },
+        {
+        "airlines": [
+          {
+            "icao": "N",
+            "fleet": "GAsinglepiston"
+          }
+        ],
+        "destination": "KGNV",
+        "exit": "VIZTA",
+        "altitude": [4000,6000],
+        "route": "VIZTA GNV"
+      }
+    ],
+    "exit_categories": {
+      "VIZTA" : "ALL",
+      "KIZER" : "ALL",
+      "KORL" : "INTRA",
+      "KSFB" : "INTRA",
+      "KMLB" : "INTRA",
+      "WORMS" : "ALL",
+      "VALKA" : "ALL",
+      "KNEED" : "ALL",
+      "RDSOX" : "ALL",
+      "OSPRY" : "ALL"
+    },
+     "vfr": {
+        "random_routes": {
+          "rate": 5
+        }
+      }
   }
 },
   "inbound_flows": {
@@ -15254,6 +15850,18 @@
             "KORL": {
               "7": "ALYNA BUDLE/a6000/h263",
               "25": "ALYNA BUDLE/a6000/h263"
+            },
+            "KSFB": {
+              "9L": "ALYNA BUDLE/a6000/h263",
+              "9R": "ALYNA BUDLE/a6000/h263",
+              "27L": "ALYNA BUDLE/a6000/h263",
+              "27R": "ALYNA BUDLE/a6000/h263"
+            },
+            "KLEE": {
+              "4": "ALYNA BUDLE/a6000/h263",
+              "22": "ALYNA BUDLE/a6000/h263",
+              "13": "ALYNA BUDLE/a6000/h263",
+              "31": "ALYNA BUDLE/a6000/h263"
             }
           },
           "airlines": {
@@ -15324,6 +15932,165 @@
                 "icao": "N",
                 "fleet": "fastGA",
                 "airport": "KSWF"
+              },
+              {
+                "icao": "TIV",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "JRE",
+                "airport": "KBGR"
+              },
+              {
+                "icao": "TCN",
+                "airport": "KILM"
+              }
+            ],
+            "KSFB": [
+               {
+                "icao": "NJM",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "TIV",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "JRE",
+                "airport": "KBGR"
+              },
+              {
+                "icao": "TCN",
+                "airport": "KILM"
+              }
+            ],
+            "KISM": [
+               {
+                "icao": "EJA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "TCN",
+                "airport": "KSWF"
+              },
+               {
+                "icao": "EJA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "TIV",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "JRE",
+                "airport": "KBGR"
+              },
+              {
+                "icao": "TCN",
+                "airport": "KILM"
+              }
+            ],
+            "KLEE": [
+               {
+                "icao": "EJA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSWF"
+              },
+               {
+                "icao": "EJA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "TIV",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "JRE",
+                "airport": "KBGR"
+              },
+              {
+                "icao": "TCN",
+                "airport": "KILM"
               }
             ]
           }
@@ -15353,6 +16120,18 @@
             "KORL": {
               "7": "ALYNA BUDLE/a6000/h263",
               "25": "ALYNA BUDLE/a6000/h263"
+            },
+            "KSFB": {
+              "9L": "ALYNA BUDLE/a6000/h263",
+              "9R": "ALYNA BUDLE/a6000/h263",
+              "27L": "ALYNA BUDLE/a6000/h263",
+              "27R": "ALYNA BUDLE/a6000/h263"
+            },
+            "KLEE": {
+              "4": "ALYNA BUDLE/a6000/h263",
+              "22": "ALYNA BUDLE/a6000/h263",
+              "13": "ALYNA BUDLE/a6000/h263",
+              "31": "ALYNA BUDLE/a6000/h263"
             }
           },
           "airlines": {
@@ -15774,13 +16553,26 @@
                 "icao": "FFT"
               }
             ],
-            "KORL": [
+             "KORL": [
               {
                 "icao": "NJM",
-                "airport": "KTYS"
+                "airport": "KSWF"
               },
               {
-                "icao": "NJM",
+                "icao": "EJA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "TIV",
                 "airport": "KTEB"
               },
               {
@@ -15792,69 +16584,151 @@
                 "airport": "KTEB"
               },
               {
-                "icao": "N",
-                "fleet": "fastGA",
-                "airport": "KSSI"
+                "icao": "JRE",
+                "airport": "KBGR"
               },
               {
+                "icao": "TCN",
+                "airport": "KILM"
+              }
+            ],
+            "KSFB": [
+               {
                 "icao": "NJM",
-                "airport": "KSSI"
+                "airport": "KSWF"
               },
               {
                 "icao": "EJA",
-                "airport": "KSSI"
+                "airport": "KSWF"
               },
               {
                 "icao": "LXJ",
-                "airport": "KSSI"
+                "airport": "KSWF"
               },
               {
                 "icao": "N",
                 "fleet": "fastGA",
-                "airport": "KSSI"
+                "airport": "KSWF"
               },
               {
-                "icao": "SJJ",
-                "airport": "KCRE"
-              },
-              {
-                "icao": "EJA",
-                "airport": "KJAX"
-              },
-              {
-                "icao": "NJM",
-                "airport": "KCRW"
-              },
-              {
-                "icao": "N",
-                "fleet": "fastGA",
-                "airport": "KCRW"
+                "icao": "TIV",
+                "airport": "KTEB"
               },
               {
                 "icao": "EJA",
-                "airport": "KCLT"
+                "airport": "KTEB"
               },
               {
                 "icao": "LXJ",
-                "airport": "KCLT"
+                "airport": "KTEB"
               },
               {
-                "icao": "N",
-                "fleet": "fastGA",
-                "airport": "KCLT"
+                "icao": "JRE",
+                "airport": "KBGR"
               },
               {
+                "icao": "TCN",
+                "airport": "KILM"
+              }
+            ],
+            "KISM": [
+               {
                 "icao": "EJA",
-                "airport": "KBQK"
+                "airport": "KSWF"
               },
               {
                 "icao": "LXJ",
-                "airport": "KBQK"
+                "airport": "KSWF"
               },
               {
                 "icao": "N",
                 "fleet": "fastGA",
-                "airport": "KBQK"
+                "airport": "KSWF"
+              },
+              {
+                "icao": "TCN",
+                "airport": "KSWF"
+              },
+               {
+                "icao": "EJA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "TIV",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "JRE",
+                "airport": "KBGR"
+              },
+              {
+                "icao": "TCN",
+                "airport": "KILM"
+              }
+            ],
+            "KLEE": [
+               {
+                "icao": "EJA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSWF"
+              },
+               {
+                "icao": "EJA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "TIV",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "JRE",
+                "airport": "KBGR"
+              },
+              {
+                "icao": "TCN",
+                "airport": "KILM"
               }
             ]
           }
@@ -16265,7 +17139,7 @@
         }
       ]
     },
-    "BITHO7": {
+    "BITHO7.MCO": {
       "arrivals": [
         {
           "star": "BITHO7",
@@ -16288,6 +17162,188 @@
                   "PC12"
                 ],
                 "airport": "KOMN"
+              }
+            ],
+            "KTIX": [
+              {
+                "icao": "EJA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KPDK"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KEVV"
+              },
+              {
+                "icao": "TIV",
+                "airport": "KPDK"
+              },
+              {
+                "icao": "JRE",
+                "airport": "KBGR"
+              }
+            ],
+            "KISM": [
+               {
+                "icao": "EJA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KPDK"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KEVV"
+              },
+              {
+                "icao": "TIV",
+                "airport": "KPDK"
+              },
+              {
+                "icao": "JRE",
+                "airport": "KBGR"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "BITHO7.MLB": {
+       "arrivals": [
+        {
+          "star": "BITHO7",
+          "initial_altitude": 17000,
+          "initial_controller": "C58",
+          "initial_speed": 250,
+          "waypoints": "OMN/ho LAMMA/a15000 JESUP COZMO BITHO",
+          "airlines": {
+            "KCOI": [
+               {
+                "icao": "EJA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KPDK"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KEVV"
+              },
+              {
+                "icao": "TIV",
+                "airport": "KPDK"
+              },
+              {
+                "icao": "JRE",
+                "airport": "KBGR"
+              }
+            ],
+            "KMLB": [
+              {
+                "icao": "DAL",
+                "types": ["B712", "A319"],
+                "airport": "KATL"
+              },
+              {
+                "icao": "JIA",
+                "airport": "KCLT"
+              },
+              {
+                "icao": "TOM",
+                "airport": "EGKK"
+              },
+              {
+                "icao": "TOM",
+                "airport": "EGCC"
+              },
+               {
+                "icao": "EJA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KPDK"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KEVV"
+              },
+              {
+                "icao": "TIV",
+                "airport": "KPDK"
+              },
+              {
+                "icao": "JRE",
+                "airport": "KBGR"
               }
             ]
           }
@@ -17932,6 +18988,228 @@
                 "fleet": "fastGA",
                 "airport": "KBQK"
               }
+            ],
+            "KSFB": [
+              {
+                "icao": "FLE",
+                "airport": "CYYZ"
+              },
+              {
+                "icao": "NJM",
+                "airport": "KTYS"
+              },
+              {
+                "icao": "NJM",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSSI"
+              },
+              {
+                "icao": "NJM",
+                "airport": "KSSI"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KSSI"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KSSI"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSSI"
+              },
+              {
+                "icao": "SJJ",
+                "airport": "KCRE"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KJAX"
+              },
+              {
+                "icao": "NJM",
+                "airport": "KCRW"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KCRW"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KCLT"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KCLT"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KCLT"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KBQK"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KBQK"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KBQK"
+              },
+              {
+                "icao": "AAY",
+                "airport": "KBGR"
+              },
+              {
+                "icao": "AAY",
+                "airport": "KROA"
+              },
+              {
+                "icao": "AAY",
+                "airport": "KPSM"
+              },
+              {
+                "icao": "AAY",
+                "airport": "KBTV"
+              },
+              {
+                "icao": "AAY",
+                "airport": "KGSP"
+              },
+              {
+                "icao": "AAY",
+                "airport": "KACY"
+              },
+              {
+                "icao": "AAY",
+                "airport": "KSWF"
+              },
+              {
+                "icao": "AAY",
+                "airport": "KELM"
+              },
+              {
+                "icao": "AAY",
+                "airport": "KTOL"
+              },
+              {
+                "icao": "AAY",
+                "airport": "KCKB"
+              },
+              {
+                "icao": "AAY",
+                "airport": "KMDT"
+              },
+              {
+                "icao": "AAY",
+                "airport": "KHGR"
+              },
+              {
+                "icao": "AAY",
+                "airport": "KTRI"
+              }
+            ],
+            "KLEE": [
+                  {
+                "icao": "NJM",
+                "airport": "KTYS"
+              },
+              {
+                "icao": "NJM",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KTEB"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSSI"
+              },
+              {
+                "icao": "NJM",
+                "airport": "KSSI"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KSSI"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KSSI"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KSSI"
+              },
+              {
+                "icao": "SJJ",
+                "airport": "KCRE"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KJAX"
+              },
+              {
+                "icao": "NJM",
+                "airport": "KCRW"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KCRW"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KCLT"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KCLT"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KCLT"
+              },
+              {
+                "icao": "EJA",
+                "airport": "KBQK"
+              },
+              {
+                "icao": "LXJ",
+                "airport": "KBQK"
+              },
+              {
+                "icao": "N",
+                "fleet": "fastGA",
+                "airport": "KBQK"
+              }
             ]
           }
         }
@@ -18344,19 +19622,59 @@
         {
           "airport": "KTIX",
           "runway": "18"
+        },
+        {
+          "airport" : "KCOI",
+          "runway": "11"
+        },
+        {
+          "airport": "X04",
+          "runway": "15"
+        },
+        {
+          "airport": "X04",
+          "runway": "33"
+        },
+        {
+          "airport": "X59",
+          "runway": "10"
+        },
+        {
+          "airport": "X59",
+          "runway": "28"
+        },
+        {
+          "airport": "X23",
+          "runway": "1"
+        },
+        {
+          "airport": "X23",
+          "runway": "19"
         }
       ],
       "inbound_rates": {
         "HIBAC.ALYNA4": {
           "KMCO": 3,
-          "KORL": 0
+          "KORL": 0,
+          "KSFB": 1,
+          "KLEE": 0,
+          "KISM": 0
         },
         "TIMIE.ALYNA4": {
           "KMCO": 0,
-          "KORL": 0
+          "KORL": 0,
+          "KSFB": 0,
+          "KLEE": 0,
+          "KISM": 0
         },
-        "BITHO7": {
-          "KMCO": 1
+        "BITHO7.MCO": {
+          "KMCO": 1,
+          "KTIX": 2,
+           "KISM": 1
+        },
+        "BITHO7.MLB": {
+          "KMLB": 3,
+          "KCOI": 0
         },
         "GRNCH5": {
           "KMCO": 13
@@ -18392,7 +19710,9 @@
           "KMCO": 0
         },
         "TTHOR3": {
-          "KORL": 3
+          "KORL": 3,
+          "KSFB": 7,
+          "KLEE": 2
         },
         "DAB DEP": {
           "overflights": 2
@@ -18516,6 +19836,54 @@
           "airport": "KTIX", 
           "rate": 2,
           "runway": "18",
+          "category": "INTRA"
+        },
+        {
+          "airport": "KCOI",
+          "rate": 0,
+          "runway": "11",
+          "category": "ALL"
+        },
+        {
+          "airport": "KCOI",
+          "rate": 2,
+          "runway": "11",
+          "category": "INTRA"
+        },
+        {
+          "airport": "X04",
+          "rate": 2,
+          "runway": "15",
+          "category": "ALL"
+        },
+        {
+          "airport": "X04",
+          "rate": 3,
+          "runway": "15",
+          "category": "INTRA"
+        },
+        {
+           "airport": "X59",
+          "rate": 1,
+          "runway": "10",
+            "category": "INTRA"
+        },
+        {
+          "airport": "X59",
+          "rate": 1,
+          "runway": "10",
+            "category": "ALL"
+        },
+        {
+          "airport": "X23",
+          "runway": "19",
+          "rate": 0,
+          "category": "ALL"
+        },
+        {
+          "airport": "X23",
+          "runway": "19",
+          "rate": 1,
           "category": "INTRA"
         }
       ],

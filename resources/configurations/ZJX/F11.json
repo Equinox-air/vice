@@ -727,6 +727,42 @@
          "default_consolidation": {
           "1M": []
         }
+       },
+         "FCN":
+       {
+        "inbound_assignments": {
+           "GRNCH5.FNLNE": "1G",
+          "PRICY5.FNLNE": "1G",
+          "SNFLD3.FNLNE": "1M",
+          "MUNGI1.FNLNE": "1M"
+        },
+         "default_consolidation": {
+          "1M": ["1G"]
+        }
+       },
+        "FWN":
+       {
+        "inbound_assignments": {
+          "GRNCH5.FNLNE": "1G",
+          "PRICY5.FNLNE": "1G",
+          "SNFLD3.FNLNE": "1M",
+          "MUNGI1.FNLNE": "1M"
+        },
+         "default_consolidation": {
+          "1G": []
+        }
+       },
+        "FEN":
+       {
+        "inbound_assignments": {
+          "GRNCH5.FNLNE": "1G",
+          "PRICY5.FNLNE": "1G",
+          "SNFLD3.FNLNE": "1M",
+          "MUNGI1.FNLNE": "1M"
+        },
+         "default_consolidation": {
+          "1M": []
+        }
        }
     },
     
